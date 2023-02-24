@@ -1,11 +1,131 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Link from "@/src/Link";
+import SwipeView from "@/components/SwipeView";
+import styles from "@/styles/Home.module.scss";
 
-const inter = Inter({ subsets: ['latin'] })
+import pushBackgroundImg from "../public/images/pushBackground.jpg";
+import push from "../public/images/push.png";
+import pushLogo from "../public/images/pushLogo.png";
+import seasonImg from "../public/images/season.jpeg";
+
+import { Avatar, Grid, Stack } from "@mui/material";
+import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
+import { useEffect, useRef, useState } from "react";
+
+import { FastAverageColor } from "fast-average-color";
+import TopMenu from "@/components/TopMenu";
+
+export type heroBannerItemType = {
+  id: number;
+  text: {
+    title: string;
+    description: string;
+  };
+  frontImg?: {
+    src: any;
+    alt: string;
+  };
+  backgroundImg: {
+    src?: any;
+    alt?: string;
+    backgroundColor?: string;
+  };
+};
+export type heroBannerType = heroBannerItemType[];
+const heroBanner: heroBannerType = [
+  {
+    id: 0,
+    text: {
+      title: "Push Online por IndieVisível",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+    },
+    frontImg: {
+      src: require("../public/images/logoIndie-300x300.png"),
+      alt: "IndieVisível Logo",
+    },
+    backgroundImg: {
+      backgroundColor: "#612F74",
+    },
+  },
+  {
+    id: 1,
+    text: {
+      title: "Push: System Reference Document",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+    },
+    frontImg: {
+      src: require("../public/images/push2.png"),
+      alt: "Push Logo",
+    },
+    backgroundImg: {
+      src: require("../public/images/pushBackground.jpg"),
+      alt: "Purple textured image",
+    },
+  },
+  {
+    id: 2,
+    text: {
+      title: "Guardiões de Althea",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+    },
+
+    backgroundImg: {
+      src: require("../public/images/altheaBack.jpg"),
+      alt: "Dragon and some other characters",
+    },
+  },
+  {
+    id: 3,
+    text: {
+      title: "Season: A letter to the future",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+    },
+
+    backgroundImg: {
+      src: require("../public/images/season.jpeg"),
+      alt: "Cover image for the Season game.",
+    },
+  },
+];
 
 export default function Home() {
+  const data = heroBanner;
+  const [heroData, setHeroData] = useState(data[0]);
+  const [textColor, setTextColor] = useState({
+    color: "white",
+    hover: "#6750A4",
+  });
+  const imgRef = useRef(null);
+
+  function changeHeroData(newHeroData: heroBannerItemType) {
+    setHeroData(newHeroData);
+  }
+  // const fac = new FastAverageColor();
+  // //TODO - Change text color based on background image average color
+  // useEffect(() => {
+  //   fac
+  //     .getColorAsync(imgRef.current)
+  //     .then((color) => {
+  //       console.log(color);
+  //       // container.style.backgroundColor = color.rgba;
+  //       // container.style.color = color.isDark ? "#fff" : "#000";
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     });
+
+  //   return () => {};
+  // }, [fac, imgRef]);
+
   return (
     <>
       <Head>
@@ -14,110 +134,76 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
+      <main>
+        <section className={styles.firstSection}>
           <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+            <SwipeView data={data} handleSwipe={changeHeroData}></SwipeView>
           </div>
-        </div>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
+          <div className={styles.hero}>
+            <Container>
+              <TopMenu></TopMenu>
+            </Container>
+            <Container>
+              <Box marginX={"2rem"} marginTop={"2rem"}>
+                <div className={styles.heroContentContainer}>
+                  <div className={styles.heroContentGrid}>
+                    <div className={styles.heroImage}>
+                      {heroData.frontImg && (
+                        <div className={styles.imageWrapperHero}>
+                          <Image
+                            ref={imgRef}
+                            src={heroData.frontImg.src}
+                            alt={heroData.frontImg.alt}
+                            className={styles.image}
+                            fill
+                          ></Image>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.heroBox}>
+                      <Stack
+                        border={3}
+                        borderColor={"white"}
+                        sx={{ backdropFilter: "blur(3px)" }}
+                        spacing={3}
+                        p={2}
+                        paddingTop={2}
+                      >
+                        <Typography variant="h3" component="h1" color="white">
+                          {heroData.text.title}
+                        </Typography>
+                        <Typography variant="subtitle1" color="white">
+                          {heroData.text.description}
+                        </Typography>
+                        <Box maxWidth={50}>
+                          <Button
+                            variant="contained"
+                            component={Link}
+                            noLinkStyle
+                            href="/play"
+                            startIcon={<CasinoOutlinedIcon />}
+                            sx={{ borderRadius: "24px" }}
+                          >
+                            Jogar
+                          </Button>
+                        </Box>
+                      </Stack>
+                    </div>
+                  </div>
+                </div>
+              </Box>
+            </Container>
           </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+        </section>
+        <section>
+          <Container>
+            <Typography variant="h3" component="h1" color="black">
+              O que é o Push?
+            </Typography>
+          </Container>
+        </section>
       </main>
     </>
-  )
+  );
 }
