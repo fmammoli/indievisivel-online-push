@@ -22,7 +22,10 @@ import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
 import ScrollableDiv from "@/components/ScrollableDiv";
 import Chat, { newMessageType } from "@/components/Chat";
-import GameSheetView from "@/components/GameSheetView";
+import GameSheetView from "@/components/GameSheetSidePanel";
+import GameSheetSidePanel from "@/components/GameSheetSidePanel";
+import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
+import characters from "@/gameData/characters";
 
 export default function Play({
   gameName = "Guardiões de Althea",
@@ -31,8 +34,28 @@ export default function Play({
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
   const [messages, setMessages] = useState<newMessageType[]>([]);
+  const [currentCharacter, setCurrentCharacter] = useState<{
+    id: number;
+    name: string;
+  }>(characters[0]);
 
   const imgRef = useRef(null);
+
+  // useEffect(() => {
+  //   console.log(currentCharacter);
+  //   if (currentCharacter && currentCharacter) {
+  //     setMessages((messages: any[]) => {
+  //       const newMessage = {
+  //         text: currentCharacter.name,
+  //         color: "error",
+  //         author: currentCharacter.name,
+  //         timestamp: new Date(),
+  //         side: "LEFT",
+  //       };
+  //       return [...messages, newMessage];
+  //     });
+  //   }
+  // }, [currentCharacter]);
 
   // const fac = new FastAverageColor();
   // //TODO - Change text color based on background image average color
@@ -75,20 +98,28 @@ export default function Play({
           </section>
 
           <Grid container sx={{ flexGrow: 1 }}>
-            <Grid xs={3}>
-              <Typography variant="h5" component="h2">
-                Character Sheet
-              </Typography>
+            <Grid xs={3} item={true}>
+              <CharacterSheetSidePanel
+                currentCharracter={currentCharacter}
+                setCurrentCharacter={setCurrentCharacter}
+              ></CharacterSheetSidePanel>
             </Grid>
-            <Grid xs={6} sx={{ borderInline: "1px solid #d8d8d8" }} padding={2}>
+            <Grid
+              xs={6}
+              sx={{ borderInline: "1px solid #d8d8d8" }}
+              padding={2}
+              item={true}
+            >
               <Chat
-                author={"My Character Name"}
+                author={currentCharacter.name}
                 messages={messages}
                 setMessages={setMessages}
               ></Chat>
             </Grid>
-            <Grid xs={3}>
-              <GameSheetView setMessages={setMessages}></GameSheetView>
+            <Grid xs={3} item={true}>
+              <GameSheetSidePanel
+                setMessages={setMessages}
+              ></GameSheetSidePanel>
             </Grid>
           </Grid>
 

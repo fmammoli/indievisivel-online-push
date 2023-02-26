@@ -25,29 +25,19 @@ import LooksOneIcon from "@mui/icons-material/LooksOne";
 import { useState } from "react";
 
 interface CollapsableListItemProps {
-  title: string;
-  handleButtonClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  title?: string;
   noButton?: boolean;
   children?: React.ReactNode;
-  icon?: React.ReactNode;
-  color?:
-    | "inherit"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "error"
-    | "info"
-    | "warning"
-    | undefined;
+  button?: JSX.Element;
+  headerElement?: JSX.Element;
 }
 
 export default function CollapsableListItem({
   title,
   children,
-  icon,
-  color,
+  button,
   noButton = false,
-  handleButtonClick,
+  headerElement,
 }: CollapsableListItemProps) {
   const [open, setOpen] = useState(false);
   const handleClick = () => {
@@ -66,26 +56,19 @@ export default function CollapsableListItem({
             <ExpandMoreIcon />
           </IconButton>
         )}
-        <Box
-          display={"flex"}
-          gap={1}
-          justifyContent="space-between"
-          width={"100%"}
-        >
-          <ListItemText primary={title}></ListItemText>
-          {noButton ? null : (
-            <Button
-              variant="outlined"
-              color={color}
-              sx={{ borderRadius: "90px" }}
-              size="small"
-              startIcon={icon}
-              onClick={handleButtonClick}
-            >
-              Rolar
-            </Button>
-          )}
-        </Box>
+        {headerElement}
+        {title ? (
+          <Box
+            display={"flex"}
+            gap={1}
+            justifyContent="space-between"
+            width={"100%"}
+          >
+            <ListItemText primary={title}></ListItemText>
+
+            {button}
+          </Box>
+        ) : null}
       </ListItem>
 
       <Collapse in={open} timeout="auto" unmountOnExit>

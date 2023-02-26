@@ -1,5 +1,6 @@
 const games = [
   {
+    id: 1,
     title: "A Cidade - Poço",
     author: "Lucas Peixoto",
     version: "versão 1.4.2",
@@ -37,7 +38,7 @@ const games = [
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
       },
     ],
-    mision: {
+    mission: {
       text: "Sem querer, você se vê dentro de um grande esquema que pode arruinar a vida de todas as pessoas. Por nenhuma razão, você é o único capaz de tomar uma atitude contra o mal maior e ser responsabilizado caso falhe ou desista de cumprir os seus objetivos. O bastião da esperança. A gota de fé. O retorno do aguardado. Você deve descobrir, afinal, do que é feita a Cocaloca?",
     },
     agenda: {
