@@ -13,9 +13,12 @@ import Message from "./Message";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import DiceIcon from "./DiceIcon";
 import useDiceRoller from "./useDiceRoller";
-import { time } from "console";
+
+import { nanoid } from "nanoid";
+import FirstRollMessageContent from "./FirstRollMessageContent";
 
 export interface newMessageType {
+  id: string;
   text?: string;
   color: string;
   author: string;
@@ -38,7 +41,7 @@ export interface ChatPropsType {
   setMessages: Dispatch<SetStateAction<newMessageType[]>>;
 }
 
-const oracle = [
+const basicRoll = [
   { value: 1, text: "Sucesso Parcial" },
   { value: 2, text: "Sucesso Parcial" },
   { value: 3, text: "Sucesso Parcial" },
@@ -52,6 +55,20 @@ const oracle = [
   { value: 11, text: "Falha" },
   { value: 12, text: "Falha" },
 ];
+const oracle = [
+  { value: 1, text: "PROVÁVEL" },
+  { value: 2, text: "PROVÁVEL" },
+  { value: 3, text: "PROVÁVEL" },
+  { value: 4, text: "PROVÁVEL" },
+  { value: 5, text: "PROVÁVEL" },
+  { value: 6, text: "IMPROVÁVEL" },
+  { value: 7, text: "INFORTÚNIO" },
+  { value: 8, text: "INFORTÚNIO" },
+  { value: 9, text: "INFORTÚNIO" },
+  { value: 10, text: "INFORTÚNIO" },
+  { value: 11, text: "INFORTÚNIO" },
+  { value: 12, text: "INFORTÚNIO" },
+];
 
 export default function Chat({
   author = "My Character Name",
@@ -62,27 +79,6 @@ export default function Chat({
   const textFieldRef = useRef<HTMLDivElement>(null);
 
   const diceRoller = useDiceRoller();
-
-  useEffect(() => {
-    if (messages.length && messages.length > 0) {
-      if (messages.length > 1) {
-        if (messages[messages.length - 2].rerollable) {
-          setMessages((prevMessages) => {
-            const lastElement = prevMessages[messages.length - 1];
-            const element = prevMessages[prevMessages.length - 2];
-            element.rerollable = false;
-
-            console.log(element);
-            return [
-              ...prevMessages.slice(0, prevMessages.length - 2),
-              element,
-              lastElement,
-            ];
-          });
-        }
-      }
-    }
-  }, [messages]);
 
   const addMessage = ({
     text,
@@ -96,6 +92,7 @@ export default function Chat({
 
     setMessages((messages: newMessageType[]) => {
       const newMessage = {
+        id: nanoid(),
         text: text,
         color: color,
         author: author,
@@ -106,14 +103,25 @@ export default function Chat({
     });
   };
 
-  async function handleSecondRoll(prevRoll: number) {
+  async function handleSecondRoll({
+    prevRoll,
+    options,
+    author,
+    color,
+  }: {
+    prevRoll: number;
+    options: { value: number; text: string }[];
+    author: string;
+    color: string;
+  }) {
     const roll2 = diceRoller.roll("1d6");
     const roll2Total = (roll2 as DiceRoll).total;
     const rollTotal = prevRoll + roll2Total;
 
     setMessages((messages: newMessageType[]) => {
       const newMessage: newMessageType = {
-        text: "text",
+        id: nanoid(),
+        text: options[rollTotal - 1].text,
         color: "#ff1744",
         author: "Oráculo",
         timestamp: new Date(),
@@ -135,7 +143,7 @@ export default function Chat({
               </Box>
 
               <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-                {oracle[rollTotal - 1].text}
+                {options[rollTotal - 1].text}
               </Typography>
             </Box>
           </Box>
@@ -145,7 +153,15 @@ export default function Chat({
     });
   }
 
-  async function handleOracle() {
+  function handleFirstRoll({
+    options,
+    author,
+    color,
+  }: {
+    options: { value: number; text: string }[];
+    author: string;
+    color: string;
+  }) {
     const roll1 = diceRoller.roll("1d6");
     const roll1Total = (roll1 as DiceRoll).total;
     const rerollable = roll1Total <= 4 ? true : false;
@@ -154,49 +170,50 @@ export default function Chat({
       const timestamp = new Date();
 
       const newMessage: newMessageType = {
-        text: oracle[roll1Total - 1].text,
-        color: "#ff1744",
-        author: "Oráculo",
+        id: nanoid(),
+        // text: options[roll1Total - 1].text,
+        text: `${rerollable}`,
+        color: color,
+        author: author,
         timestamp: timestamp,
         side: "RIGHT",
         rerollable: rerollable,
         content: (
-          <Box>
-            <Box display={"flex"} gap={1} alignItems="flex-start">
-              <DiceIcon
-                value={roll1Total}
-                fontSize="medium"
-                color="disabled"
-              ></DiceIcon>
-              <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-                {oracle[roll1Total - 1].text}
-              </Typography>
-            </Box>
-
-            {rerollable ? (
-              <Box>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={(e) => handleSecondRoll(roll1Total)}
-                >
-                  Rolar Novamente
-                </Button>
-              </Box>
-            ) : null}
-          </Box>
+          <FirstRollMessageContent
+            rerollable={rerollable}
+            value={roll1Total}
+            text={options[roll1Total - 1].text}
+            handleSecondRoll={handleSecondRoll}
+            color={color}
+            author={author}
+            options={options}
+          ></FirstRollMessageContent>
         ),
       };
+
+      if (messages.length && messages.length > 0) {
+        let lastMessage = messages[messages.length - 1];
+        lastMessage.rerollable = false;
+
+        return [
+          ...messages.slice(0, messages.length - 1),
+          lastMessage,
+          newMessage,
+        ];
+      }
       return [...messages, newMessage];
     });
   }
 
+  async function handleOracle() {
+    handleFirstRoll({ options: oracle, author: "Oráculo", color: "#ff1744" });
+  }
+
   async function handleDice() {
-    addMessage({
-      text: "D6",
+    handleFirstRoll({
+      options: basicRoll,
       author: "Dados",
       color: "#19857b",
-      side: "RIGHT",
     });
   }
 

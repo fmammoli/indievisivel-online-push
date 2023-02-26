@@ -37,6 +37,7 @@ import { totalmem } from "os";
 import SheetSidePanel from "./SheetSidePanel";
 import SheetSidePanelTitleItem from "./SheetSidePanelTitleItem";
 import SheetSidePanelItem from "./SheetSidePanelItem";
+import { nanoid } from "nanoid";
 
 interface GameSheetViewProps {
   setMessages: Dispatch<SetStateAction<newMessageType[]>>;
@@ -56,6 +57,7 @@ export default function GameSheetSidePanel({
       const value = (roll as DiceRoll).total;
       const text = complications[value - 1].text;
       const newMessage: newMessageType = {
+        id: nanoid(),
         text: text,
         color: "#ff1744",
         author: "Complicações",
@@ -89,6 +91,7 @@ export default function GameSheetSidePanel({
 
     setMessages((messages: newMessageType[]) => {
       const newMessage: newMessageType = {
+        id: nanoid(),
         text: text,
         color: "#6750A4",
         author: "Matrix",
@@ -195,4 +198,7 @@ export default function GameSheetSidePanel({
       </ScrollableDiv>
     </Box>
   );
+}
+function uuidv4() {
+  throw new Error("Function not implemented.");
 }
