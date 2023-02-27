@@ -5,17 +5,20 @@ import DiceIcon from "./DiceIcon";
 interface FirstRollPropsType {
   rerollable: boolean;
   value: number;
+  value2?: number;
   text: string;
-  handleSecondRoll: ({
+  handleSecondRoll?: ({
     prevRoll,
     options,
     author,
     color,
+    id,
   }: {
     prevRoll: number;
     options: { value: number; text: string }[];
     author: string;
     color: string;
+    id: string;
   }) => void;
   color: string;
   author: string;
@@ -23,7 +26,7 @@ interface FirstRollPropsType {
   id: string;
 }
 
-export default function FirstRollMessageContent({
+export default function RollMessageContent({
   id,
   rerollable = false,
   value,
@@ -32,21 +35,26 @@ export default function FirstRollMessageContent({
   color,
   author,
   options,
+  value2,
 }: FirstRollPropsType) {
-  useEffect(() => {
-    console.log(`Rerendering: ${id}, rerroled changed to ${rerollable}`);
-  }, [rerollable]);
-
   return (
     <Box>
       <Box display={"flex"} gap={1} alignItems="flex-start">
         <DiceIcon value={value} fontSize="medium" color="disabled"></DiceIcon>
+        {value2 ? (
+          <DiceIcon
+            value={value2}
+            fontSize="medium"
+            color="disabled"
+          ></DiceIcon>
+        ) : null}
+
         <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
           {text}
         </Typography>
       </Box>
 
-      {rerollable ? (
+      {rerollable && handleSecondRoll ? (
         <Box>
           <Button
             fullWidth
@@ -57,6 +65,7 @@ export default function FirstRollMessageContent({
                 color: color,
                 author: author,
                 options: options,
+                id: id,
               })
             }
           >

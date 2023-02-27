@@ -12,6 +12,7 @@ import Chat, { newMessageType } from "@/components/Chat";
 import GameSheetSidePanel from "@/components/GameSheetSidePanel";
 import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
 import characters from "@/gameData/characters";
+import RollMessageContent from "@/components/RollMessageContent";
 
 export default function Play({
   gameName = "Guardiões de Althea",
@@ -27,17 +28,24 @@ export default function Play({
 
   const imgRef = useRef(null);
 
+  //Remove the Roll Again Button from the second to last message
   useEffect(() => {
-    console.log(messages);
-    if (messages.length && messages.length > 1) {
+    if (messages.length > 1) {
       if (messages.at(-2)?.rerollable === true) {
-        const newM = messages.map((item, index) => {
-          if ((index = messages.length - 2)) {
-            return { ...item, rerollable: false };
+        const newMessages = messages.map((item, index) => {
+          if (index === messages.length - 2) {
+            if (item.rerollable === true) {
+              const newProps = { ...item.content?.props, rerollable: false };
+              const newContent = (
+                <RollMessageContent {...newProps}></RollMessageContent>
+              );
+              return { ...item, content: newContent, rerollable: false };
+            }
           }
           return item;
         });
-        setMessages(newM);
+
+        setMessages(newMessages);
       }
     }
   }, [messages]);
