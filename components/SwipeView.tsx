@@ -23,6 +23,7 @@ export default function SwipeView({
       <Swiper
         // install Swiper modules
         modules={[Navigation, Pagination, Scrollbar, A11y]}
+        speed={600}
         spaceBetween={0}
         slidesPerView={1}
         navigation

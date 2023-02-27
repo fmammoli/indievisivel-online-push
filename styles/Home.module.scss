@@ -43,7 +43,9 @@
   position: relative;
   width: 100%;
   height: 100%;
+
   .image {
+    transition: linear 5s;
     object-fit: contain;
     object-position: center center;
   }

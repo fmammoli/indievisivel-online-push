@@ -13,12 +13,13 @@ import push from "../public/images/push.png";
 import pushLogo from "../public/images/pushLogo.png";
 import seasonImg from "../public/images/season.jpeg";
 
-import { Avatar, Grid, Stack } from "@mui/material";
+import { Avatar, Fade, Grid, Stack } from "@mui/material";
 import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
 import { useEffect, useRef, useState } from "react";
 
 import { FastAverageColor } from "fast-average-color";
 import TopMenu from "@/components/TopMenu";
+import { Face } from "@mui/icons-material";
 
 export type heroBannerItemType = {
   id: number;
