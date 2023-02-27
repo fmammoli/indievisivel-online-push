@@ -14,9 +14,11 @@ interface CharacterSheetSidePanel {}
 export default function CharacterSheetSidePanel({
   currentCharracter,
   setCurrentCharacter,
+  handleHideButton,
 }: {
   currentCharracter: any;
   setCurrentCharacter: any;
+  handleHideButton?: () => void;
 }) {
   const [checked, setChecked] = useState<null | number>(currentCharracter.id);
 
@@ -34,6 +36,7 @@ export default function CharacterSheetSidePanel({
     setCurrentCharacter(char);
   }
 
+  const handleHide = handleHideButton ? { handleHide: handleHideButton } : {};
   return (
     <Box
       sx={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -44,6 +47,7 @@ export default function CharacterSheetSidePanel({
           sheet={characters}
           title={"Character Sheet"}
           align={"left"}
+          {...handleHide}
         >
           {characters.map((character, index) => {
             return (

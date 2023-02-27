@@ -7,7 +7,7 @@ interface GameBannerProps {
   banner: string;
   title: string;
 }
-
+console.log(pushPowered);
 export default function GameBanner({ banner, title }: GameBannerProps) {
   console.log();
   return (
@@ -16,7 +16,7 @@ export default function GameBanner({ banner, title }: GameBannerProps) {
         display: "grid",
         gridTemplateColumns: "1fr",
         gridTemplateRows: "1fr",
-        borderBlock: "1px solid #D8D8D8",
+        borderBlock: { xs: "", sm: "", md: "1px solid #D8D8D8" },
       }}
     >
       <Box
@@ -39,13 +39,29 @@ export default function GameBanner({ banner, title }: GameBannerProps) {
           display={"flex"}
           alignItems="center"
           justifyContent="space-between"
-          sx={{ marginInline: "2rem" }}
+          sx={{
+            marginInline: "2rem",
+            flexDirection: "row",
+          }}
         >
-          <Typography variant="h2" component="h1" color="white">
+          <Typography
+            variant="h2"
+            component="h1"
+            color="white"
+            sx={{ fontSize: { xs: "2rem", sm: "2rem", md: "3.75rem" } }}
+          >
             {title}
           </Typography>
-
-          <Image src={pushPowered} alt={""} width={160}></Image>
+          <Box
+            alignSelf={"flex-end"}
+            position={"relative"}
+            sx={{
+              width: { xs: "50px", sm: "50px", md: "160px" },
+              height: { xs: "27.8px", sm: "27.8px", md: "100%" },
+            }}
+          >
+            <Image src={pushPowered} alt={""} fill></Image>
+          </Box>
         </Box>
       </Container>
     </Box>

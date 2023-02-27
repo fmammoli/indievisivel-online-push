@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-import { Button, Drawer, Grid } from "@mui/material";
+import { Button, ButtonGroup, Drawer, Grid, Paper } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
@@ -13,6 +13,9 @@ import GameSheetSidePanel from "@/components/GameSheetSidePanel";
 import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
 import characters from "@/gameData/characters";
 import RollMessageContent from "@/components/RollMessageContent";
+import DatasetIcon from "@mui/icons-material/Dataset";
+import ClickAwayListener from "@mui/base/ClickAwayListener";
+import PersonIcon from "@mui/icons-material/Person";
 
 export default function Play({
   gameName = "Guardiões de Althea",
@@ -83,14 +86,14 @@ export default function Play({
   //   return () => {};
   // }, [fac, imgRef]);
 
-  const [drawerStatus, setDrawerStatus] = useState(false);
-  const [drawerStatus2, setDrawerStatus2] = useState(false);
-  function toggleDrawer() {
-    setDrawerStatus((prev) => !prev);
+  const [characterDrawerStatus, setCharacterDrawerStatus] = useState(false);
+  const [gameDrawerStatus, setGameDrawerStatus] = useState(false);
+  function toggleCharacterSheetDrawer() {
+    setCharacterDrawerStatus((prev) => !prev);
   }
 
-  function toggleDrawer2() {
-    setDrawerStatus2((prev) => !prev);
+  function toggleGameDrawer() {
+    setGameDrawerStatus((prev) => !prev);
   }
   return (
     <>
@@ -104,6 +107,7 @@ export default function Play({
         <Box
           sx={{
             height: "100svh",
+            maxHeight: "100svh",
             display: "flex",
             flexDirection: "column",
           }}
@@ -115,44 +119,90 @@ export default function Play({
             <GameBanner banner={bannerImg} title={gameName}></GameBanner>
           </section>
 
-          {/* <Button onClick={toggleDrawer}>Drawer1</Button>
-          <Button onClick={toggleDrawer2}>Drawer1</Button>
-
-          <Drawer
-            anchor="left"
-            variant="temporary"
-            open={drawerStatus}
-            id={"drawer"}
-            sx={{ display: "flex", flexDirection: "column" }}
+          <Box
+            sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
+            justifyContent="center"
+            gap={2}
           >
-            <Button onClick={toggleDrawer}>Alooo</Button>
-            <Button onClick={toggleDrawer2}>Alooo2</Button>
-
-            <CharacterSheetSidePanel
-              currentCharracter={currentCharacter}
-              setCurrentCharacter={setCurrentCharacter}
-            ></CharacterSheetSidePanel>
-          </Drawer>
-
-          <Drawer
-            anchor="right"
-            variant="permanent"
-            open={drawerStatus2}
-            id={"drawer"}
-            sx={{ display: "flex", flexDirection: "column" }}
+            <ButtonGroup variant="contained" fullWidth>
+              <Button
+                onClick={toggleCharacterSheetDrawer}
+                startIcon={<PersonIcon></PersonIcon>}
+                sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+              >
+                Characters
+              </Button>
+              <Button
+                onClick={toggleGameDrawer}
+                endIcon={<DatasetIcon></DatasetIcon>}
+                sx={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+              >
+                Game
+              </Button>
+            </ButtonGroup>
+          </Box>
+          <Container
+            id={"contianer"}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", sm: "flex", md: "none" },
+              flexDirection: "column",
+              paddingBottom: 1,
+            }}
           >
-            <Button onClick={toggleDrawer2}>Alooo</Button>
+            <Drawer
+              anchor="left"
+              variant="temporary"
+              open={characterDrawerStatus}
+              id={"characterDrawer"}
+            >
+              <ClickAwayListener
+                onClickAway={(e) => {
+                  if (characterDrawerStatus === true)
+                    setCharacterDrawerStatus(false);
+                }}
+              >
+                <Box width={300} height={"100%"}>
+                  <CharacterSheetSidePanel
+                    currentCharracter={currentCharacter}
+                    setCurrentCharacter={setCurrentCharacter}
+                    handleHideButton={toggleCharacterSheetDrawer}
+                  ></CharacterSheetSidePanel>
+                </Box>
+              </ClickAwayListener>
+            </Drawer>
+            <Drawer
+              anchor="right"
+              variant="temporary"
+              open={gameDrawerStatus}
+              id={"gameDrawer"}
+            >
+              <ClickAwayListener
+                onClickAway={(e) => {
+                  if (gameDrawerStatus === true) setGameDrawerStatus(false);
+                }}
+              >
+                <Box width={300} height={"100%"}>
+                  <GameSheetSidePanel
+                    setMessages={setMessages}
+                    handleHideButton={toggleGameDrawer}
+                  ></GameSheetSidePanel>
+                </Box>
+              </ClickAwayListener>
+            </Drawer>
+            <Box flexGrow={1}>
+              <Chat
+                author={currentCharacter.name}
+                messages={messages}
+                setMessages={setMessages}
+              ></Chat>
+            </Box>
+          </Container>
 
-            <GameSheetSidePanel setMessages={setMessages}></GameSheetSidePanel>
-          </Drawer> */}
-          {/* 
-          <Chat
-            author={currentCharacter.name}
-            messages={messages}
-            setMessages={setMessages}
-          ></Chat> */}
-
-          <Grid container sx={{ flexGrow: 1 }}>
+          <Grid
+            container
+            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+          >
             <Grid xs={3} item={true}>
               <CharacterSheetSidePanel
                 currentCharracter={currentCharacter}
@@ -179,9 +229,11 @@ export default function Play({
           </Grid>
 
           <Box>
-            <Typography variant="h5" component="h2">
-              Footer
-            </Typography>
+            <Paper elevation={5} square sx={{ backgroundColor: "#6750A4" }}>
+              <Typography variant="body2" component="h2" color={"white"} p={1}>
+                Footer
+              </Typography>
+            </Paper>
           </Box>
         </Box>
       </main>

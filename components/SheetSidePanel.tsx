@@ -15,11 +15,13 @@ export default function SheetSidePanel({
   title,
   children,
   align = "right",
+  handleHide,
 }: {
   sheet: any;
   title: string;
   children: ReactNode;
   align?: "right" | "left";
+  handleHide?: () => void;
 }) {
   return (
     <List
@@ -37,7 +39,7 @@ export default function SheetSidePanel({
             <Typography variant="h5" component="h2" fontWeight={300}>
               {title}
             </Typography>
-            <IconButton aria-label="Hide Game Sheet View">
+            <IconButton aria-label="Hide Game Sheet View" onClick={handleHide}>
               {align === "right" ? (
                 <ArrowForwardIcon></ArrowForwardIcon>
               ) : (

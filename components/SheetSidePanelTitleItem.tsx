@@ -87,7 +87,7 @@ export default function SheetSidePanelTitleItem({
         <ListItemText primary={title} secondary={secondaryText}></ListItemText>
 
         <Grow in={showOptions} mountOnEnter unmountOnExit>
-          <Box>
+          <Box display={"flex"}>
             {!noEdit ? (
               <IconButton aria-label="Edit Game Sheet" color="primary">
                 <EditOutlinedIcon></EditOutlinedIcon>

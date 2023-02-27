@@ -16,10 +16,12 @@ import { nanoid } from "nanoid";
 
 interface GameSheetViewProps {
   setMessages: Dispatch<SetStateAction<newMessageType[]>>;
+  handleHideButton?: () => void;
 }
 
 export default function GameSheetSidePanel({
   setMessages,
+  handleHideButton,
 }: GameSheetViewProps) {
   const game = games[0];
   const diceRoller = useDiceRoller();
@@ -97,14 +99,14 @@ export default function GameSheetSidePanel({
       return [...messages, newMessage];
     });
   }
-
+  const handleHide = handleHideButton ? { handleHide: handleHideButton } : {};
   return (
     <Box
       sx={{ height: "100%", display: "flex", flexDirection: "column" }}
       py={1}
     >
       <ScrollableDiv>
-        <SheetSidePanel sheet={game} title={"Game Sheet"}>
+        <SheetSidePanel sheet={game} title={"Game Sheet"} {...handleHide}>
           <SheetSidePanelTitleItem
             id={game.id}
             title={game.title}
