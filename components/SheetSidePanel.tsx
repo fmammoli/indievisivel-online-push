@@ -5,16 +5,9 @@ import {
   ListSubheader,
   Typography,
 } from "@mui/material";
-import ScrollableDiv from "./ScrollableDiv";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import ExpandLessIcon from "@mui/icons-material/ExpandLessOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
 
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import LooksOneIcon from "@mui/icons-material/LooksOne";
 import { ReactNode } from "react";
 
 export default function SheetSidePanel({

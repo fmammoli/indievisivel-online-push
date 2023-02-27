@@ -1,26 +1,13 @@
 import {
   Box,
-  Button,
   Collapse,
-  Container,
-  Divider,
   IconButton,
   List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
   ListItemText,
-  ListSubheader,
-  Typography,
 } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ExpandLessIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
-
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import LooksOneIcon from "@mui/icons-material/LooksOne";
 
 import { useState } from "react";
 

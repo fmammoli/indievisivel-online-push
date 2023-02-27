@@ -1,7 +1,5 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { timeStamp } from "console";
-import { newMessageType } from "./Chat";
 
 interface MessagePropsType {
   color: string;

@@ -1,44 +1,13 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  Container,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import ExpandLessIcon from "@mui/icons-material/ExpandLessOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
+import { Box, Divider, List } from "@mui/material";
 
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import LooksOneIcon from "@mui/icons-material/LooksOne";
-
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Fragment, useState } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import ScrollableDiv from "./ScrollableDiv";
-import DiceIcon from "./DiceIcon";
-import PentagonIcon from "@mui/icons-material/Pentagon";
-import SquareIcon from "@mui/icons-material/Square";
-import CircleIcon from "@mui/icons-material/Circle";
 
-import { newMessageType } from "./Chat";
-import useDiceRoller from "./useDiceRoller";
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
-import { totalmem } from "os";
 import SheetSidePanel from "./SheetSidePanel";
 import SheetSidePanelTitleItem from "./SheetSidePanelTitleItem";
 import SheetSidePanelItem from "./SheetSidePanelItem";
 import characters from "../gameData/characters";
-import { Padding } from "@mui/icons-material";
 
 interface CharacterSheetSidePanel {}
 

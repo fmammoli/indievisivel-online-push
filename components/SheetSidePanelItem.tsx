@@ -1,5 +1,4 @@
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
-import { nanoid } from "nanoid";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
 

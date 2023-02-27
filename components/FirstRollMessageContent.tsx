@@ -1,5 +1,4 @@
 import { Box, Typography, Button } from "@mui/material";
-import { color } from "@mui/system";
 import DiceIcon from "./DiceIcon";
 
 interface FirstRollPropsType {

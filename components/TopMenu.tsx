@@ -1,24 +1,14 @@
-import Head from "next/head";
 import Image from "next/image";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Link from "@/src/Link";
-import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
 
-import pushBackgroundImg from "../public/images/pushBackground.jpg";
-import push from "../public/images/push.png";
 import pushLogo from "../public/images/pushLogo.png";
 import indieLogo from "../public/images/logoIndie-300x300.png";
-import seasonImg from "../public/images/season.jpeg";
 
-import { Avatar, Grid, Paper, Stack } from "@mui/material";
-import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { useEffect, useRef, useState } from "react";
-
-import { FastAverageColor } from "fast-average-color";
+import { Paper, Stack } from "@mui/material";
+import { useState } from "react";
 
 export type MenuColorsType = {
   color: string;

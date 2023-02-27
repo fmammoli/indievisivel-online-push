@@ -1,34 +1,9 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import ExpandLessIcon from "@mui/icons-material/ExpandLessOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import LooksOneIcon from "@mui/icons-material/LooksOne";
-
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import CollapsableListItem from "./CollapsableListItem";
-import ScrollableDiv from "./ScrollableDiv";
-import DiceIcon from "./DiceIcon";
-import PentagonIcon from "@mui/icons-material/Pentagon";
-import SquareIcon from "@mui/icons-material/Square";
-import CircleIcon from "@mui/icons-material/Circle";
-import games from "../gameData/games";
-import { newMessageType } from "./Chat";
-import useDiceRoller from "./useDiceRoller";
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
-import { totalmem } from "os";
-import SheetSidePanel from "./SheetSidePanel";
+import { ReactNode, useEffect, useState } from "react";
 
 import {
   Box,
@@ -38,9 +13,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Slide,
 } from "@mui/material";
-import { ChatBubble } from "@mui/icons-material";
 
 export default function SheetSidePanelTitleItem({
   title,

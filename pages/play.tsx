@@ -1,28 +1,14 @@
 import Head from "next/head";
-import Image from "next/image";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "@/src/Link";
-import SwipeView from "@/components/SwipeView";
-import styles from "@/styles/Home.module.scss";
 
-import pushBackgroundImg from "../public/images/pushBackground.jpg";
-import push from "../public/images/push.png";
-import pushLogo from "../public/images/pushLogo.png";
-import seasonImg from "../public/images/season.jpeg";
+import { Grid } from "@mui/material";
+import { useRef, useState } from "react";
 
-import { Avatar, Grid, Paper, Stack, TextField } from "@mui/material";
-import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { SetStateAction, useEffect, useRef, useState } from "react";
-
-import { FastAverageColor } from "fast-average-color";
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
-import ScrollableDiv from "@/components/ScrollableDiv";
 import Chat, { newMessageType } from "@/components/Chat";
-import GameSheetView from "@/components/GameSheetSidePanel";
 import GameSheetSidePanel from "@/components/GameSheetSidePanel";
 import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
 import characters from "@/gameData/characters";

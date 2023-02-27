@@ -8,10 +8,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { Box } from "@mui/material";
 
-import pushBackgroundImg from "../public/images/pushBackground.jpg";
-import seasonImg from "../public/images/season.jpeg";
-import pushImage from "../public/images/push2.png";
-
 import styles from "@/styles/Home.module.scss";
 import { heroBannerItemType, heroBannerType } from "@/pages";
 

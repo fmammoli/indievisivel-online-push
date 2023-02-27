@@ -1,12 +1,5 @@
-import {
-  Box,
-  Button,
-  Fab,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Box, Button, Fab, TextField, Typography } from "@mui/material";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import SendIcon from "@mui/icons-material/Send";
 import Message from "./Message";
