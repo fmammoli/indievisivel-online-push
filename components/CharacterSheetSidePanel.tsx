@@ -18,7 +18,7 @@ export default function CharacterSheetSidePanel({
   currentCharracter: any;
   setCurrentCharacter: any;
 }) {
-  const [checked, setChecked] = useState<null | number>(null);
+  const [checked, setChecked] = useState<null | number>(currentCharracter.id);
 
   function handleChatClick({
     characterId,

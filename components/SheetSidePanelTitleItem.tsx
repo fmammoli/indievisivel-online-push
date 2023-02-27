@@ -51,6 +51,9 @@ export default function SheetSidePanelTitleItem({
   if (checked) {
     if (checked === id) {
       isChecked = true;
+      if (showOptions === false) {
+        setOptions(true);
+      }
     }
   }
 
