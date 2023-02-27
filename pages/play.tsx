@@ -113,9 +113,8 @@ export default function Play({
           }}
         >
           <section>
-            <Container>
-              <TopMenu colors={menuColors} small={true}></TopMenu>
-            </Container>
+            <TopMenu colors={menuColors} small={true}></TopMenu>
+
             <GameBanner banner={bannerImg} title={gameName}></GameBanner>
           </section>
 
@@ -144,9 +143,8 @@ export default function Play({
           <Container
             id={"contianer"}
             sx={{
-              flexGrow: 1,
-              display: { xs: "flex", sm: "flex", md: "none" },
-              flexDirection: "column",
+              height: "100%",
+              display: { xs: "block", sm: "block", md: "none" },
               paddingBottom: 1,
             }}
           >
@@ -190,7 +188,7 @@ export default function Play({
                 </Box>
               </ClickAwayListener>
             </Drawer>
-            <Box flexGrow={1}>
+            <Box height={"100%"}>
               <Chat
                 author={currentCharacter.name}
                 messages={messages}
