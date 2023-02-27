@@ -30,7 +30,6 @@ export default function CharacterSheetSidePanel({
     const char = characters.find((item, index) => {
       return item.id == characterId;
     });
-    console.log(characterId);
     setChecked(characterId);
     setCurrentCharacter(char);
   }

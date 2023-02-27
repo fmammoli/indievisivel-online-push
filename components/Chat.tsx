@@ -118,7 +118,11 @@ export default function Chat({
       const newMessages = messages.map((item, index) => {
         if (item.id === id) {
           if (item.content) {
-            const newProps = { ...item.content.props, rerollable: false };
+            const newProps = {
+              ...item.content.props,
+              rerollable: false,
+              value2: roll2Total,
+            };
             const newContent = (
               <RollMessageContent {...newProps}></RollMessageContent>
             );

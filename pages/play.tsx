@@ -82,7 +82,7 @@ export default function Play({
 
   //   return () => {};
   // }, [fac, imgRef]);
-  console.log(currentCharacter);
+
   return (
     <>
       <Head>
