@@ -22,7 +22,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import LooksOneIcon from "@mui/icons-material/LooksOne";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import ScrollableDiv from "./ScrollableDiv";
 import DiceIcon from "./DiceIcon";
@@ -79,9 +79,9 @@ export default function CharacterSheetSidePanel({
         >
           {characters.map((character, index) => {
             return (
-              <>
+              <Fragment key={index}>
                 <CollapsableListItem
-                  key={index}
+                  key={`collapsable-${index}`}
                   headerElement={
                     <List disablePadding sx={{ width: "100%" }}>
                       <SheetSidePanelTitleItem
@@ -130,8 +130,8 @@ export default function CharacterSheetSidePanel({
                     title={"Vínculos"}
                   ></SheetSidePanelItem>
                 </CollapsableListItem>
-                <Divider variant="middle" component="li" />
-              </>
+                <Divider key={`divider-${index}`} variant="middle"></Divider>
+              </Fragment>
             );
           })}
         </SheetSidePanel>

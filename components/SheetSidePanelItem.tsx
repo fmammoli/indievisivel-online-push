@@ -1,4 +1,5 @@
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
+import { nanoid } from "nanoid";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
 
@@ -17,7 +18,7 @@ export default function SheetSidePanelItem({
   if (Array.isArray(sheetItem)) {
     toRender = sheetItem.map((item, index) => {
       return (
-        <ListItem key={Math.random()}>
+        <ListItem key={index}>
           <Box display={"flex"} gap={1} alignItems="flex-start">
             <DiceIcon
               value={item.id}
@@ -47,7 +48,7 @@ export default function SheetSidePanelItem({
       if (Array.isArray(sheetItem[key])) {
         arrayCount++;
         return (
-          <Box key={Math.random()} paddingX={3}>
+          <Box key={key} paddingX={3}>
             <ul
               style={{
                 paddingInline:
@@ -56,10 +57,9 @@ export default function SheetSidePanelItem({
                 listStyleType: listStyleTypes[arrayCount - 1],
               }}
             >
-              {sheetItem[key].map((item: string) => (
-                <li>
+              {sheetItem[key].map((item: string, index: number) => (
+                <li key={index}>
                   <Typography
-                    key={Math.random()}
                     variant="body2"
                     component="p"
                     color={"rgba(0, 0, 0, 0.6)"}
@@ -78,7 +78,7 @@ export default function SheetSidePanelItem({
   }
 
   return (
-    <CollapsableListItem title={title} key={1} button={button}>
+    <CollapsableListItem title={title} button={button}>
       {toRender}
     </CollapsableListItem>
   );
