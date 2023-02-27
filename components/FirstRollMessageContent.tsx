@@ -42,7 +42,7 @@ export default function FirstRollMessageContent({
       <Box display={"flex"} gap={1} alignItems="flex-start">
         <DiceIcon value={value} fontSize="medium" color="disabled"></DiceIcon>
         <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-          {id}
+          {text}
         </Typography>
       </Box>
 
