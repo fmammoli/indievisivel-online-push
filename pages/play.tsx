@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-import { Grid } from "@mui/material";
+import { Button, Drawer, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
@@ -83,6 +83,15 @@ export default function Play({
   //   return () => {};
   // }, [fac, imgRef]);
 
+  const [drawerStatus, setDrawerStatus] = useState(false);
+  const [drawerStatus2, setDrawerStatus2] = useState(false);
+  function toggleDrawer() {
+    setDrawerStatus((prev) => !prev);
+  }
+
+  function toggleDrawer2() {
+    setDrawerStatus2((prev) => !prev);
+  }
   return (
     <>
       <Head>
@@ -105,6 +114,43 @@ export default function Play({
             </Container>
             <GameBanner banner={bannerImg} title={gameName}></GameBanner>
           </section>
+
+          {/* <Button onClick={toggleDrawer}>Drawer1</Button>
+          <Button onClick={toggleDrawer2}>Drawer1</Button>
+
+          <Drawer
+            anchor="left"
+            variant="temporary"
+            open={drawerStatus}
+            id={"drawer"}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
+            <Button onClick={toggleDrawer}>Alooo</Button>
+            <Button onClick={toggleDrawer2}>Alooo2</Button>
+
+            <CharacterSheetSidePanel
+              currentCharracter={currentCharacter}
+              setCurrentCharacter={setCurrentCharacter}
+            ></CharacterSheetSidePanel>
+          </Drawer>
+
+          <Drawer
+            anchor="right"
+            variant="permanent"
+            open={drawerStatus2}
+            id={"drawer"}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
+            <Button onClick={toggleDrawer2}>Alooo</Button>
+
+            <GameSheetSidePanel setMessages={setMessages}></GameSheetSidePanel>
+          </Drawer> */}
+          {/* 
+          <Chat
+            author={currentCharacter.name}
+            messages={messages}
+            setMessages={setMessages}
+          ></Chat> */}
 
           <Grid container sx={{ flexGrow: 1 }}>
             <Grid xs={3} item={true}>

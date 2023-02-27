@@ -35,6 +35,24 @@
     .heroBox {
       grid-area: 2 / 1 / 6 / 4;
     }
+    @media (max-width: 900px) {
+      .heroImage {
+        grid-area: 1 / 1/ 6 / 7;
+      }
+      .heroBox {
+        grid-area: 3/ 1 / 7/ 7;
+      }
+    }
+    @media (max-width: 600px) {
+      .heroImage {
+        grid-area: 0 / 1/ 7 / 7;
+        margin: -10px;
+      }
+      .heroBox {
+        grid-area: 1/ 1 / 7/ 7;
+        margin-inline: 0.5rem;
+      }
+    }
   }
 }
 

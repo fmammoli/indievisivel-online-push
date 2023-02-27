@@ -171,10 +171,23 @@ export default function Home() {
                         p={2}
                         paddingTop={2}
                       >
-                        <Typography variant="h3" component="h1" color="white">
+                        <Typography
+                          variant="h3"
+                          component="h1"
+                          color="white"
+                          sx={{
+                            fontSize: { xs: "1.8rem", sm: "2rem", md: "3rem" },
+                          }}
+                        >
                           {heroData.text.title}
                         </Typography>
-                        <Typography variant="subtitle1" color="white">
+                        <Typography
+                          variant="subtitle1"
+                          color="white"
+                          sx={{
+                            fontSize: { xs: "0.9em", sm: "1rem" },
+                          }}
+                        >
                           {heroData.text.description}
                         </Typography>
                         <Box maxWidth={50}>
