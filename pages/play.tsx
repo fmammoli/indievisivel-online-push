@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import { Grid } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
@@ -26,6 +26,21 @@ export default function Play({
   }>(characters[0]);
 
   const imgRef = useRef(null);
+
+  useEffect(() => {
+    console.log(messages);
+    if (messages.length && messages.length > 1) {
+      if (messages.at(-2)?.rerollable === true) {
+        const newM = messages.map((item, index) => {
+          if ((index = messages.length - 2)) {
+            return { ...item, rerollable: false };
+          }
+          return item;
+        });
+        setMessages(newM);
+      }
+    }
+  }, [messages]);
 
   // useEffect(() => {
   //   console.log(currentCharacter);

@@ -18,7 +18,7 @@ export interface newMessageType {
   side: "LEFT" | "RIGHT";
   timestamp: Date;
   content?: JSX.Element;
-  rerollable?: boolean;
+  rerollable: boolean;
 }
 
 export interface addMessageType {
@@ -84,13 +84,14 @@ export default function Chat({
     }
 
     setMessages((messages: newMessageType[]) => {
-      const newMessage = {
+      const newMessage: newMessageType = {
         id: nanoid(),
         text: text,
         color: color,
         author: author,
         timestamp: new Date(),
         side: side,
+        rerollable: false,
       };
       return [...messages, newMessage];
     });
@@ -115,8 +116,8 @@ export default function Chat({
       const newMessage: newMessageType = {
         id: nanoid(),
         text: options[rollTotal - 1].text,
-        color: "#ff1744",
-        author: "Oráculo",
+        color: color,
+        author: author,
         timestamp: new Date(),
         side: "RIGHT",
         content: (
@@ -141,6 +142,7 @@ export default function Chat({
             </Box>
           </Box>
         ),
+        rerollable: false,
       };
       return [...messages.slice(0, messages.length - 1), newMessage];
     });
@@ -161,11 +163,10 @@ export default function Chat({
 
     setMessages((messages: newMessageType[]) => {
       const timestamp = new Date();
-
+      const id = nanoid();
       const newMessage: newMessageType = {
-        id: nanoid(),
-        // text: options[roll1Total - 1].text,
-        text: `${rerollable}`,
+        id: id,
+        text: options[roll1Total - 1].text,
         color: color,
         author: author,
         timestamp: timestamp,
@@ -173,6 +174,7 @@ export default function Chat({
         rerollable: rerollable,
         content: (
           <FirstRollMessageContent
+            id={id}
             rerollable={rerollable}
             value={roll1Total}
             text={options[roll1Total - 1].text}
@@ -185,14 +187,10 @@ export default function Chat({
       };
 
       if (messages.length && messages.length > 0) {
-        let lastMessage = messages[messages.length - 1];
-        lastMessage.rerollable = false;
-
-        return [
-          ...messages.slice(0, messages.length - 1),
-          lastMessage,
-          newMessage,
-        ];
+        let lastMessage = messages.slice(-1);
+        if (lastMessage[0].rerollable) lastMessage[0].rerollable = false;
+        console.log(lastMessage);
+        return [...messages.slice(0, -1), ...lastMessage, newMessage];
       }
       return [...messages, newMessage];
     });

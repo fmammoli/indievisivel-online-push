@@ -38,6 +38,7 @@ export default function GameSheetSidePanel({
         author: "Complicações",
         timestamp: new Date(),
         side: "RIGHT",
+        rerollable: false,
         content: (
           <Box display={"flex"} gap={1} alignItems="flex-start">
             <DiceIcon
@@ -91,6 +92,7 @@ export default function GameSheetSidePanel({
             </Typography>
           </Box>
         ),
+        rerollable: false,
       };
       return [...messages, newMessage];
     });
