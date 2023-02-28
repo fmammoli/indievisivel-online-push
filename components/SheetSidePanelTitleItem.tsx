@@ -27,7 +27,7 @@ export default function SheetSidePanelTitleItem({
   checked,
   handleChatClick,
 }: {
-  id: number;
+  id: string;
   title: string;
   secondaryText?: string;
   disablePadding?: boolean;
@@ -35,12 +35,12 @@ export default function SheetSidePanelTitleItem({
   noEdit?: boolean;
   chat?: boolean;
   options?: ReactNode;
-  checked?: number | null;
+  checked?: string | null;
   handleChatClick?: ({
     characterId,
     characterName,
   }: {
-    characterId: number;
+    characterId: string;
     characterName: string;
   }) => void;
 }) {

@@ -1,5 +1,5 @@
+import { GameType } from "@/gameData/games";
 import { Box, Typography, Button } from "@mui/material";
-import { useEffect, useState } from "react";
 import DiceIcon from "./DiceIcon";
 
 interface FirstRollPropsType {
@@ -22,7 +22,7 @@ interface FirstRollPropsType {
   }) => void;
   color: string;
   author: string;
-  options: any[];
+  options: GameType["oracle"] | GameType["basicRoll"];
   id: string;
 }
 

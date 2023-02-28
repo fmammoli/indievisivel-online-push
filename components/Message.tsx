@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 interface MessagePropsType {
+  id: string;
   color: string;
   timestamp: Date;
   author: string;
@@ -10,6 +11,7 @@ interface MessagePropsType {
 }
 
 export default function Message({
+  id,
   color,
   timestamp,
   author,
@@ -20,7 +22,13 @@ export default function Message({
   return (
     <Box display={"flex"} flexDirection={flexDirection}>
       <Box py={2} maxWidth={"70%"}>
-        <Box display={"flex"} justifyContent="space-between" px={1} gap={3}>
+        <Box
+          display={"flex"}
+          justifyContent="space-between"
+          px={1}
+          gap={3}
+          id={id}
+        >
           <Typography variant="caption" component="p">
             {author}
           </Typography>

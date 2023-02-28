@@ -31,7 +31,6 @@ export default function SwipeView({
         scrollbar={{ draggable: true }}
         onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={(swiper) => {
-          console.log(swiper.activeIndex);
           handleSwipe(data[swiper.activeIndex]);
         }}
         className={styles.mySwiper}

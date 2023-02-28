@@ -11,13 +11,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { ReactNode } from "react";
 
 export default function SheetSidePanel({
-  sheet,
   title,
   children,
   align = "right",
   handleHide,
 }: {
-  sheet: any;
   title: string;
   children: ReactNode;
   align?: "right" | "left";

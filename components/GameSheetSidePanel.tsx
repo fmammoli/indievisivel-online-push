@@ -5,35 +5,37 @@ import ScrollableDiv from "./ScrollableDiv";
 import DiceIcon from "./DiceIcon";
 import PentagonIcon from "@mui/icons-material/Pentagon";
 import CircleIcon from "@mui/icons-material/Circle";
-import games from "../gameData/games";
-import { newMessageType } from "./Chat";
+
 import useDiceRoller from "./useDiceRoller";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import SheetSidePanel from "./SheetSidePanel";
 import SheetSidePanelTitleItem from "./SheetSidePanelTitleItem";
 import SheetSidePanelItem from "./SheetSidePanelItem";
 import { nanoid } from "nanoid";
+import { MessageType } from "@/pages/[gameId]/[sessionId]";
+import { GameType } from "@/gameData/games";
 
 interface GameSheetViewProps {
-  setMessages: Dispatch<SetStateAction<newMessageType[]>>;
+  game: GameType;
+  setMessages: Dispatch<SetStateAction<MessageType[]>>;
   handleHideButton?: () => void;
 }
 
 export default function GameSheetSidePanel({
+  game,
   setMessages,
   handleHideButton,
 }: GameSheetViewProps) {
-  const game = games[0];
   const diceRoller = useDiceRoller();
   const complications = game.complications;
   const matrix = game.matrix;
 
   function handleComplicationsRoll(e: React.MouseEvent<HTMLButtonElement>) {
     const roll = diceRoller.roll("1d6");
-    setMessages((messages: newMessageType[]) => {
+    setMessages((messages: MessageType[]) => {
       const value = (roll as DiceRoll).total;
       const text = complications[value - 1].text;
-      const newMessage: newMessageType = {
+      const newMessage: MessageType = {
         id: nanoid(),
         text: text,
         color: "#ff1744",
@@ -67,8 +69,8 @@ export default function GameSheetSidePanel({
     const text =
       matrix[total].text == "" ? matrix[total + 1].text : matrix[total].text;
 
-    setMessages((messages: newMessageType[]) => {
-      const newMessage: newMessageType = {
+    setMessages((messages: MessageType[]) => {
+      const newMessage: MessageType = {
         id: nanoid(),
         text: text,
         color: "#6750A4",
@@ -106,7 +108,7 @@ export default function GameSheetSidePanel({
       py={1}
     >
       <ScrollableDiv>
-        <SheetSidePanel sheet={game} title={"Game Sheet"} {...handleHide}>
+        <SheetSidePanel title={"Game Sheet"} {...handleHide}>
           <SheetSidePanelTitleItem
             id={game.id}
             title={game.title}

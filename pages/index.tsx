@@ -7,22 +7,15 @@ import Box from "@mui/material/Box";
 import Link from "@/src/Link";
 import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
-
-import pushBackgroundImg from "../public/images/pushBackground.jpg";
-import push from "../public/images/push.png";
-import pushLogo from "../public/images/pushLogo.png";
-import seasonImg from "../public/images/season.jpeg";
-
-import { Avatar, Fade, Grid, Stack } from "@mui/material";
+import { Fade, Stack } from "@mui/material";
 import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
-import { FastAverageColor } from "fast-average-color";
 import TopMenu from "@/components/TopMenu";
-import { Face } from "@mui/icons-material";
 
 export type heroBannerItemType = {
   id: number;
+  gameId: string;
   text: {
     title: string;
     description: string;
@@ -41,6 +34,7 @@ export type heroBannerType = heroBannerItemType[];
 const heroBanner: heroBannerType = [
   {
     id: 0,
+    gameId: "0",
     text: {
       title: "Push Online por IndieVisível",
       description:
@@ -56,6 +50,7 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 1,
+    gameId: "1",
     text: {
       title: "Push: System Reference Document",
       description:
@@ -72,6 +67,7 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 2,
+    gameId: "2",
     text: {
       title: "Guardiões de Althea",
       description:
@@ -85,6 +81,7 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 3,
+    gameId: "3",
     text: {
       title: "Season: A letter to the future",
       description:
@@ -171,16 +168,22 @@ export default function Home() {
                         p={2}
                         paddingTop={2}
                       >
-                        <Typography
-                          variant="h3"
-                          component="h1"
-                          color="white"
-                          sx={{
-                            fontSize: { xs: "1.8rem", sm: "2rem", md: "3rem" },
-                          }}
-                        >
-                          {heroData.text.title}
-                        </Typography>
+                        <Fade in={!!heroData.text.title}>
+                          <Typography
+                            variant="h3"
+                            component="h1"
+                            color="white"
+                            sx={{
+                              fontSize: {
+                                xs: "1.8rem",
+                                sm: "2rem",
+                                md: "3rem",
+                              },
+                            }}
+                          >
+                            {heroData.text.title}
+                          </Typography>
+                        </Fade>
                         <Typography
                           variant="subtitle1"
                           color="white"
@@ -195,7 +198,7 @@ export default function Home() {
                             variant="contained"
                             component={Link}
                             noLinkStyle
-                            href="/play"
+                            href={`/${heroData.gameId}/new`}
                             startIcon={<CasinoOutlinedIcon />}
                             sx={{ borderRadius: "24px" }}
                           >

@@ -1,6 +1,48 @@
-const games = [
+export interface GameType {
+  id: string;
+  title: string;
+  author: string;
+  version: string;
+  about: {
+    text: string;
+  };
+  themes: {
+    description: string;
+    list: string[];
+  };
+  complications: {
+    id: number;
+    text: string;
+  }[];
+  mission: {
+    text: string;
+  };
+  agenda: {
+    description: string;
+    list: string[];
+  };
+  rewards: {
+    description: string;
+    list: string[];
+    details: string[];
+  };
+  matrix: {
+    id: number;
+    text: string;
+  }[];
+  basicRoll: {
+    value: number;
+    text: string;
+  }[];
+  oracle: {
+    value: number;
+    text: string;
+  }[];
+}
+
+export const games: GameType[] = [
   {
-    id: 1,
+    id: "0",
     title: "A Cidade - Poço",
     author: "Lucas Peixoto",
     version: "versão 1.4.2",
@@ -197,6 +239,34 @@ const games = [
         id: 6,
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
       },
+    ],
+    basicRoll: [
+      { value: 1, text: "Sucesso Parcial" },
+      { value: 2, text: "Sucesso Parcial" },
+      { value: 3, text: "Sucesso Parcial" },
+      { value: 4, text: "Sucesso Parcial" },
+      { value: 5, text: "Sucesso" },
+      { value: 6, text: "Sucesso" },
+      { value: 7, text: "Falha" },
+      { value: 8, text: "Falha" },
+      { value: 9, text: "Falha" },
+      { value: 10, text: "Falha" },
+      { value: 11, text: "Falha" },
+      { value: 12, text: "Falha" },
+    ],
+    oracle: [
+      { value: 1, text: "PROVÁVEL" },
+      { value: 2, text: "PROVÁVEL" },
+      { value: 3, text: "PROVÁVEL" },
+      { value: 4, text: "PROVÁVEL" },
+      { value: 5, text: "PROVÁVEL" },
+      { value: 6, text: "IMPROVÁVEL" },
+      { value: 7, text: "INFORTÚNIO" },
+      { value: 8, text: "INFORTÚNIO" },
+      { value: 9, text: "INFORTÚNIO" },
+      { value: 10, text: "INFORTÚNIO" },
+      { value: 11, text: "INFORTÚNIO" },
+      { value: 12, text: "INFORTÚNIO" },
     ],
   },
 ];

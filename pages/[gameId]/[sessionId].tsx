@@ -4,32 +4,139 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import { Button, ButtonGroup, Drawer, Grid, Paper } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
-import Chat, { newMessageType } from "@/components/Chat";
+import Chat from "@/components/Chat";
 import GameSheetSidePanel from "@/components/GameSheetSidePanel";
 import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
-import characters from "@/gameData/characters";
+import { CharacterType } from "@/gameData/characters";
 import RollMessageContent from "@/components/RollMessageContent";
 import DatasetIcon from "@mui/icons-material/Dataset";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 import PersonIcon from "@mui/icons-material/Person";
+import { GameType, games } from "@/gameData/games";
+import { nanoid } from "nanoid";
+import { useRouter } from "next/router";
+
+export interface MessageType {
+  id: string;
+  text: string;
+  color: string;
+  author: string;
+  side: "LEFT" | "RIGHT";
+  timestamp: Date;
+  content?: JSX.Element;
+  rerollable?: boolean;
+}
+
+interface SessionType {
+  id: string;
+  name: string;
+  lastSaved: Date;
+  game: GameType;
+  messages: MessageType[] | [];
+  characters: CharacterType[] | [];
+}
+
+const annonymousCharacter: CharacterType = {
+  id: "-1",
+  name: "Annonymous",
+  fromGame: "",
+  gameId: "",
+  pronouns: "",
+  age: "",
+  gifts: {
+    description: "",
+    list: [],
+  },
+  upbringing: {
+    desciption: "",
+    list: [],
+  },
+  experience: {
+    description: "",
+    list: [],
+  },
+  mark: {
+    list: [],
+  },
+  charm: {
+    list: [],
+  },
+  bond: {
+    list: [],
+  },
+};
+
+interface PlayPropsType {
+  gameId: string;
+  sessionId: string;
+  gameName: string;
+  bannerImg: any;
+}
 
 export default function Play({
   gameName = "Guardiões de Althea",
-  bannerImg = require("../public/images/altheaBack.jpg"),
-}) {
+  bannerImg = require("../../public/images/altheaBack.jpg"),
+}: PlayPropsType) {
+  const router = useRouter();
+  const { gameId, sessionId } = router.query;
+  console.log(`game:${gameId} ____ ${sessionId}`);
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
-  const [messages, setMessages] = useState<newMessageType[]>([]);
-  const [currentCharacter, setCurrentCharacter] = useState<{
-    id: number;
-    name: string;
-  }>(characters[0]);
+  const initialSession = initialSesstionState(gameId, sessionId);
 
-  const imgRef = useRef(null);
+  function initialSesstionState(
+    gameId: string | string[] | undefined,
+    sessionId: string | string[] | undefined
+  ) {
+    if (typeof gameId === "string" && gameId !== "") {
+      if (sessionId === "new") {
+        return newSession(gameId);
+      } else {
+        return newSession(gameId);
+      }
+    } else {
+      return {
+        id: "0",
+        name: "session 1",
+        lastSaved: new Date(),
+        game: games[0],
+        messages: [],
+        characters: [],
+      };
+      // throw new Error("Malformed gameId");
+    }
+  }
+
+  function newSession(gameId: string): SessionType {
+    const game = games.find((game: GameType, index) => game.id === gameId);
+    if (!game) throw new Error(`Error, no game found with id:${gameId}`);
+    console.log("Creating new Session");
+    return {
+      id: nanoid(),
+      name: "my new session",
+      lastSaved: new Date(),
+      game: game,
+      messages: [],
+      characters: [{ ...annonymousCharacter, gameId: gameId }],
+    };
+  }
+
+  const [session, setSession] = useState(initialSession);
+
+  const [messages, setMessages] = useState<MessageType[]>(
+    initialSession.messages
+  );
+  const [characters, setCharacter] = useState<CharacterType[]>(
+    initialSession.characters
+  );
+
+  const [currentCharacter, setCurrentCharacter] = useState<CharacterType>(
+    initialSession.characters[0]
+  );
 
   //Remove the Roll Again Button from the second to last message
   useEffect(() => {
@@ -53,39 +160,6 @@ export default function Play({
     }
   }, [messages]);
 
-  // useEffect(() => {
-  //   console.log(currentCharacter);
-  //   if (currentCharacter && currentCharacter) {
-  //     setMessages((messages: any[]) => {
-  //       const newMessage = {
-  //         text: currentCharacter.name,
-  //         color: "error",
-  //         author: currentCharacter.name,
-  //         timestamp: new Date(),
-  //         side: "LEFT",
-  //       };
-  //       return [...messages, newMessage];
-  //     });
-  //   }
-  // }, [currentCharacter]);
-
-  // const fac = new FastAverageColor();
-  // //TODO - Change text color based on background image average color
-  // useEffect(() => {
-  //   fac
-  //     .getColorAsync(imgRef.current)
-  //     .then((color) => {
-  //       console.log(color);
-  //       // container.style.backgroundColor = color.rgba;
-  //       // container.style.color = color.isDark ? "#fff" : "#000";
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-
-  //   return () => {};
-  // }, [fac, imgRef]);
-
   const [characterDrawerStatus, setCharacterDrawerStatus] = useState(false);
   const [gameDrawerStatus, setGameDrawerStatus] = useState(false);
   function toggleCharacterSheetDrawer() {
@@ -95,6 +169,15 @@ export default function Play({
   function toggleGameDrawer() {
     setGameDrawerStatus((prev) => !prev);
   }
+
+  useEffect(() => {
+    const newSession = initialSesstionState(gameId, sessionId);
+    setSession(newSession);
+    setCharacter(newSession.characters);
+    setCurrentCharacter(newSession.characters[0]);
+    setMessages(newSession.messages);
+  }, [gameId, sessionId]);
+
   return (
     <>
       <Head>
@@ -162,6 +245,7 @@ export default function Play({
               >
                 <Box width={300} height={"100%"}>
                   <CharacterSheetSidePanel
+                    characters={characters}
                     currentCharracter={currentCharacter}
                     setCurrentCharacter={setCurrentCharacter}
                     handleHideButton={toggleCharacterSheetDrawer}
@@ -182,6 +266,7 @@ export default function Play({
               >
                 <Box width={300} height={"100%"}>
                   <GameSheetSidePanel
+                    game={session.game}
                     setMessages={setMessages}
                     handleHideButton={toggleGameDrawer}
                   ></GameSheetSidePanel>
@@ -190,7 +275,9 @@ export default function Play({
             </Drawer>
             <Box height={"100%"}>
               <Chat
-                author={currentCharacter.name}
+                oracle={session.game.oracle}
+                basicRoll={session.game.basicRoll}
+                author={currentCharacter}
                 messages={messages}
                 setMessages={setMessages}
               ></Chat>
@@ -203,6 +290,7 @@ export default function Play({
           >
             <Grid xs={3} item={true}>
               <CharacterSheetSidePanel
+                characters={characters}
                 currentCharracter={currentCharacter}
                 setCurrentCharacter={setCurrentCharacter}
               ></CharacterSheetSidePanel>
@@ -214,13 +302,16 @@ export default function Play({
               item={true}
             >
               <Chat
-                author={currentCharacter.name}
+                author={currentCharacter}
                 messages={messages}
                 setMessages={setMessages}
+                oracle={session.game.oracle}
+                basicRoll={session.game.basicRoll}
               ></Chat>
             </Grid>
             <Grid xs={3} item={true}>
               <GameSheetSidePanel
+                game={session.game}
                 setMessages={setMessages}
               ></GameSheetSidePanel>
             </Grid>

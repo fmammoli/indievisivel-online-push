@@ -1,39 +1,44 @@
 import { Box, Divider, List } from "@mui/material";
 
-import { Fragment, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import ScrollableDiv from "./ScrollableDiv";
 
 import SheetSidePanel from "./SheetSidePanel";
 import SheetSidePanelTitleItem from "./SheetSidePanelTitleItem";
 import SheetSidePanelItem from "./SheetSidePanelItem";
-import characters from "../gameData/characters";
+import { CharacterType } from "../gameData/characters";
 
 interface CharacterSheetSidePanel {}
 
 export default function CharacterSheetSidePanel({
+  characters,
   currentCharracter,
   setCurrentCharacter,
   handleHideButton,
 }: {
-  currentCharracter: any;
-  setCurrentCharacter: any;
+  characters: CharacterType[];
+  currentCharracter: CharacterType | null;
+  setCurrentCharacter: Dispatch<SetStateAction<CharacterType>>;
   handleHideButton?: () => void;
 }) {
-  const [checked, setChecked] = useState<null | number>(currentCharracter.id);
+  const [checked, setChecked] = useState<null | string>(
+    currentCharracter ? currentCharracter.id : null
+  );
 
   function handleChatClick({
     characterId,
     characterName,
   }: {
-    characterId: number;
+    characterId: string;
     characterName: string;
   }) {
-    const char = characters.find((item, index) => {
-      return item.id == characterId;
+    const newChar = characters.find((item, index) => {
+      return item.id === characterId;
     });
+    if (!newChar) throw new Error("Error:Character no found");
     setChecked(characterId);
-    setCurrentCharacter(char);
+    setCurrentCharacter(newChar);
   }
 
   const handleHide = handleHideButton ? { handleHide: handleHideButton } : {};
@@ -44,7 +49,6 @@ export default function CharacterSheetSidePanel({
     >
       <ScrollableDiv>
         <SheetSidePanel
-          sheet={characters}
           title={"Character Sheet"}
           align={"left"}
           {...handleHide}
@@ -59,7 +63,12 @@ export default function CharacterSheetSidePanel({
                       <SheetSidePanelTitleItem
                         id={character.id}
                         title={character.name}
-                        secondaryText={`${character.pronouns} - ${character.age} anos`}
+                        secondaryText={
+                          character.pronouns &&
+                          `${character.pronouns}` &&
+                          character.age &&
+                          ` - ${character.age} anos`
+                        }
                         disablePadding
                         noSettings
                         chat

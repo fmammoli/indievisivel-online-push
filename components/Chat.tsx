@@ -4,22 +4,14 @@ import ScrollableDiv from "./ScrollableDiv";
 import SendIcon from "@mui/icons-material/Send";
 import Message from "./Message";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
-import DiceIcon from "./DiceIcon";
+
 import useDiceRoller from "./useDiceRoller";
 
 import { nanoid } from "nanoid";
 import RollMessageContent from "./RollMessageContent";
-
-export interface newMessageType {
-  id: string;
-  text?: string;
-  color: string;
-  author: string;
-  side: "LEFT" | "RIGHT";
-  timestamp: Date;
-  content?: JSX.Element;
-  rerollable: boolean;
-}
+import { MessageType } from "@/pages/[gameId]/[sessionId]";
+import { GameType } from "@/gameData/games";
+import { CharacterType } from "@/gameData/characters";
 
 export interface addMessageType {
   text: string;
@@ -29,44 +21,19 @@ export interface addMessageType {
 }
 
 export interface ChatPropsType {
-  author: string;
-  messages: newMessageType[];
-  setMessages: Dispatch<SetStateAction<newMessageType[]>>;
+  author: CharacterType;
+  messages: MessageType[];
+  oracle: GameType["oracle"];
+  basicRoll: GameType["basicRoll"];
+  setMessages: Dispatch<SetStateAction<MessageType[]>>;
 }
 
-const basicRoll = [
-  { value: 1, text: "Sucesso Parcial" },
-  { value: 2, text: "Sucesso Parcial" },
-  { value: 3, text: "Sucesso Parcial" },
-  { value: 4, text: "Sucesso Parcial" },
-  { value: 5, text: "Sucesso" },
-  { value: 6, text: "Sucesso" },
-  { value: 7, text: "Falha" },
-  { value: 8, text: "Falha" },
-  { value: 9, text: "Falha" },
-  { value: 10, text: "Falha" },
-  { value: 11, text: "Falha" },
-  { value: 12, text: "Falha" },
-];
-const oracle = [
-  { value: 1, text: "PROVÁVEL" },
-  { value: 2, text: "PROVÁVEL" },
-  { value: 3, text: "PROVÁVEL" },
-  { value: 4, text: "PROVÁVEL" },
-  { value: 5, text: "PROVÁVEL" },
-  { value: 6, text: "IMPROVÁVEL" },
-  { value: 7, text: "INFORTÚNIO" },
-  { value: 8, text: "INFORTÚNIO" },
-  { value: 9, text: "INFORTÚNIO" },
-  { value: 10, text: "INFORTÚNIO" },
-  { value: 11, text: "INFORTÚNIO" },
-  { value: 12, text: "INFORTÚNIO" },
-];
-
 export default function Chat({
-  author = "My Character Name",
+  author,
   messages,
   setMessages,
+  oracle,
+  basicRoll,
 }: ChatPropsType) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
@@ -83,8 +50,8 @@ export default function Chat({
       textFieldRef.current.getElementsByTagName("textarea")[0].value = "";
     }
 
-    setMessages((messages: newMessageType[]) => {
-      const newMessage: newMessageType = {
+    setMessages((messages: MessageType[]) => {
+      const newMessage: MessageType = {
         id: nanoid(),
         text: text,
         color: color,
@@ -114,7 +81,7 @@ export default function Chat({
     const roll2Total = (roll2 as DiceRoll).total;
     const rollTotal = prevRoll + roll2Total;
 
-    setMessages((messages: newMessageType[]) => {
+    setMessages((messages: MessageType[]) => {
       const newMessages = messages.map((item, index) => {
         if (item.id === id) {
           if (item.content) {
@@ -132,75 +99,6 @@ export default function Chat({
         return item;
       });
       return newMessages;
-      // const newRerollable = false;
-      // const newContent = (
-      //   <Box>
-      //     <Box display={"flex"} gap={1} alignItems="flex-start">
-      //       <Box>
-      //         <DiceIcon
-      //           value={prevRoll}
-      //           fontSize="medium"
-      //           color="disabled"
-      //         ></DiceIcon>
-      //         <DiceIcon
-      //           value={roll2Total}
-      //           fontSize="medium"
-      //           color="disabled"
-      //         ></DiceIcon>
-      //       </Box>
-
-      //       <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-      //         {options[rollTotal - 1].text}
-      //       </Typography>
-      //     </Box>
-      //   </Box>
-      // );
-      // if (messageToEdit.length && messageToEdit[0] !== undefined) {
-      //   return [
-      //     ...messages.slice(0, messageToEdit[0].index),
-      //     { ...messageToEdit[0].message },
-      //     ...messages.slice(messageToEdit[0].index, messages.length - 1),
-      //   ];
-      // }
-      // return [...messages];
-
-      // const newMessage: newMessageType = {
-      //   id: messageToEdit?.message.id,
-      //   text: options[rollTotal - 1].text,
-      //   color: color,
-      //   author: author,
-      //   timestamp: messageToEdit?.message.timestamp,
-      //   side: "RIGHT",
-      //   rerollable: false,
-      //   content: (
-      //     <FirstRollMessageContent
-      //       rerollable={false}
-      //       value={prevRoll}
-      //       value2={roll2Total}
-      //       text={options[rollTotal - 1].text}
-      //       color={color}
-      //       author={author}
-      //       options={options}
-      //       id={id}
-      //     ></FirstRollMessageContent>
-      //   ),
-      // };
-      // if (messages.length > 1) {
-      //   let lastMessage = messages.slice(0, -2)[0];
-      //   if (lastMessage.rerollable === true) {
-      //     return [
-      //       ...messages.slice(0, -1),
-      //       { ...lastMessage, rerollable: false },
-      //       newMessage,
-      //     ];
-      //   }
-      // }
-      // return [
-      //   ...messages.slice(0, messageToEdit?.index),
-      //   newMessage,
-      //   ...messages.slice(messageToEdit?.index, messages.length - 1),
-      // ];
-      // return [...messages];
     });
   }
 
@@ -217,10 +115,10 @@ export default function Chat({
     const roll1Total = (roll1 as DiceRoll).total;
     const rerollable = roll1Total <= 4 ? true : false;
 
-    setMessages((messages: newMessageType[]) => {
+    setMessages((messages: MessageType[]) => {
       const timestamp = new Date();
       const id = nanoid();
-      const newMessage: newMessageType = {
+      const newMessage: MessageType = {
         id: id,
         text: options[roll1Total - 1].text,
         color: color,
@@ -265,7 +163,7 @@ export default function Chat({
     if (target.message.value) {
       addMessage({
         text: target.message.value,
-        author: author,
+        author: author.name,
         color: "#6750A4",
       });
     }
@@ -278,7 +176,11 @@ export default function Chat({
     if (event.code === "Enter" && !event.shiftKey) {
       event.preventDefault();
       if (target.value) {
-        addMessage({ text: target.value, author: author, color: "#6750A4" });
+        addMessage({
+          text: target.value,
+          author: author.name,
+          color: "#6750A4",
+        });
       }
     }
   };
@@ -294,7 +196,8 @@ export default function Chat({
           {messages.map((message, index) => {
             return (
               <Message
-                key={index}
+                id={message.id}
+                key={message.id}
                 color={message.color}
                 author={message.author}
                 timestamp={message.timestamp}
