@@ -26,6 +26,7 @@ export default function SheetSidePanelTitleItem({
   options,
   checked,
   handleChatClick,
+  handleEditClick,
 }: {
   id: string;
   title: string;
@@ -43,6 +44,7 @@ export default function SheetSidePanelTitleItem({
     characterId: string;
     characterName: string;
   }) => void;
+  handleEditClick: (id: string) => void;
 }) {
   const [showOptions, setOptions] = useState(false);
 
@@ -89,7 +91,11 @@ export default function SheetSidePanelTitleItem({
         <Grow in={showOptions} mountOnEnter unmountOnExit>
           <Box display={"flex"}>
             {!noEdit ? (
-              <IconButton aria-label="Edit Game Sheet" color="primary">
+              <IconButton
+                aria-label="Edit Game Sheet"
+                color="primary"
+                onClick={() => handleEditClick(id)}
+              >
                 <EditOutlinedIcon></EditOutlinedIcon>
               </IconButton>
             ) : null}

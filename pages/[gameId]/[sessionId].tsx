@@ -19,6 +19,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { GameType, games } from "@/gameData/games";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
+import characters from "../../gameData/characters";
 
 export interface MessageType {
   id: string;
@@ -40,7 +41,7 @@ interface SessionType {
   characters: CharacterType[] | [];
 }
 
-const annonymousCharacter: CharacterType = {
+let annonymousCharacter: CharacterType = {
   id: "-1",
   name: "Annonymous",
   fromGame: "",
@@ -70,6 +71,8 @@ const annonymousCharacter: CharacterType = {
   },
 };
 
+annonymousCharacter = characters[0];
+
 interface PlayPropsType {
   gameId: string;
   sessionId: string;
@@ -83,7 +86,7 @@ export default function Play({
 }: PlayPropsType) {
   const router = useRouter();
   const { gameId, sessionId } = router.query;
-  console.log(`game:${gameId} ____ ${sessionId}`);
+
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
   const initialSession = initialSesstionState(gameId, sessionId);
@@ -245,6 +248,7 @@ export default function Play({
               >
                 <Box width={300} height={"100%"}>
                   <CharacterSheetSidePanel
+                    game={session.game}
                     characters={characters}
                     currentCharracter={currentCharacter}
                     setCurrentCharacter={setCurrentCharacter}
@@ -290,6 +294,7 @@ export default function Play({
           >
             <Grid xs={3} item={true}>
               <CharacterSheetSidePanel
+                game={session.game}
                 characters={characters}
                 currentCharracter={currentCharacter}
                 setCurrentCharacter={setCurrentCharacter}

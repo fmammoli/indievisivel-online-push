@@ -38,6 +38,30 @@ export interface GameType {
     value: number;
     text: string;
   }[];
+  gifts: {
+    value: number;
+    text: string;
+  }[];
+  upbringing: {
+    value: number;
+    text: string;
+  }[];
+  experience: {
+    value: number;
+    text: string;
+  }[];
+  mark: {
+    value: number;
+    text: string;
+  }[];
+  bond: {
+    value: number;
+    text: string;
+  }[];
+  charm: {
+    value: number;
+    text: string;
+  }[];
 }
 
 export const games: GameType[] = [
@@ -267,6 +291,54 @@ export const games: GameType[] = [
       { value: 10, text: "INFORTÚNIO" },
       { value: 11, text: "INFORTÚNIO" },
       { value: 12, text: "INFORTÚNIO" },
+    ],
+    gifts: [
+      { value: 1, text: "Irresistivelmente feio e desajeitado" },
+      { value: 2, text: "Tão indiferente que jamais perde o controle" },
+      { value: 3, text: "Às do equilíbrio social" },
+      { value: 4, text: "Simpático até com quem não merece" },
+      { value: 5, text: "Expert em tecno-tecnologia velha" },
+      { value: 6, text: "Perito em rebeldia bem colocada" },
+    ],
+    upbringing: [
+      { value: 1, text: "O Centro-Terra" },
+      { value: 2, text: "Ribeirinho do Lago de Ácido" },
+      { value: 3, text: "Cohab de Conaptos" },
+      { value: 4, text: "Círculo Vermelho dos Prazeres" },
+      { value: 5, text: "Movimentada Alameda do Suicídio" },
+      { value: 6, text: "Superfície Aristo" },
+    ],
+    experience: [
+      { value: 1, text: "Medíocre Detetive Particular Classe 'R'" },
+      { value: 2, text: "Aristo Calejada em Múltiplos Níveis" },
+      { value: 3, text: "Gentil e Implacável Máquina de Matar" },
+      { value: 4, text: "Carismático Revolucionário Brutamontes" },
+      { value: 5, text: "Lixeiro Rebelde Sem Causa" },
+      { value: 6, text: "Ativista da Sabedoria Pré-Tecna" },
+    ],
+    mark: [
+      { value: 1, text: "Tem medo do Céu de Jodorow" },
+      { value: 2, text: "Não dá um passo sem o seu Tarot" },
+      { value: 3, text: "Adorador do Ovo Andrógino" },
+      { value: 4, text: "Seguidor de Orh" },
+      { value: 5, text: "Não confia em Orgarganos" },
+      { value: 6, text: "Ama Uísque, SPV e Homeoputas" },
+    ],
+    charm: [
+      { value: 1, text: "Fiel pássaro de cimento como mascote" },
+      { value: 2, text: "Auréola Ectoplasmática" },
+      { value: 3, text: "Katana Cromovibrante" },
+      { value: 4, text: "Pistola Phaser com Xenocalibre" },
+      { value: 5, text: "Caixa de Ferramentas Neurotecno" },
+      { value: 6, text: "Amorina e Cocaloca" },
+    ],
+    bond: [
+      { value: 1, text: "Ser notado pelo Diavaloo" },
+      { value: 2, text: "Conquistar a Luz de Garra" },
+      { value: 3, text: "Acabar com os planos de Kill Cara-de-cão" },
+      { value: 4, text: "Pagar o que deve ao Gorgo-o-sujo" },
+      { value: 5, text: "Desbancar as Necrocorps" },
+      { value: 6, text: "Se tornar um Metabarão" },
     ],
   },
 ];
