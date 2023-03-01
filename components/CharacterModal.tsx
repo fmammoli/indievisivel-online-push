@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   Fade,
+  FormControl,
   FormControlLabel,
   FormGroup,
   IconButton,
@@ -17,8 +18,9 @@ import {
   Slide,
   TextField,
   Typography,
+  useFormControl,
 } from "@mui/material";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
@@ -29,6 +31,8 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import useDiceRoller from "./useDiceRoller";
 import { GameType } from "@/gameData/games";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface CharacterModalPropsType {
   open: boolean;
@@ -37,6 +41,9 @@ interface CharacterModalPropsType {
   handleOnClose: () => void;
   setCharacter: any;
   game: GameType;
+  handleUpdate: (char: any) => void;
+  handleCreate: (char: any) => void;
+  handleRemove: (char: any) => void;
 }
 
 type CharacterListsTypes =
@@ -53,6 +60,9 @@ export default function CharacterModal({
   handleOnClose,
   setCharacter,
   game,
+  handleUpdate,
+  handleCreate,
+  handleRemove,
 }: CharacterModalPropsType) {
   const descriptionElementRef = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -89,15 +99,14 @@ export default function CharacterModal({
     keyName: CharacterListsTypes
   ) {
     if (character) {
-      // console.log(`${index}_____${text}`);
-      setCharacter((char: CharacterType) => {
-        const newList = char[keyName].list.filter((item, i) => index !== i);
-        // console.log(newList);
-        let newChar = { ...char };
-
-        newChar[keyName].list = newList;
-        return newChar;
-      });
+      const oldList = [...(character as CharacterType)[keyName].list];
+      const newList = oldList.filter((item, i) => i !== index);
+      const newCharValues = {
+        ...character,
+        [keyName]: { ...character[keyName], list: [...newList] },
+      };
+      setCharacter(newCharValues);
+      // handleUpdate(newCharValues);
     }
   }
 
@@ -119,17 +128,22 @@ export default function CharacterModal({
         } on ${keyName}`
       );
 
-    setCharacter((prevChar: CharacterType) => {
-      const newList = prevChar[keyName].list.map((item: string, i: number) => {
+    if (character) {
+      const oldList = [...(character as CharacterType)[keyName].list];
+      const newList = oldList.map((item, i) => {
         if (i === index) {
           return newText.text;
-        } else return item;
+        } else {
+          return item;
+        }
       });
-      let newChar = { ...prevChar };
-
-      newChar[keyName].list = newList;
-      return newChar;
-    });
+      const newCharValues = {
+        ...character,
+        [keyName]: { ...character[keyName], list: [...newList] },
+      };
+      setCharacter(newCharValues);
+      // handleUpdate(newCharValues);
+    }
   }
 
   const formEl = useRef<HTMLFormElement>(null);
@@ -142,19 +156,51 @@ export default function CharacterModal({
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    console.log("saved");
-    console.log(e);
-    const target = e.target as typeof e.target & CharacterType;
-    setCharacter((prevChar: CharacterType) => {
-      const newChar = {};
-      return { ...prevChar };
+  function handleSubmit(e: any) {
+    let inputs = [...e.target.elements].filter(
+      (item, index) => item.type === "text"
+    );
+
+    let a = inputs.map((item, index) => {
+      return { name: item.name, value: item.value };
     });
+
+    let newCharValues: any = {};
+    a.forEach((item, index) => {
+      const splitedName = item.name.split("____");
+
+      if (splitedName.length > 1) {
+        if (newCharValues[splitedName[1]]) {
+          newCharValues[splitedName[1]].list.push(item.value);
+        } else {
+          newCharValues[splitedName[1]] = { list: [item.value] };
+        }
+      } else {
+        newCharValues[item.name] = item.value;
+      }
+    });
+
+    newCharValues.id = character?.id;
+
+    setCharacter({ ...character, ...newCharValues });
+    handleUpdate({ ...character, ...newCharValues });
+    handleOnClose();
+  }
+
+  function handleEreaseChar() {
+    handleRemove(character);
+    handleOnClose();
   }
 
   return (
     <Dialog open={open} scroll={"paper"} maxWidth={"lg"}>
-      <DialogTitle id="scroll-dialog-title"></DialogTitle>
+      <DialogTitle id="scroll-dialog-title">
+        <Box display={"flex"} justifyContent={"flex-end"}>
+          <IconButton onClick={handleOnClose}>
+            <CloseIcon></CloseIcon>
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent
         dividers={true}
         id="scroll-dialog-description"
@@ -170,8 +216,11 @@ export default function CharacterModal({
                 alignItems={"flex-end"}
                 id={"formTop"}
                 justifyContent="space-between"
+                sx={{
+                  flexDirection: { xs: "column", sm: "column", md: "row" },
+                }}
               >
-                <Box flexGrow={1}>
+                <Box flexGrow={1} alignSelf="center">
                   <Box position={"relative"}>
                     <Image
                       src={pushCharacterSheetLogo}
@@ -181,16 +230,26 @@ export default function CharacterModal({
                     ></Image>
                   </Box>
                 </Box>
-                <Box flexGrow={2}>
+                <Box flexGrow={2} paddingRight={1}>
                   <Box display={"flex"} flexDirection={"column"} gap={2}>
                     <TextInputSheet
                       name={"name"}
                       label={"Nome"}
                       initialValue={character ? character.name : ""}
                     ></TextInputSheet>
-                    <Box display={"flex"}>
+                    <Box
+                      display={"flex"}
+                      sx={{
+                        flexDirection: {
+                          xs: "column",
+                          sm: "column",
+                          md: "row",
+                        },
+                        gap: { xs: 2, sm: 2, md: 2 },
+                      }}
+                    >
                       <TextInputSheet
-                        name={"pronoum"}
+                        name={"pronouns"}
                         label={"Pronome"}
                         initialValue={character ? character.pronouns : ""}
                       ></TextInputSheet>
@@ -209,6 +268,9 @@ export default function CharacterModal({
                 paddingTop={0}
                 justifyContent="space-between"
                 gap={4}
+                sx={{
+                  flexDirection: { xs: "column", sm: "column", md: "row" },
+                }}
               >
                 <InputList
                   title={"Doms"}
@@ -223,6 +285,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"gifts"}
+                        inputName={`${index}____${"gifts"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -240,6 +303,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"upbringing"}
+                        inputName={`${index}____${"upbringing"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -251,6 +315,9 @@ export default function CharacterModal({
                 paddingTop={0}
                 justifyContent="space-between"
                 gap={4}
+                sx={{
+                  flexDirection: { xs: "column", sm: "column", md: "row" },
+                }}
               >
                 <InputList
                   title={"Experiência"}
@@ -265,6 +332,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"experience"}
+                        inputName={`${index}____${"experience"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -282,6 +350,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"mark"}
+                        inputName={`${index}____${"mark"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -293,6 +362,9 @@ export default function CharacterModal({
                 paddingTop={0}
                 justifyContent="space-between"
                 gap={4}
+                sx={{
+                  flexDirection: { xs: "column", sm: "column", md: "row" },
+                }}
               >
                 <InputList
                   title={"Pertence"}
@@ -307,6 +379,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"charm"}
+                        inputName={`${index}____${"charm"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -324,6 +397,7 @@ export default function CharacterModal({
                         handleDelete={handleDelete}
                         handleReroll={handleReroll}
                         keyName={"bond"}
+                        inputName={`${index}____${"bond"}____${item}`}
                       ></InputListItem>
                     );
                   })}
@@ -334,8 +408,17 @@ export default function CharacterModal({
         </Container>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleOnClose}>Delete</Button>
-        <Button onClick={handleOnSave}>Save</Button>
+        <Button
+          variant="outlined"
+          color={"error"}
+          onClick={handleEreaseChar}
+          startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
+        >
+          Deletar
+        </Button>
+        <Button variant="contained" color={"info"} onClick={handleOnSave}>
+          Salvar
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -388,6 +471,7 @@ interface InputListItemPropsType {
     keyName: CharacterListsTypes
   ) => void;
   keyName: CharacterListsTypes;
+  inputName: string;
 }
 
 function InputListItem({
@@ -396,9 +480,13 @@ function InputListItem({
   handleDelete,
   handleReroll,
   keyName,
+  inputName,
 }: InputListItemPropsType) {
   // console.log(`${index}__${initialValue}`);
   const [show, setShow] = useState(false);
+  const [options, setOptions] = useState(false);
+  const [inputFocus, setInputFocus] = useState(false);
+
   function handleEnter() {
     setShow(true);
   }
@@ -414,10 +502,29 @@ function InputListItem({
     handleReroll(initialValue, index, keyName);
   }
 
+  function showOptions() {
+    setOptions(true);
+  }
+
+  function hideOptions() {
+    setOptions(false);
+  }
+
+  //TODO Increase maxRows of TextInput on focus
+  // const { focused } = useFormControl() || {};
+
+  // const helperText = useMemo(() => {
+  //   if (focused) {
+  //     return "This field is being focused";
+  //   }
+
+  //   return "Helper text";
+  // }, [focused]);
+
+  // console.log(focused);
   return (
     <Box
       sx={{
-        paddingRight: 4,
         paddingY: 2,
         position: "relative",
       }}
@@ -428,6 +535,7 @@ function InputListItem({
         style={{
           display: "flex",
           alignItems: "center",
+          width: "100%",
         }}
       >
         <Circle fontSize="small" sx={{ color: "white", mr: 1, my: 0.5 }} />
@@ -438,25 +546,51 @@ function InputListItem({
           defaultValue={initialValue}
           size={"small"}
           fullWidth
-          onFocus={handleExit}
+          name={inputName}
         />
-        <Fade in={show}>
+        <Box
+          sx={{
+            display: { xs: "none", sm: "none", md: "block" },
+            paddingRight: "3.5px",
+          }}
+        >
+          <Fade in={show}>
+            <IconButton color="default" onClick={showOptions}>
+              <MoreVertIcon></MoreVertIcon>
+            </IconButton>
+          </Fade>
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "block", sm: "block", md: "none" },
+            paddingRight: "3.5px",
+          }}
+        >
+          <IconButton color="default" onClick={showOptions}>
+            <MoreVertIcon></MoreVertIcon>
+          </IconButton>
+        </Box>
+        <Fade in={options}>
           <Paper
             elevation={4}
             sx={{
               display: "flex",
-              top: "0.5rem",
+              top: "0.8rem",
               left: "100%",
               transform: "translateX(-100%)",
               position: "absolute",
               padding: 0.4,
             }}
+            onMouseLeave={hideOptions}
           >
             <IconButton color="primary" onClick={handleOnReroll}>
               <SettingsBackupRestoreIcon></SettingsBackupRestoreIcon>
             </IconButton>
             <IconButton color="error" onClick={handleOnDelete}>
               <DeleteOutlinedIcon></DeleteOutlinedIcon>
+            </IconButton>
+            <IconButton color={"default"} onClick={hideOptions}>
+              <MoreVertIcon></MoreVertIcon>
             </IconButton>
           </Paper>
         </Fade>
@@ -483,11 +617,11 @@ function TextInputSheet({
         borderRadius: "8px 0 0 8px",
         display: "flex",
         justifyContent: "flex-end",
+        marginLeft: 0,
       }}
       control={
         <Box paddingX={1} width={"100%"}>
           <TextField
-            disabled
             name={name}
             hiddenLabel
             id="filled-hidden-label-small"

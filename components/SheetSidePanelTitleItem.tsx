@@ -44,8 +44,9 @@ export default function SheetSidePanelTitleItem({
     characterId: string;
     characterName: string;
   }) => void;
-  handleEditClick: (id: string) => void;
+  handleEditClick?: (id: string) => void;
 }) {
+  // console.log(`Rerenderd with: ${title}`);
   const [showOptions, setOptions] = useState(false);
 
   let isChecked = false;
@@ -94,7 +95,7 @@ export default function SheetSidePanelTitleItem({
               <IconButton
                 aria-label="Edit Game Sheet"
                 color="primary"
-                onClick={() => handleEditClick(id)}
+                onClick={() => (handleEditClick ? handleEditClick(id) : null)}
               >
                 <EditOutlinedIcon></EditOutlinedIcon>
               </IconButton>

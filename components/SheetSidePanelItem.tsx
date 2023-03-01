@@ -1,4 +1,6 @@
+import { CharacterType } from "@/gameData/characters";
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
+import { SetStateAction } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
 
@@ -57,7 +59,7 @@ export default function SheetSidePanelItem({
               }}
             >
               {sheetItem[key].map((item: string, index: number) => (
-                <li key={index}>
+                <li key={`${index}-${item}`}>
                   <Typography
                     variant="body2"
                     component="p"

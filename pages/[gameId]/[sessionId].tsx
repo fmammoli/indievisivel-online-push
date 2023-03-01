@@ -20,6 +20,7 @@ import { GameType, games } from "@/gameData/games";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import characters from "../../gameData/characters";
+import { Session } from "inspector";
 
 export interface MessageType {
   id: string;
@@ -71,7 +72,7 @@ let annonymousCharacter: CharacterType = {
   },
 };
 
-annonymousCharacter = characters[0];
+// annonymousCharacter = characters[0];
 
 interface PlayPropsType {
   gameId: string;
@@ -89,12 +90,10 @@ export default function Play({
 
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
-  const initialSession = initialSesstionState(gameId, sessionId);
-
   function initialSesstionState(
     gameId: string | string[] | undefined,
     sessionId: string | string[] | undefined
-  ) {
+  ): SessionType {
     if (typeof gameId === "string" && gameId !== "") {
       if (sessionId === "new") {
         return newSession(gameId);
@@ -128,18 +127,48 @@ export default function Play({
     };
   }
 
-  const [session, setSession] = useState(initialSession);
+  // const [session, setSession] = useState(initialSession);
 
-  const [messages, setMessages] = useState<MessageType[]>(
-    initialSession.messages
-  );
-  const [characters, setCharacter] = useState<CharacterType[]>(
-    initialSession.characters
-  );
+  // const [messages, setMessages] = useState<MessageType[]>(session.messages);
+  // const [characters, setCharacters] = useState<CharacterType[]>(
+  //   session.characters
+  // );
 
-  const [currentCharacter, setCurrentCharacter] = useState<CharacterType>(
-    initialSession.characters[0]
-  );
+  // const [currentCharacter, setCurrentCharacter] = useState<CharacterType>(
+  //   session.characters[0]
+  // );
+
+  const [session, setSession] = useState<SessionType | null>(null);
+
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [characters, setCharacters] = useState<CharacterType[]>([
+    annonymousCharacter,
+  ]);
+
+  const [currentCharacter, setCurrentCharacter] =
+    useState<CharacterType>(annonymousCharacter);
+
+  useEffect(() => {
+    // console.log("characters changed");
+    // console.log(characters);
+    if (characters) {
+      setSession((prev) => {
+        // console.log(characters);
+        if (prev !== null) return { ...prev, characters: [...characters] };
+        return prev;
+      });
+    }
+  }, [characters, setSession]);
+
+  useEffect(() => {
+    console.log("messages changed");
+    if (messages) {
+      setSession((prev) => {
+        if (prev !== null) return { ...prev, messages: [...messages] };
+        return prev;
+      });
+    }
+  }, [messages, setSession]);
 
   //Remove the Roll Again Button from the second to last message
   useEffect(() => {
@@ -173,13 +202,16 @@ export default function Play({
     setGameDrawerStatus((prev) => !prev);
   }
 
-  useEffect(() => {
-    const newSession = initialSesstionState(gameId, sessionId);
-    setSession(newSession);
-    setCharacter(newSession.characters);
-    setCurrentCharacter(newSession.characters[0]);
-    setMessages(newSession.messages);
-  }, [gameId, sessionId]);
+  // useEffect(() => {
+  //   const newSession = initialSesstionState(gameId, sessionId);
+  //   setSession(newSession);
+  //   setCharacters(newSession.characters);
+  //   setCurrentCharacter(newSession.characters[0]);
+  //   setMessages(newSession.messages);
+  // }, [gameId, sessionId]);
+
+  if (!session) setSession(initialSesstionState(gameId, sessionId));
+  // console.log(session);
 
   return (
     <>
@@ -247,13 +279,16 @@ export default function Play({
                 }}
               >
                 <Box width={300} height={"100%"}>
-                  <CharacterSheetSidePanel
-                    game={session.game}
-                    characters={characters}
-                    currentCharracter={currentCharacter}
-                    setCurrentCharacter={setCurrentCharacter}
-                    handleHideButton={toggleCharacterSheetDrawer}
-                  ></CharacterSheetSidePanel>
+                  {session && (
+                    <CharacterSheetSidePanel
+                      game={session.game}
+                      characters={characters}
+                      currentCharracter={currentCharacter}
+                      setCurrentCharacter={setCurrentCharacter}
+                      handleHideButton={toggleCharacterSheetDrawer}
+                      setCharacters={setCharacters}
+                    ></CharacterSheetSidePanel>
+                  )}
                 </Box>
               </ClickAwayListener>
             </Drawer>
@@ -269,22 +304,26 @@ export default function Play({
                 }}
               >
                 <Box width={300} height={"100%"}>
-                  <GameSheetSidePanel
-                    game={session.game}
-                    setMessages={setMessages}
-                    handleHideButton={toggleGameDrawer}
-                  ></GameSheetSidePanel>
+                  {session && (
+                    <GameSheetSidePanel
+                      game={session.game}
+                      setMessages={setMessages}
+                      handleHideButton={toggleGameDrawer}
+                    ></GameSheetSidePanel>
+                  )}
                 </Box>
               </ClickAwayListener>
             </Drawer>
             <Box height={"100%"}>
-              <Chat
-                oracle={session.game.oracle}
-                basicRoll={session.game.basicRoll}
-                author={currentCharacter}
-                messages={messages}
-                setMessages={setMessages}
-              ></Chat>
+              {session && (
+                <Chat
+                  oracle={session.game.oracle}
+                  basicRoll={session.game.basicRoll}
+                  author={currentCharacter}
+                  messages={messages}
+                  setMessages={setMessages}
+                ></Chat>
+              )}
             </Box>
           </Container>
 
@@ -293,12 +332,15 @@ export default function Play({
             sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
           >
             <Grid xs={3} item={true}>
-              <CharacterSheetSidePanel
-                game={session.game}
-                characters={characters}
-                currentCharracter={currentCharacter}
-                setCurrentCharacter={setCurrentCharacter}
-              ></CharacterSheetSidePanel>
+              {session && (
+                <CharacterSheetSidePanel
+                  game={session.game}
+                  characters={characters}
+                  currentCharracter={currentCharacter}
+                  setCurrentCharacter={setCurrentCharacter}
+                  setCharacters={setCharacters}
+                ></CharacterSheetSidePanel>
+              )}
             </Grid>
             <Grid
               xs={6}
@@ -306,19 +348,23 @@ export default function Play({
               padding={2}
               item={true}
             >
-              <Chat
-                author={currentCharacter}
-                messages={messages}
-                setMessages={setMessages}
-                oracle={session.game.oracle}
-                basicRoll={session.game.basicRoll}
-              ></Chat>
+              {session && (
+                <Chat
+                  author={currentCharacter}
+                  messages={messages}
+                  setMessages={setMessages}
+                  oracle={session.game.oracle}
+                  basicRoll={session.game.basicRoll}
+                ></Chat>
+              )}
             </Grid>
             <Grid xs={3} item={true}>
-              <GameSheetSidePanel
-                game={session.game}
-                setMessages={setMessages}
-              ></GameSheetSidePanel>
+              {session && (
+                <GameSheetSidePanel
+                  game={session.game}
+                  setMessages={setMessages}
+                ></GameSheetSidePanel>
+              )}
             </Grid>
           </Grid>
 

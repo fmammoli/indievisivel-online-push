@@ -1,6 +1,6 @@
 import { Box, Divider, List } from "@mui/material";
 
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import ScrollableDiv from "./ScrollableDiv";
 
@@ -10,8 +10,7 @@ import SheetSidePanelItem from "./SheetSidePanelItem";
 import { CharacterType } from "../gameData/characters";
 import CharacterModal from "./CharacterModal";
 import { GameType } from "@/gameData/games";
-
-interface CharacterSheetSidePanel {}
+import { nanoid } from "nanoid";
 
 export default function CharacterSheetSidePanel({
   characters,
@@ -19,12 +18,14 @@ export default function CharacterSheetSidePanel({
   setCurrentCharacter,
   handleHideButton,
   game,
+  setCharacters,
 }: {
   characters: CharacterType[];
   currentCharracter: CharacterType | null;
   setCurrentCharacter: Dispatch<SetStateAction<CharacterType>>;
   handleHideButton?: () => void;
   game: GameType;
+  setCharacters: Dispatch<SetStateAction<CharacterType[]>>;
 }) {
   const [checked, setChecked] = useState<null | string>(
     currentCharracter ? currentCharracter.id : null
@@ -66,6 +67,103 @@ export default function CharacterSheetSidePanel({
     setModalState(false);
   }
 
+  function handleUpdate(char: any) {
+    setCharacters((prevChar: CharacterType[]) => {
+      let found = false;
+      const newChars = prevChar.map((item) => {
+        if (item.id === char.id) {
+          found = true;
+          return char;
+        }
+        return item;
+      });
+      if (found) {
+        return newChars;
+      } else {
+        return [...prevChar, { ...char }];
+      }
+    });
+  }
+
+  function handleRemove(char: CharacterType) {
+    setCharacters((prevChar: CharacterType[]) => {
+      const newChar = prevChar.filter((item) => item.id !== char.id);
+      if (currentCharracter && currentCharracter.id === char.id) {
+        setCurrentCharacter(newChar[0]);
+        setChecked(newChar[0].id);
+      }
+      return newChar;
+    });
+  }
+
+  function handleAddButton() {
+    let emptyChar: CharacterType = {
+      id: nanoid(),
+      name: "",
+      fromGame: "",
+      gameId: "",
+      pronouns: "",
+      age: "",
+      gifts: {
+        description: "",
+        list: [],
+      },
+      upbringing: {
+        desciption: "",
+        list: [],
+      },
+      experience: {
+        description: "",
+        list: [],
+      },
+      mark: {
+        list: [],
+      },
+      charm: {
+        list: [],
+      },
+      bond: {
+        list: [],
+      },
+    };
+    setModalCharacter({
+      id: nanoid(),
+      name: "",
+      fromGame: "",
+      gameId: "",
+      pronouns: "",
+      age: "",
+      gifts: {
+        description: "",
+        list: [],
+      },
+      upbringing: {
+        desciption: "",
+        list: [],
+      },
+      experience: {
+        description: "",
+        list: [],
+      },
+      mark: {
+        list: [],
+      },
+      charm: {
+        list: [],
+      },
+      bond: {
+        list: [],
+      },
+    });
+    setModalState(true);
+  }
+
+  function handleCreateNewChar(
+    newChar: CharacterType & Omit<CharacterType, CharacterType["id"]>
+  ) {
+    setCharacters((prev) => [...prev, { ...newChar }]);
+  }
+
   return (
     <>
       <Box
@@ -77,72 +175,78 @@ export default function CharacterSheetSidePanel({
             title={"Character Sheet"}
             align={"left"}
             {...handleHide}
+            addButton
+            handleAdd={handleAddButton}
           >
             {characters.map((character, index) => {
-              return (
-                <Fragment key={index}>
-                  <CollapsableListItem
-                    key={`collapsable-${index}`}
-                    headerElement={
-                      <List disablePadding sx={{ width: "100%" }}>
-                        <SheetSidePanelTitleItem
-                          id={character.id}
-                          title={character.name}
-                          secondaryText={
-                            character.pronouns && character.age
-                              ? `${character.pronouns} - ${character.age} anos`
-                              : character.pronouns
-                              ? `${character.pronouns}`
-                              : character.age
-                              ? `${character.age} anos`
-                              : ""
-                          }
-                          disablePadding
-                          noSettings
-                          chat
-                          handleChatClick={handleChatClick}
-                          handleEditClick={handleOpenModal}
-                          checked={checked}
-                        ></SheetSidePanelTitleItem>
-                      </List>
-                    }
-                  >
-                    <SheetSidePanelItem
-                      sheetItem={character.gifts}
-                      title={"Doms"}
-                    ></SheetSidePanelItem>
-                    <Divider variant="middle" component="li" />
+              if (character.id !== "-1")
+                return (
+                  <Fragment key={index}>
+                    <CollapsableListItem
+                      key={`collapsable-${index}`}
+                      headerElement={
+                        <List disablePadding sx={{ width: "100%" }}>
+                          <SheetSidePanelTitleItem
+                            id={character.id}
+                            title={character.name}
+                            secondaryText={
+                              character.pronouns && character.age
+                                ? `${character.pronouns} - ${character.age} anos`
+                                : character.pronouns
+                                ? `${character.pronouns}`
+                                : character.age
+                                ? `${character.age} anos`
+                                : ""
+                            }
+                            disablePadding
+                            noSettings
+                            chat
+                            handleChatClick={handleChatClick}
+                            handleEditClick={handleOpenModal}
+                            checked={checked}
+                          ></SheetSidePanelTitleItem>
+                        </List>
+                      }
+                    >
+                      <SheetSidePanelItem
+                        sheetItem={character.gifts}
+                        title={"Doms"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
 
-                    <SheetSidePanelItem
-                      sheetItem={character.upbringing}
-                      title={"Origem"}
-                    ></SheetSidePanelItem>
-                    <Divider variant="middle" component="li" />
+                      <SheetSidePanelItem
+                        sheetItem={character.upbringing}
+                        title={"Origem"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
 
-                    <SheetSidePanelItem
-                      sheetItem={character.experience}
-                      title={"Experiência"}
-                    ></SheetSidePanelItem>
-                    <Divider variant="middle" component="li" />
+                      <SheetSidePanelItem
+                        sheetItem={character.experience}
+                        title={"Experiência"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
 
-                    <SheetSidePanelItem
-                      sheetItem={character.mark}
-                      title={"Marca"}
-                    ></SheetSidePanelItem>
-                    <Divider variant="middle" component="li" />
-                    <SheetSidePanelItem
-                      sheetItem={character.charm}
-                      title={"Charme"}
-                    ></SheetSidePanelItem>
-                    <Divider variant="middle" component="li" />
-                    <SheetSidePanelItem
-                      sheetItem={character.bond}
-                      title={"Vínculos"}
-                    ></SheetSidePanelItem>
-                  </CollapsableListItem>
-                  <Divider key={`divider-${index}`} variant="middle"></Divider>
-                </Fragment>
-              );
+                      <SheetSidePanelItem
+                        sheetItem={character.mark}
+                        title={"Marca"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
+                      <SheetSidePanelItem
+                        sheetItem={character.charm}
+                        title={"Charme"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
+                      <SheetSidePanelItem
+                        sheetItem={character.bond}
+                        title={"Vínculos"}
+                      ></SheetSidePanelItem>
+                    </CollapsableListItem>
+                    <Divider
+                      key={`divider-${index}`}
+                      variant="middle"
+                    ></Divider>
+                  </Fragment>
+                );
             })}
           </SheetSidePanel>
         </ScrollableDiv>
@@ -153,6 +257,9 @@ export default function CharacterSheetSidePanel({
         character={modalCharacter}
         setCharacter={setModalCharacter}
         handleOnClose={handleCloseModal}
+        handleUpdate={handleUpdate}
+        handleCreate={handleCreateNewChar}
+        handleRemove={handleRemove}
       ></CharacterModal>
     </>
   );
