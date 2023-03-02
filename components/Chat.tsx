@@ -1,4 +1,12 @@
-import { Box, Button, Fab, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Fab,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import SendIcon from "@mui/icons-material/Send";
@@ -73,10 +81,8 @@ export default function Chat({
               rerollable: false,
               value2: roll2Total,
             };
-            const newContent = (
-              <RollMessageContent {...newProps}></RollMessageContent>
-            );
-            return { ...item, content: newContent, rerollable: false };
+
+            return { ...item, content: { props: newProps }, rerollable: false };
           }
         }
         return item;
@@ -107,18 +113,18 @@ export default function Chat({
       side: "RIGHT",
       rerollable: rerollable,
       rollMessage: true,
-      content: (
-        <RollMessageContent
-          id={id}
-          rerollable={rerollable}
-          value={roll1Total}
-          text={options[roll1Total - 1].text}
-          handleSecondRoll={handleSecondRoll}
-          color={color}
-          author={author}
-          options={options}
-        ></RollMessageContent>
-      ),
+      content: {
+        props: {
+          id: id,
+          rerollable: rerollable,
+          value: roll1Total,
+          text: options[roll1Total - 1].text,
+          handleSecondRoll: handleSecondRoll,
+          color: color,
+          author: author,
+          options: options,
+        },
+      },
     };
     addMessage({ ...newMessage });
   }

@@ -3,7 +3,15 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-import { Button, ButtonGroup, Drawer, Grid, Paper } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  Drawer,
+  Grid,
+  Paper,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
@@ -21,7 +29,7 @@ import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 
 import useLocalStorageState from "use-local-storage-state";
-
+import img from "@/public/images/altheaBack.jpg";
 export interface MessageType {
   id: string;
   text: string;
@@ -29,7 +37,7 @@ export interface MessageType {
   author: string;
   side: "LEFT" | "RIGHT";
   timestamp: Date;
-  content?: JSX.Element;
+  content?: { props: any };
   rerollable?: boolean;
   rollMessage?: boolean;
 }
@@ -71,6 +79,7 @@ let annonymousCharacter: CharacterType = {
   bond: {
     list: [],
   },
+  notes: "",
 };
 
 // annonymousCharacter = characters[0];
@@ -82,24 +91,23 @@ interface PlayPropsType {
   bannerImg: any;
 }
 
-export default function Play({
-  gameName = "Guardiões de Althea",
-  bannerImg = require("../../public/images/altheaBack.jpg"),
-}: PlayPropsType) {
-  const router = useRouter();
-  const { gameId, sessionId } = router.query;
+export default function Play({ gameName, bannerImg }: PlayPropsType) {
+  const { query, isReady } = useRouter();
+  const { gameId, sessionId } = query;
 
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
   const game = games.find((game, index) => {
     return game.id === gameId;
   });
-
+  const theme = useTheme();
+  const smallSreen = useMediaQuery(theme.breakpoints.down("md"));
+  console.log(smallSreen);
   const [session, setSession] = useLocalStorageState<SessionType>(
     "online-push",
     {
       defaultValue: {
-        id: nanoid(),
+        id: "-1",
         name: "my new session",
         lastSaved: new Date(),
         game: null,
@@ -252,7 +260,7 @@ export default function Play({
         });
       }
     }
-  }, [gameId, sessionId, setSession]);
+  }, [isReady, setSession]);
 
   // if (!session) setSession(initialSesstionState(gameId, sessionId));
   // console.log(session);
@@ -277,142 +285,143 @@ export default function Play({
           <section>
             <TopMenu colors={menuColors} small={true}></TopMenu>
 
-            <GameBanner banner={bannerImg} title={gameName}></GameBanner>
+            <GameBanner
+              banner={game?.bannerImg && game.bannerImg}
+              title={game?.title ? game.title : ""}
+              backgroundColor={game?.backgroundColor}
+            ></GameBanner>
           </section>
 
-          <Box
-            sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
-            justifyContent="center"
-            gap={2}
-          >
-            <ButtonGroup variant="contained" fullWidth>
-              <Button
-                onClick={toggleCharacterSheetDrawer}
-                startIcon={<PersonIcon></PersonIcon>}
-                sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-              >
-                Characters
-              </Button>
-              <Button
-                onClick={toggleGameDrawer}
-                endIcon={<DatasetIcon></DatasetIcon>}
-                sx={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-              >
-                Game
-              </Button>
-            </ButtonGroup>
-          </Box>
-          <Container
-            id={"contianer"}
-            sx={{
-              height: "100%",
-              display: { xs: "block", sm: "block", md: "none" },
-              paddingBottom: 1,
-            }}
-          >
-            <Drawer
-              anchor="left"
-              variant="temporary"
-              open={characterDrawerStatus}
-              id={"characterDrawer"}
-            >
-              <ClickAwayListener
-                onClickAway={(e) => {
-                  if (characterDrawerStatus === true)
-                    setCharacterDrawerStatus(false);
+          {smallSreen ? (
+            <>
+              <Box display={"flex"} justifyContent="center" gap={2}>
+                <ButtonGroup variant="contained" fullWidth>
+                  <Button
+                    onClick={toggleCharacterSheetDrawer}
+                    startIcon={<PersonIcon></PersonIcon>}
+                    sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  >
+                    Characters
+                  </Button>
+                  <Button
+                    onClick={toggleGameDrawer}
+                    endIcon={<DatasetIcon></DatasetIcon>}
+                    sx={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                  >
+                    Game
+                  </Button>
+                </ButtonGroup>
+              </Box>
+              <Container
+                id={"contianer"}
+                sx={{
+                  height: "100%",
+                  display: "block",
+                  paddingBottom: 1,
                 }}
               >
-                <Box width={300} height={"100%"}>
+                <Drawer
+                  anchor="left"
+                  variant="temporary"
+                  open={characterDrawerStatus}
+                  id={"characterDrawer"}
+                >
+                  <ClickAwayListener
+                    onClickAway={(e) => {
+                      if (characterDrawerStatus === true)
+                        setCharacterDrawerStatus(false);
+                    }}
+                  >
+                    <Box width={300} height={"100%"}>
+                      {session && session.game && (
+                        <CharacterSheetSidePanel
+                          game={session.game}
+                          characters={characters}
+                          currentCharracter={currentCharacter}
+                          setCurrentCharacter={setCurrentCharacter}
+                          handleHideButton={toggleCharacterSheetDrawer}
+                          setCharacters={setCharacters}
+                        ></CharacterSheetSidePanel>
+                      )}
+                    </Box>
+                  </ClickAwayListener>
+                </Drawer>
+                <Drawer
+                  anchor="right"
+                  variant="temporary"
+                  open={gameDrawerStatus}
+                  id={"gameDrawer"}
+                >
+                  <ClickAwayListener
+                    onClickAway={(e) => {
+                      if (gameDrawerStatus === true) setGameDrawerStatus(false);
+                    }}
+                  >
+                    <Box width={300} height={"100%"}>
+                      {session && session.game && (
+                        <GameSheetSidePanel
+                          game={session.game}
+                          setMessages={setMessages}
+                          handleHideButton={toggleGameDrawer}
+                        ></GameSheetSidePanel>
+                      )}
+                    </Box>
+                  </ClickAwayListener>
+                </Drawer>
+                <Box height={"100%"}>
                   {session && session.game && (
-                    <CharacterSheetSidePanel
-                      game={session.game}
-                      characters={characters}
-                      currentCharracter={currentCharacter}
-                      setCurrentCharacter={setCurrentCharacter}
-                      handleHideButton={toggleCharacterSheetDrawer}
-                      setCharacters={setCharacters}
-                    ></CharacterSheetSidePanel>
-                  )}
-                </Box>
-              </ClickAwayListener>
-            </Drawer>
-            <Drawer
-              anchor="right"
-              variant="temporary"
-              open={gameDrawerStatus}
-              id={"gameDrawer"}
-            >
-              <ClickAwayListener
-                onClickAway={(e) => {
-                  if (gameDrawerStatus === true) setGameDrawerStatus(false);
-                }}
-              >
-                <Box width={300} height={"100%"}>
-                  {session && session.game && (
-                    <GameSheetSidePanel
-                      game={session.game}
+                    <Chat
+                      oracle={session.game.oracle}
+                      basicRoll={session.game.basicRoll}
+                      author={currentCharacter}
+                      messages={messages}
                       setMessages={setMessages}
-                      handleHideButton={toggleGameDrawer}
-                    ></GameSheetSidePanel>
+                      addMessage={addMessage}
+                    ></Chat>
                   )}
                 </Box>
-              </ClickAwayListener>
-            </Drawer>
-            <Box height={"100%"}>
-              {session && session.game && (
-                <Chat
-                  oracle={session.game.oracle}
-                  basicRoll={session.game.basicRoll}
-                  author={currentCharacter}
-                  messages={messages}
-                  setMessages={setMessages}
-                  addMessage={addMessage}
-                ></Chat>
-              )}
-            </Box>
-          </Container>
-
-          <Grid
-            container
-            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
-          >
-            <Grid xs={3} item={true}>
-              {session && session.game && (
-                <CharacterSheetSidePanel
-                  game={session.game}
-                  characters={characters}
-                  currentCharracter={currentCharacter}
-                  setCurrentCharacter={setCurrentCharacter}
-                  setCharacters={setCharacters}
-                ></CharacterSheetSidePanel>
-              )}
+              </Container>
+            </>
+          ) : (
+            <Grid container flexGrow={1}>
+              <Grid xs={3} item={true}>
+                {session && session.game && (
+                  <CharacterSheetSidePanel
+                    game={session.game}
+                    characters={characters}
+                    currentCharracter={currentCharacter}
+                    setCurrentCharacter={setCurrentCharacter}
+                    setCharacters={setCharacters}
+                  ></CharacterSheetSidePanel>
+                )}
+              </Grid>
+              <Grid
+                xs={6}
+                sx={{ borderInline: "1px solid #d8d8d8" }}
+                padding={2}
+                item={true}
+              >
+                {session && session.game && (
+                  <Chat
+                    author={currentCharacter}
+                    messages={messages}
+                    setMessages={setMessages}
+                    oracle={session.game.oracle}
+                    basicRoll={session.game.basicRoll}
+                    addMessage={addMessage}
+                  ></Chat>
+                )}
+              </Grid>
+              <Grid xs={3} item={true}>
+                {session && session.game && (
+                  <GameSheetSidePanel
+                    game={session.game}
+                    setMessages={setMessages}
+                  ></GameSheetSidePanel>
+                )}
+              </Grid>
             </Grid>
-            <Grid
-              xs={6}
-              sx={{ borderInline: "1px solid #d8d8d8" }}
-              padding={2}
-              item={true}
-            >
-              {session && session.game && (
-                <Chat
-                  author={currentCharacter}
-                  messages={messages}
-                  setMessages={setMessages}
-                  oracle={session.game.oracle}
-                  basicRoll={session.game.basicRoll}
-                  addMessage={addMessage}
-                ></Chat>
-              )}
-            </Grid>
-            <Grid xs={3} item={true}>
-              {session && session.game && (
-                <GameSheetSidePanel
-                  game={session.game}
-                  setMessages={setMessages}
-                ></GameSheetSidePanel>
-              )}
-            </Grid>
-          </Grid>
+          )}
 
           <Box>
             <Paper elevation={5} square sx={{ backgroundColor: "#6750A4" }}>

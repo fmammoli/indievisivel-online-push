@@ -27,6 +27,8 @@ export default function SheetSidePanelTitleItem({
   checked,
   handleChatClick,
   handleEditClick,
+  show,
+  handleOnShow,
 }: {
   id: string;
   title: string;
@@ -37,6 +39,8 @@ export default function SheetSidePanelTitleItem({
   chat?: boolean;
   options?: ReactNode;
   checked?: string | null;
+  show?: boolean;
+  handleOnShow?: (pdf: string) => void;
   handleChatClick?: ({
     characterId,
     characterName,

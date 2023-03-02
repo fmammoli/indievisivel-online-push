@@ -8,8 +8,9 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
-
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import { ReactNode } from "react";
+import Link from "@/src/Link";
 
 export default function SheetSidePanel({
   title,
@@ -18,6 +19,8 @@ export default function SheetSidePanel({
   handleHide,
   addButton = false,
   handleAdd,
+  showButton,
+  link,
 }: {
   title: string;
   children: ReactNode;
@@ -25,6 +28,8 @@ export default function SheetSidePanel({
   handleHide?: () => void;
   addButton?: boolean;
   handleAdd?: (value: any) => void;
+  showButton?: boolean;
+  link?: string;
 }) {
   return (
     <List
@@ -35,7 +40,9 @@ export default function SheetSidePanel({
           <Box
             display={"flex"}
             alignItems="center"
-            justifyContent={addButton ? "space-between" : "flex-end"}
+            justifyContent={
+              addButton || showButton ? "space-between" : "flex-end"
+            }
             gap={2}
             flexDirection={align === "right" ? "row" : "row-reverse"}
           >
@@ -44,7 +51,18 @@ export default function SheetSidePanel({
                 <AddIcon></AddIcon>
               </IconButton>
             )}
-
+            {showButton && link && (
+              <Link
+                href={link}
+                underline={"none"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton aria-label="Show pdf">
+                  <MenuBookOutlinedIcon></MenuBookOutlinedIcon>
+                </IconButton>
+              </Link>
+            )}
             <Typography variant="h5" component="h2" fontWeight={300}>
               {title}
             </Typography>

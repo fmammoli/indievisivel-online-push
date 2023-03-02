@@ -4,11 +4,16 @@ import styles from "@/styles/Home.module.scss";
 import pushPowered from "../public/images/pushPoweredLogo.png";
 
 interface GameBannerProps {
-  banner: string;
+  banner?: string;
   title: string;
+  backgroundColor?: string;
 }
-console.log(pushPowered);
-export default function GameBanner({ banner, title }: GameBannerProps) {
+
+export default function GameBanner({
+  banner,
+  title,
+  backgroundColor = "white",
+}: GameBannerProps) {
   return (
     <Box
       sx={{
@@ -24,14 +29,18 @@ export default function GameBanner({ banner, title }: GameBannerProps) {
           position: "relative",
           isolation: "isolate",
           gridArea: "1 / 1 / 2 / 2",
+          backgroundColor: backgroundColor,
         }}
       >
-        <Image
-          src={banner}
-          alt={""}
-          className={styles.bannerImage}
-          fill
-        ></Image>
+        {banner && (
+          <Image
+            priority
+            src={banner}
+            alt={""}
+            className={styles.bannerImage}
+            fill
+          ></Image>
+        )}
       </Box>
       <Container sx={{ gridArea: "1 / 1 / 2 / 2", zIndex: "1" }}>
         <Box

@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import DiceIcon from "./DiceIcon";
 import PentagonIcon from "@mui/icons-material/Pentagon";
@@ -84,6 +84,12 @@ export default function GameSheetSidePanel({
       return [...messages, newMessage];
     });
   }
+  const pdfProps = useMemo(
+    () =>
+      game.pdf ? { showButton: true, link: `/pdfViewer/${game.pdf}` } : {},
+    [game]
+  );
+
   const handleHide = handleHideButton ? { handleHide: handleHideButton } : {};
   return (
     <Box
@@ -91,7 +97,7 @@ export default function GameSheetSidePanel({
       py={1}
     >
       <ScrollableDiv>
-        <SheetSidePanel title={"Game Sheet"} {...handleHide}>
+        <SheetSidePanel title={"Game Sheet"} {...handleHide} {...pdfProps}>
           <SheetSidePanelTitleItem
             id={game.id}
             title={game.title}
