@@ -2,7 +2,7 @@ import { Box, Button, Fab, TextField, Typography } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import SendIcon from "@mui/icons-material/Send";
-import Message from "./Message";
+import Message, { MemoedMessage } from "./Message";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 
 import useDiceRoller from "./useDiceRoller";
@@ -12,12 +12,17 @@ import RollMessageContent from "./RollMessageContent";
 import { MessageType } from "@/pages/[gameId]/[sessionId]";
 import { GameType } from "@/gameData/games";
 import { CharacterType } from "@/gameData/characters";
+import MatrixMessageContent from "./MatrixMessageContent";
 
 export interface addMessageType {
+  id?: string;
   text: string;
   author: string;
   color: string;
   side?: "LEFT" | "RIGHT";
+  rerollable?: boolean;
+  content?: any;
+  rollMessage?: boolean;
 }
 
 export interface ChatPropsType {
@@ -26,6 +31,7 @@ export interface ChatPropsType {
   oracle: GameType["oracle"];
   basicRoll: GameType["basicRoll"];
   setMessages: Dispatch<SetStateAction<MessageType[]>>;
+  addMessage: ({ text, author, color, side }: addMessageType) => void;
 }
 
 export default function Chat({
@@ -34,35 +40,12 @@ export default function Chat({
   setMessages,
   oracle,
   basicRoll,
+  addMessage,
 }: ChatPropsType) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
 
   const diceRoller = useDiceRoller();
-
-  const addMessage = ({
-    text,
-    author,
-    color,
-    side = "LEFT",
-  }: addMessageType) => {
-    if (textFieldRef.current) {
-      textFieldRef.current.getElementsByTagName("textarea")[0].value = "";
-    }
-
-    setMessages((messages: MessageType[]) => {
-      const newMessage: MessageType = {
-        id: nanoid(),
-        text: text,
-        color: color,
-        author: author,
-        timestamp: new Date(),
-        side: side,
-        rerollable: false,
-      };
-      return [...messages, newMessage];
-    });
-  };
 
   async function handleSecondRoll({
     prevRoll,
@@ -114,35 +97,31 @@ export default function Chat({
     const roll1 = diceRoller.roll("1d6");
     const roll1Total = (roll1 as DiceRoll).total;
     const rerollable = roll1Total <= 4 ? true : false;
-
-    setMessages((messages: MessageType[]) => {
-      const timestamp = new Date();
-      const id = nanoid();
-      const newMessage: MessageType = {
-        id: id,
-        text: options[roll1Total - 1].text,
-        color: color,
-        author: author,
-        timestamp: timestamp,
-        side: "RIGHT",
-        rerollable: rerollable,
-        content: (
-          <RollMessageContent
-            id={id}
-            rerollable={rerollable}
-            value={roll1Total}
-            text={options[roll1Total - 1].text}
-            handleSecondRoll={handleSecondRoll}
-            color={color}
-            author={author}
-            options={options}
-          ></RollMessageContent>
-        ),
-      };
-      return [...messages, newMessage];
-    });
+    const id = nanoid();
+    const newMessage: MessageType = {
+      id: id,
+      text: options[roll1Total - 1].text,
+      color: color,
+      author: author,
+      timestamp: new Date(),
+      side: "RIGHT",
+      rerollable: rerollable,
+      rollMessage: true,
+      content: (
+        <RollMessageContent
+          id={id}
+          rerollable={rerollable}
+          value={roll1Total}
+          text={options[roll1Total - 1].text}
+          handleSecondRoll={handleSecondRoll}
+          color={color}
+          author={author}
+          options={options}
+        ></RollMessageContent>
+      ),
+    };
+    addMessage({ ...newMessage });
   }
-
   async function handleOracle() {
     handleFirstRoll({ options: oracle, author: "Oráculo", color: "#ff1744" });
   }
@@ -166,6 +145,9 @@ export default function Chat({
         author: author.name,
         color: "#6750A4",
       });
+      if (textFieldRef.current) {
+        textFieldRef.current.getElementsByTagName("textarea")[0].value = "";
+      }
     }
   }
 
@@ -181,6 +163,9 @@ export default function Chat({
           author: author.name,
           color: "#6750A4",
         });
+        if (textFieldRef.current) {
+          textFieldRef.current.getElementsByTagName("textarea")[0].value = "";
+        }
       }
     }
   };
@@ -195,7 +180,7 @@ export default function Chat({
         <Box sx={{ flexGrow: 1 }}>
           {messages.map((message, index) => {
             return (
-              <Message
+              <MemoedMessage
                 id={message.id}
                 key={message.id}
                 color={message.color}
@@ -204,11 +189,22 @@ export default function Chat({
                 side={message.side}
               >
                 {message.content ? (
-                  message.content
+                  message.rollMessage ? (
+                    <RollMessageContent
+                      {...message.content.props}
+                      handleSecondRoll={() =>
+                        handleSecondRoll({ ...message.content?.props })
+                      }
+                    ></RollMessageContent>
+                  ) : (
+                    <MatrixMessageContent
+                      {...message.content.props}
+                    ></MatrixMessageContent>
+                  )
                 ) : (
                   <Typography variant="body2">{message.text}</Typography>
                 )}
-              </Message>
+              </MemoedMessage>
             );
           })}
           <div ref={bottomRef}></div>

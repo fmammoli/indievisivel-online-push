@@ -14,6 +14,7 @@ import SheetSidePanelItem from "./SheetSidePanelItem";
 import { nanoid } from "nanoid";
 import { MessageType } from "@/pages/[gameId]/[sessionId]";
 import { GameType } from "@/gameData/games";
+import MatrixMessageContent from "./MatrixMessageContent";
 
 interface GameSheetViewProps {
   game: GameType;
@@ -44,16 +45,10 @@ export default function GameSheetSidePanel({
         side: "RIGHT",
         rerollable: false,
         content: (
-          <Box display={"flex"} gap={1} alignItems="flex-start">
-            <DiceIcon
-              value={value}
-              fontSize="medium"
-              color="disabled"
-            ></DiceIcon>
-            <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-              {text}
-            </Typography>
-          </Box>
+          <MatrixMessageContent
+            value1={value}
+            text={text}
+          ></MatrixMessageContent>
         ),
       };
       return [...messages, newMessage];
@@ -78,23 +73,11 @@ export default function GameSheetSidePanel({
         timestamp: new Date(),
         side: "RIGHT",
         content: (
-          <Box display={"flex"} gap={1} alignItems="flex-start">
-            <Box>
-              <DiceIcon
-                value={(roll1 as DiceRoll).total}
-                fontSize="medium"
-                color="disabled"
-              ></DiceIcon>
-              <DiceIcon
-                value={(roll2 as DiceRoll).total}
-                fontSize="medium"
-                color="disabled"
-              ></DiceIcon>
-            </Box>
-            <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
-              {text}
-            </Typography>
-          </Box>
+          <MatrixMessageContent
+            value1={(roll1 as DiceRoll).total}
+            value2={(roll2 as DiceRoll).total}
+            text={text}
+          ></MatrixMessageContent>
         ),
         rerollable: false,
       };
@@ -179,7 +162,4 @@ export default function GameSheetSidePanel({
       </ScrollableDiv>
     </Box>
   );
-}
-function uuidv4() {
-  throw new Error("Function not implemented.");
 }

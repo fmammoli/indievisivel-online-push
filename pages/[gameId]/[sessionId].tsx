@@ -4,11 +4,11 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import { Button, ButtonGroup, Drawer, Grid, Paper } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
-import Chat from "@/components/Chat";
+import Chat, { addMessageType } from "@/components/Chat";
 import GameSheetSidePanel from "@/components/GameSheetSidePanel";
 import CharacterSheetSidePanel from "@/components/CharacterSheetSidePanel";
 import { CharacterType } from "@/gameData/characters";
@@ -19,8 +19,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import { GameType, games } from "@/gameData/games";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
-import characters from "../../gameData/characters";
-import { Session } from "inspector";
+
+import useLocalStorageState from "use-local-storage-state";
 
 export interface MessageType {
   id: string;
@@ -31,13 +31,14 @@ export interface MessageType {
   timestamp: Date;
   content?: JSX.Element;
   rerollable?: boolean;
+  rollMessage?: boolean;
 }
 
 interface SessionType {
   id: string;
   name: string;
   lastSaved: Date;
-  game: GameType;
+  game: GameType | null;
   messages: MessageType[] | [];
   characters: CharacterType[] | [];
 }
@@ -90,110 +91,144 @@ export default function Play({
 
   const menuColors = { color: "#6750A4", hover: "#6750A4" };
 
-  function initialSesstionState(
-    gameId: string | string[] | undefined,
-    sessionId: string | string[] | undefined
-  ): SessionType {
-    if (typeof gameId === "string" && gameId !== "") {
-      if (sessionId === "new") {
-        return newSession(gameId);
-      } else {
-        return newSession(gameId);
-      }
-    } else {
-      return {
-        id: "0",
-        name: "session 1",
+  const game = games.find((game, index) => {
+    return game.id === gameId;
+  });
+
+  const [session, setSession] = useLocalStorageState<SessionType>(
+    "online-push",
+    {
+      defaultValue: {
+        id: nanoid(),
+        name: "my new session",
         lastSaved: new Date(),
-        game: games[0],
+        game: null,
         messages: [],
-        characters: [],
-      };
-      // throw new Error("Malformed gameId");
+        characters: [{ ...annonymousCharacter, gameId: gameId as string }],
+      },
     }
-  }
+  );
 
-  function newSession(gameId: string): SessionType {
-    const game = games.find((game: GameType, index) => game.id === gameId);
-    if (!game) throw new Error(`Error, no game found with id:${gameId}`);
-    console.log("Creating new Session");
-    return {
-      id: nanoid(),
-      name: "my new session",
-      lastSaved: new Date(),
-      game: game,
-      messages: [],
-      characters: [{ ...annonymousCharacter, gameId: gameId }],
-    };
-  }
-
-  // const [session, setSession] = useState(initialSession);
-
-  // const [messages, setMessages] = useState<MessageType[]>(session.messages);
-  // const [characters, setCharacters] = useState<CharacterType[]>(
-  //   session.characters
-  // );
-
-  // const [currentCharacter, setCurrentCharacter] = useState<CharacterType>(
-  //   session.characters[0]
-  // );
-
-  const [session, setSession] = useState<SessionType | null>(null);
-
-  const [messages, setMessages] = useState<MessageType[]>([]);
-  const [characters, setCharacters] = useState<CharacterType[]>([
-    annonymousCharacter,
-  ]);
+  // const [session, setSession] = useState<SessionType>({
+  //   id: nanoid(),
+  //   name: "my new session",
+  //   lastSaved: new Date(),
+  //   game: null,
+  //   messages: [],
+  //   characters: [{ ...annonymousCharacter, gameId: gameId as string }],
+  // });
 
   const [currentCharacter, setCurrentCharacter] =
     useState<CharacterType>(annonymousCharacter);
 
-  useEffect(() => {
-    // console.log("characters changed");
-    // console.log(characters);
-    if (characters) {
-      setSession((prev) => {
-        // console.log(characters);
-        if (prev !== null) return { ...prev, characters: [...characters] };
-        return prev;
-      });
-    }
-  }, [characters, setSession]);
+  const messages = session.messages;
 
-  useEffect(() => {
-    console.log("messages changed");
-    if (messages) {
-      setSession((prev) => {
-        if (prev !== null) return { ...prev, messages: [...messages] };
-        return prev;
-      });
-    }
-  }, [messages, setSession]);
-
-  //Remove the Roll Again Button from the second to last message
-  useEffect(() => {
-    if (messages.length > 1) {
-      if (messages.at(-2)?.rerollable === true) {
-        const newMessages = messages.map((item, index) => {
-          if (index === messages.length - 2) {
-            if (item.rerollable === true) {
-              const newProps = { ...item.content?.props, rerollable: false };
-              const newContent = (
-                <RollMessageContent {...newProps}></RollMessageContent>
-              );
-              return { ...item, content: newContent, rerollable: false };
-            }
+  const setMessages = useCallback(
+    (value: MessageType[] | ((value: MessageType[] | []) => MessageType[])) => {
+      setSession((prevSession) => {
+        if (prevSession) {
+          if (typeof value === "function") {
+            const newMessages = value(prevSession?.messages);
+            return { ...prevSession, messages: newMessages };
           }
-          return item;
-        });
+          if (Array.isArray(value)) {
+            return { ...prevSession, messages: value };
+          }
+        }
+        return prevSession;
+      });
+    },
+    [setSession]
+  );
 
-        setMessages(newMessages);
+  const characters = session?.characters || [
+    {
+      ...annonymousCharacter,
+      gameId: gameId as string,
+    },
+  ];
+
+  const setCharacters = useCallback(
+    (
+      value:
+        | CharacterType[]
+        | ((value: CharacterType[] | []) => CharacterType[])
+    ) => {
+      setSession((prevSession) => {
+        if (prevSession) {
+          if (typeof value === "function") {
+            const newCharacters = value(prevSession?.characters);
+            return { ...prevSession, characters: newCharacters };
+          }
+          if (Array.isArray(value)) {
+            return { ...prevSession, characters: value };
+          }
+        }
+        return prevSession;
+      });
+    },
+    [setSession]
+  );
+
+  const addMessageOriginal = ({
+    id,
+    text,
+    author,
+    color,
+    side = "LEFT",
+    content,
+    rollMessage = false,
+    rerollable = false,
+  }: addMessageType) => {
+    const newMessage: MessageType = {
+      id: id ? id : nanoid(),
+      text: text,
+      color: color,
+      author: author,
+      timestamp: new Date(),
+      side: side,
+      rerollable: rerollable,
+      content: content,
+      rollMessage: rollMessage,
+    };
+
+    setMessages((messages: MessageType[]) => {
+      if (messages) {
+        if (messages.length === 0) {
+          return [...messages, newMessage];
+        }
+        if (messages.length > 0) {
+          const lastItem = messages.slice(-1)[0];
+          if (lastItem.rerollable === true && lastItem.content) {
+            const newContentProps = {
+              ...lastItem.content.props,
+              rerollable: false,
+            };
+            return [
+              ...messages.slice(0, -1),
+              {
+                ...lastItem,
+                rerollable: false,
+                content: (
+                  <RollMessageContent {...newContentProps}></RollMessageContent>
+                ),
+              },
+              newMessage,
+            ];
+          } else {
+            return [...messages, newMessage];
+          }
+        }
       }
-    }
-  }, [messages]);
+      return messages;
+    });
+  };
+
+  const addMessage = useCallback(addMessageOriginal, [setMessages]);
 
   const [characterDrawerStatus, setCharacterDrawerStatus] = useState(false);
   const [gameDrawerStatus, setGameDrawerStatus] = useState(false);
+
   function toggleCharacterSheetDrawer() {
     setCharacterDrawerStatus((prev) => !prev);
   }
@@ -202,15 +237,24 @@ export default function Play({
     setGameDrawerStatus((prev) => !prev);
   }
 
-  // useEffect(() => {
-  //   const newSession = initialSesstionState(gameId, sessionId);
-  //   setSession(newSession);
-  //   setCharacters(newSession.characters);
-  //   setCurrentCharacter(newSession.characters[0]);
-  //   setMessages(newSession.messages);
-  // }, [gameId, sessionId]);
+  useEffect(() => {
+    if (gameId && sessionId) {
+      const game = games.find((game, index) => {
+        return game.id === gameId;
+      });
 
-  if (!session) setSession(initialSesstionState(gameId, sessionId));
+      if (game) {
+        setSession((prevSession) => {
+          if (prevSession) {
+            return { ...prevSession, game: game };
+          }
+          return prevSession;
+        });
+      }
+    }
+  }, [gameId, sessionId, setSession]);
+
+  // if (!session) setSession(initialSesstionState(gameId, sessionId));
   // console.log(session);
 
   return (
@@ -279,7 +323,7 @@ export default function Play({
                 }}
               >
                 <Box width={300} height={"100%"}>
-                  {session && (
+                  {session && session.game && (
                     <CharacterSheetSidePanel
                       game={session.game}
                       characters={characters}
@@ -304,7 +348,7 @@ export default function Play({
                 }}
               >
                 <Box width={300} height={"100%"}>
-                  {session && (
+                  {session && session.game && (
                     <GameSheetSidePanel
                       game={session.game}
                       setMessages={setMessages}
@@ -315,13 +359,14 @@ export default function Play({
               </ClickAwayListener>
             </Drawer>
             <Box height={"100%"}>
-              {session && (
+              {session && session.game && (
                 <Chat
                   oracle={session.game.oracle}
                   basicRoll={session.game.basicRoll}
                   author={currentCharacter}
                   messages={messages}
                   setMessages={setMessages}
+                  addMessage={addMessage}
                 ></Chat>
               )}
             </Box>
@@ -332,7 +377,7 @@ export default function Play({
             sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
           >
             <Grid xs={3} item={true}>
-              {session && (
+              {session && session.game && (
                 <CharacterSheetSidePanel
                   game={session.game}
                   characters={characters}
@@ -348,18 +393,19 @@ export default function Play({
               padding={2}
               item={true}
             >
-              {session && (
+              {session && session.game && (
                 <Chat
                   author={currentCharacter}
                   messages={messages}
                   setMessages={setMessages}
                   oracle={session.game.oracle}
                   basicRoll={session.game.basicRoll}
+                  addMessage={addMessage}
                 ></Chat>
               )}
             </Grid>
             <Grid xs={3} item={true}>
-              {session && (
+              {session && session.game && (
                 <GameSheetSidePanel
                   game={session.game}
                   setMessages={setMessages}

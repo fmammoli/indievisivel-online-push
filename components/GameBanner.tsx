@@ -9,7 +9,6 @@ interface GameBannerProps {
 }
 console.log(pushPowered);
 export default function GameBanner({ banner, title }: GameBannerProps) {
-  console.log();
   return (
     <Box
       sx={{

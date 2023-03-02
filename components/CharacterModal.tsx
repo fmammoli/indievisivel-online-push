@@ -6,26 +6,21 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Fade,
-  FormControl,
   FormControlLabel,
   FormGroup,
   IconButton,
-  Modal,
   Paper,
-  Slide,
   TextField,
   Typography,
-  useFormControl,
 } from "@mui/material";
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import pushCharacterSheetLogo from "../public/images/pushCharacterSheetLogo.png";
-import { AccountCircle, Circle } from "@mui/icons-material";
+import { Circle } from "@mui/icons-material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import useDiceRoller from "./useDiceRoller";

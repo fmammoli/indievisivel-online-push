@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { memo } from "react";
 
 interface MessagePropsType {
   id: string;
@@ -9,6 +10,8 @@ interface MessagePropsType {
   side: "LEFT" | "RIGHT";
   children: JSX.Element;
 }
+
+export const MemoedMessage = memo(Message);
 
 export default function Message({
   id,
@@ -33,10 +36,12 @@ export default function Message({
             {author}
           </Typography>
           <Typography variant="caption" component="p">
-            {`${timestamp.toLocaleDateString()}  -  ${timestamp.toLocaleTimeString(
-              [],
-              { hour: "2-digit", minute: "2-digit" }
-            )}`}
+            {`${new Date(timestamp).toLocaleDateString()}  -  ${new Date(
+              timestamp
+            ).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`}
           </Typography>
         </Box>
         <Box border={"1px solid"} borderRadius={2} p={1} borderColor={color}>
