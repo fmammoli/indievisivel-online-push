@@ -9,9 +9,10 @@ import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
 import { Fade, Stack } from "@mui/material";
 import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
+import { nanoid } from "nanoid";
 
 export type heroBannerItemType = {
   id: number;
@@ -124,6 +125,8 @@ export default function Home() {
   //   return () => {};
   // }, [fac, imgRef]);
 
+  const newSessionId = useMemo(() => nanoid(), []);
+
   return (
     <>
       <Head>
@@ -198,7 +201,7 @@ export default function Home() {
                             variant="contained"
                             component={Link}
                             noLinkStyle
-                            href={`/${heroData.gameId}/new`}
+                            href={`/${heroData.gameId}/${newSessionId}`}
                             startIcon={<CasinoOutlinedIcon />}
                             sx={{ borderRadius: "24px" }}
                           >

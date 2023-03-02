@@ -115,13 +115,15 @@ export default function TopMenu({
               </MenuItem>
               <Divider></Divider>
               <MenuItem onClick={handleClose}>
-                <Button
-                  variant={"outlined"}
-                  sx={{ borderRadius: "24px" }}
-                  size={"large"}
-                >
-                  Minhas Sessões
-                </Button>
+                <Link href={"/mySessions"} underline={"none"}>
+                  <Button
+                    variant={"outlined"}
+                    sx={{ borderRadius: "24px" }}
+                    size={"large"}
+                  >
+                    Minhas Sessões
+                  </Button>
+                </Link>
               </MenuItem>
             </Menu>
           </Box>
@@ -163,13 +165,15 @@ export default function TopMenu({
           alignItems={"center"}
           sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
         >
-          <Button
-            variant={"outlined"}
-            sx={{ borderRadius: "24px", color: textColor.color }}
-            size={"large"}
-          >
-            Minhas Sessões
-          </Button>
+          <Link href={"/mySessions"} underline={"none"}>
+            <Button
+              variant={"outlined"}
+              sx={{ borderRadius: "24px", color: textColor.color }}
+              size={"large"}
+            >
+              Minhas Sessões
+            </Button>
+          </Link>
         </Stack>
       </Stack>
     </nav>

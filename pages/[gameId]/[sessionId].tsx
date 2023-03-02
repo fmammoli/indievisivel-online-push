@@ -30,6 +30,10 @@ import { useRouter } from "next/router";
 
 import useLocalStorageState from "use-local-storage-state";
 import img from "@/public/images/altheaBack.jpg";
+import { SessionItemType, SessionListType } from "../mySessions";
+
+export const version = "v0.0.1";
+
 export interface MessageType {
   id: string;
   text: string;
@@ -42,9 +46,10 @@ export interface MessageType {
   rollMessage?: boolean;
 }
 
-interface SessionType {
+export interface SessionType {
   id: string;
   name: string;
+  createdAt: Date;
   lastSaved: Date;
   game: GameType | null;
   messages: MessageType[] | [];
@@ -102,20 +107,60 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
   });
   const theme = useTheme();
   const smallSreen = useMediaQuery(theme.breakpoints.down("md"));
-  console.log(smallSreen);
+
   const [session, setSession] = useLocalStorageState<SessionType>(
-    "online-push",
+    `indivisivel-online-push-${sessionId}`,
     {
       defaultValue: {
-        id: "-1",
-        name: "my new session",
+        id: sessionId && !Array.isArray(sessionId) ? sessionId : "",
+        name: "My new session",
         lastSaved: new Date(),
+        createdAt: new Date(),
         game: null,
         messages: [],
         characters: [{ ...annonymousCharacter, gameId: gameId as string }],
       },
     }
   );
+
+  const [sessions, setSessions] = useLocalStorageState<SessionListType>(
+    `indivisivel-online-push-session-list-${version}`,
+    {
+      defaultValue: {
+        sessions: [
+          {
+            gameId: session.id,
+            gameName: session.game ? session.game?.title : "",
+            sessionId: session.id,
+            sessionName: session.name,
+            sessionKey: `indivisivel-online-push-${sessionId}`,
+          },
+        ],
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (game && session && session.game) {
+      setSessions((prev: SessionListType) => {
+        if (prev && session && session.game) {
+          return {
+            sessions: [
+              ...prev.sessions,
+              {
+                sessionId: session.id,
+                sessionKey: `indivisivel-online-push-${session.id}`,
+                sessionName: session.name,
+                gameName: session.game.title,
+                gameId: session.game.id,
+              },
+            ],
+          };
+        }
+        return prev;
+      });
+    }
+  }, [game, session, setSessions]);
 
   // const [session, setSession] = useState<SessionType>({
   //   id: nanoid(),
@@ -258,6 +303,65 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
           }
           return prevSession;
         });
+
+        setSessions((prev: SessionListType) => {
+          if (prev) {
+            return {
+              sessions: [
+                ...prev.sessions.slice(0, -1),
+                {
+                  ...prev.sessions.slice(-1)[0],
+                  gameName: game.title,
+                  gameId: game.id,
+                },
+              ],
+            };
+          }
+          return prev;
+        });
+
+        // setSessions((prevSessions) => {
+        //   type UpdatedSessionType = {
+        //     session: SessionItemType;
+        //     index: number;
+        //   };
+        //   console.log(prevSessions);
+        //   let updatedSession: UpdatedSessionType | null = null;
+        //   console.log(sessionId);
+        //   prevSessions.sessions.forEach((item, index) => {
+        //     if (item.sessionId === sessionId)
+        //       updatedSession = {
+        //         session: {
+        //           ...item,
+        //           gameName: game.title,
+        //           gameId: game.id,
+        //         },
+        //         index: index,
+        //       };
+        //   });
+        //   if (updatedSession) {
+        //     const newSessions = [
+        //       ...prevSessions.sessions.slice(
+        //         0,
+        //         (updatedSession as UpdatedSessionType).index
+        //       ),
+        //       { ...(updatedSession as UpdatedSessionType).session },
+        //       ...prevSessions.sessions.slice(
+        //         (updatedSession as UpdatedSessionType).index
+        //       ),
+        //     ];
+        //     console.log(newSessions);
+        //     // const uniqueSessions = newSessions.filter(
+        //     //   (v, i, a) =>
+        //     //     a.findIndex((v2) => v2.sessionId === v.sessionId) === i
+        //     // );
+        //     return {
+        //       sessions: [...newSessions],
+        //     };
+        //   }
+
+        //   return { sessions: [...prevSessions.sessions] };
+        // });
       }
     }
   }, [isReady, setSession]);
@@ -268,7 +372,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>IndieVisivel Push Online</title>
         <meta name="description" content="Generated by create next app" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -289,6 +393,9 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
               banner={game?.bannerImg && game.bannerImg}
               title={game?.title ? game.title : ""}
               backgroundColor={game?.backgroundColor}
+              sessionName={session.name}
+              lastSaved={session.lastSaved}
+              setSession={setSession}
             ></GameBanner>
           </section>
 
