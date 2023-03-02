@@ -152,10 +152,11 @@ export default function CharacterModal({
   }
 
   function handleSubmit(e: any) {
+    console.log(e.target.elements);
     let inputs = [...e.target.elements].filter(
-      (item, index) => item.type === "text"
+      (item, index) => item.type === "text" || item.type === "textarea"
     );
-
+    console.log(inputs);
     let a = inputs.map((item, index) => {
       return { name: item.name, value: item.value };
     });
@@ -176,7 +177,7 @@ export default function CharacterModal({
     });
 
     newCharValues.id = character?.id;
-
+    console.log(newCharValues);
     setCharacter({ ...character, ...newCharValues });
     handleUpdate({ ...character, ...newCharValues });
     handleOnClose();
@@ -398,6 +399,13 @@ export default function CharacterModal({
                   })}
                 </InputList>
               </Box>
+              <InputList title={"Notas"}>
+                <InputNotes
+                  name={"notes"}
+                  initialValue={character?.notes}
+                  label={"notas"}
+                ></InputNotes>
+              </InputList>
             </FormGroup>
           </form>
         </Container>
@@ -416,6 +424,33 @@ export default function CharacterModal({
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+function InputNotes({
+  initialValue,
+  label,
+  name,
+}: {
+  initialValue?: string;
+  label: string;
+  name: string;
+}) {
+  return (
+    <Box>
+      <Box paddingX={1} width={"100%"}>
+        <TextField
+          name={name}
+          hiddenLabel
+          id={`filled-hidden-label-small-notes-${name}`}
+          defaultValue={initialValue}
+          variant="standard"
+          fullWidth
+          multiline
+          maxRows={8}
+        />
+      </Box>
+    </Box>
   );
 }
 
@@ -536,7 +571,7 @@ function InputListItem({
         <Circle fontSize="small" sx={{ color: "white", mr: 1, my: 0.5 }} />
         <TextField
           hiddenLabel
-          id="input-with-sx"
+          id={`input-with-sx-${inputName}`}
           variant="standard"
           defaultValue={initialValue}
           size={"small"}
@@ -619,7 +654,7 @@ function TextInputSheet({
           <TextField
             name={name}
             hiddenLabel
-            id="filled-hidden-label-small"
+            id={`filled-hidden-label-small-${name}`}
             defaultValue={initialValue}
             variant="standard"
             fullWidth

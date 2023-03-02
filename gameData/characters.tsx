@@ -26,6 +26,7 @@ export interface CharacterType {
   bond: {
     list: string[];
   };
+  notes: string;
 }
 
 const characters = [

@@ -125,6 +125,7 @@ export default function CharacterSheetSidePanel({
       bond: {
         list: [],
       },
+      notes: "",
     };
     setModalCharacter({
       id: nanoid(),
@@ -154,6 +155,7 @@ export default function CharacterSheetSidePanel({
       bond: {
         list: [],
       },
+      notes: "Aloooo",
     });
     setModalState(true);
   }
@@ -239,6 +241,11 @@ export default function CharacterSheetSidePanel({
                       <SheetSidePanelItem
                         sheetItem={character.bond}
                         title={"Vínculos"}
+                      ></SheetSidePanelItem>
+                      <Divider variant="middle" component="li" />
+                      <SheetSidePanelItem
+                        sheetItem={character.notes}
+                        title={"Notas"}
                       ></SheetSidePanelItem>
                     </CollapsableListItem>
                     <Divider

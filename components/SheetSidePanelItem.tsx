@@ -1,5 +1,6 @@
 import { CharacterType } from "@/gameData/characters";
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
+import { type } from "os";
 import { SetStateAction } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
@@ -16,7 +17,16 @@ export default function SheetSidePanelItem({
   listStyleTypes?: string[];
 }) {
   let toRender = null;
-  if (Array.isArray(sheetItem)) {
+
+  if (typeof sheetItem === "string") {
+    toRender = (
+      <ListItemText
+        key={title.length}
+        sx={{ paddingX: 3, paddingBottom: 2 }}
+        secondary={sheetItem}
+      ></ListItemText>
+    );
+  } else if (Array.isArray(sheetItem)) {
     toRender = sheetItem.map((item, index) => {
       return (
         <ListItem key={index}>
