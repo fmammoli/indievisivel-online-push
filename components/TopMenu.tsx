@@ -7,23 +7,27 @@ import styles from "@/styles/Home.module.scss";
 import pushLogo from "../public/images/pushLogo.png";
 import indieLogo from "../public/images/logoIndie-300x300.png";
 
-import { Divider, Menu, MenuItem, Paper, Stack } from "@mui/material";
+import {
+  Divider,
+  Menu,
+  MenuItem,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useState } from "react";
 
-export type MenuColorsType = {
-  color: string;
-  hover: string;
-};
-
 export default function TopMenu({
-  colors = { color: "white", hover: "#6750A4" },
+  colors = "primary",
   small = false,
+  linkColor,
 }: {
-  colors?: MenuColorsType;
+  colors?: "primary" | "secondary";
   small?: boolean;
+  linkColor?: string;
 }) {
-  const [textColor, setTextColor] = useState(colors);
-
+  const theme = useTheme();
   const logoSize = small ? "36" : "52";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -52,10 +56,8 @@ export default function TopMenu({
           <Paper elevation={4} sx={{ borderRadius: "90px" }}>
             <Box
               position={"relative"}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
+              display="flex"
+              justifyContent={"center"}
               gap={2}
               padding={1}
             >
@@ -82,10 +84,6 @@ export default function TopMenu({
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
-              sx={{
-                "&:hover": { color: textColor.hover },
-                color: textColor.color,
-              }}
             >
               Menu
             </Button>
@@ -98,17 +96,17 @@ export default function TopMenu({
                 "aria-labelledby": "basic-button",
               }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose} href={"/"}>
                 <Link href={"/"} underline={"none"}>
                   Home
                 </Link>
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose} href={"#"}>
                 <Link href={"#"} underline={"none"}>
                   Sobre
                 </Link>
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose} href={"#"}>
                 <Link href={"#"} underline={"none"}>
                   Jogos
                 </Link>
@@ -116,11 +114,7 @@ export default function TopMenu({
               <Divider></Divider>
               <MenuItem onClick={handleClose}>
                 <Link href={"/mySessions"} underline={"none"}>
-                  <Button
-                    variant={"outlined"}
-                    sx={{ borderRadius: "24px" }}
-                    size={"large"}
-                  >
+                  <Button variant={"outlined"} size={"large"}>
                     Minhas Sessões
                   </Button>
                 </Link>
@@ -128,35 +122,32 @@ export default function TopMenu({
             </Menu>
           </Box>
           <Box gap={6} sx={{ display: { xs: "none", sm: "none", md: "flex" } }}>
-            <Link
-              href={"/"}
-              underline={"none"}
-              sx={{
-                "&:hover": { color: textColor.hover },
-                color: textColor.color,
-              }}
-            >
-              Home
+            <Link href={"/"} underline={"hover"} color={"secondary"}>
+              <Typography
+                variant={"body1"}
+                color={linkColor}
+                sx={{ transition: "color 0.6s ease-out" }}
+              >
+                Home
+              </Typography>
             </Link>
-            <Link
-              href={"#"}
-              underline={"none"}
-              sx={{
-                "&:hover": { color: textColor.hover },
-                color: textColor.color,
-              }}
-            >
-              Sobre
+            <Link href={"#"} underline={"hover"} color={"secondary"}>
+              <Typography
+                variant={"body1"}
+                color={linkColor}
+                sx={{ transition: "color 0.6s ease-out" }}
+              >
+                Sobre
+              </Typography>
             </Link>
-            <Link
-              href={"#"}
-              underline={"none"}
-              sx={{
-                "&:hover": { color: textColor.hover },
-                color: textColor.color,
-              }}
-            >
-              Jogos
+            <Link href={"#"} underline={"hover"} color={"secondary"}>
+              <Typography
+                variant={"body1"}
+                color={linkColor}
+                sx={{ transition: "color 0.6s ease-out" }}
+              >
+                Jogos
+              </Typography>
             </Link>
           </Box>
         </Stack>
@@ -166,11 +157,7 @@ export default function TopMenu({
           sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
         >
           <Link href={"/mySessions"} underline={"none"}>
-            <Button
-              variant={"outlined"}
-              sx={{ borderRadius: "24px", color: textColor.color }}
-              size={"large"}
-            >
+            <Button variant={"outlined"} size={"large"} color={colors}>
               Minhas Sessões
             </Button>
           </Link>

@@ -10,14 +10,19 @@ import { Box } from "@mui/material";
 
 import styles from "@/styles/Home.module.scss";
 import { heroBannerItemType, heroBannerType } from "@/pages";
+import { MutableRefObject, RefObject, useRef } from "react";
 
 export default function SwipeView({
   data,
   handleSwipe,
 }: {
   data: heroBannerType;
-  handleSwipe: (newHeroData: heroBannerItemType) => void;
+  handleSwipe: (
+    newHeroData: heroBannerItemType,
+    backgroundImgRef?: RefObject<HTMLImageElement> | null
+  ) => void;
 }) {
+  const backgroundImgRef = useRef<HTMLImageElement>(null);
   return (
     <Box>
       <Swiper
@@ -29,9 +34,13 @@ export default function SwipeView({
         navigation
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
+        // onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={(swiper) => {
-          handleSwipe(data[swiper.activeIndex]);
+          console.log(backgroundImgRef);
+          handleSwipe(
+            data[swiper.activeIndex],
+            backgroundImgRef.current ? backgroundImgRef : null
+          );
         }}
         className={styles.mySwiper}
       >
@@ -44,6 +53,7 @@ export default function SwipeView({
             {item.backgroundImg.src && (
               <div className={styles.imageWrapper}>
                 <Image
+                  ref={backgroundImgRef}
                   src={item.backgroundImg.src}
                   alt={item.backgroundImg.alt ? item.backgroundImg.alt : ""}
                   className={styles.image}

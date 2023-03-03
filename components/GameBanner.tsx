@@ -24,6 +24,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import HistoryIcon from "@mui/icons-material/History";
+
 interface GameBannerProps {
   banner?: string;
   title: string;

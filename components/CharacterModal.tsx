@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import AddIcon from "@mui/icons-material/Add";
+
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import pushCharacterSheetLogo from "../public/images/pushCharacterSheetLogo.png";
 import { Circle } from "@mui/icons-material";
@@ -28,6 +28,10 @@ import { GameType } from "@/gameData/games";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CloseIcon from "@mui/icons-material/Close";
+import TextInputSheet from "./TextInputSheet";
+import InputList from "./InputList";
+import InputNotes from "./InputNotes";
+import InputListItem from "./InputListItem";
 
 interface CharacterModalPropsType {
   open: boolean;
@@ -41,7 +45,7 @@ interface CharacterModalPropsType {
   handleRemove: (char: any) => void;
 }
 
-type CharacterListsTypes =
+export type CharacterListsTypes =
   | "gifts"
   | "experience"
   | "upbringing"
@@ -422,254 +426,5 @@ export default function CharacterModal({
         </Button>
       </DialogActions>
     </Dialog>
-  );
-}
-
-function InputNotes({
-  initialValue,
-  label,
-  name,
-}: {
-  initialValue?: string;
-  label: string;
-  name: string;
-}) {
-  return (
-    <Box>
-      <Box paddingX={1} width={"100%"}>
-        <TextField
-          name={name}
-          hiddenLabel
-          id={`filled-hidden-label-small-notes-${name}`}
-          defaultValue={initialValue}
-          variant="standard"
-          fullWidth
-          multiline
-          maxRows={8}
-        />
-      </Box>
-    </Box>
-  );
-}
-
-interface InputListPropsType {
-  children?: ReactNode;
-  title: string;
-  handleAdd?: () => void;
-}
-
-function InputList({ children, title, handleAdd }: InputListPropsType) {
-  return (
-    <Box id={"formList1"} paddingTop={4} flexGrow={1}>
-      <Box
-        sx={{ backgroundColor: "rgba(0, 0, 0, 0.06)" }}
-        p={1}
-        borderRadius={"8px 8px 0 0"}
-      >
-        <Box
-          borderRadius={"6px 6px 0 0"}
-          sx={{ backgroundColor: "white" }}
-          paddingX={1}
-          display={"flex"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <Typography variant={"body1"}>{title}</Typography>
-          <IconButton onClick={handleAdd}>
-            <AddIcon></AddIcon>
-          </IconButton>
-        </Box>
-        {children}
-      </Box>
-    </Box>
-  );
-}
-
-interface InputListItemPropsType {
-  initialValue: string;
-  index: number;
-  handleDelete: (
-    initialValue: string,
-    index: number,
-    keyName: CharacterListsTypes
-  ) => void;
-  handleReroll: (
-    initialValue: string,
-    index: number,
-    keyName: CharacterListsTypes
-  ) => void;
-  keyName: CharacterListsTypes;
-  inputName: string;
-}
-
-function InputListItem({
-  index,
-  initialValue,
-  handleDelete,
-  handleReroll,
-  keyName,
-  inputName,
-}: InputListItemPropsType) {
-  const [show, setShow] = useState(false);
-  const [options, setOptions] = useState(false);
-  const [inputFocus, setInputFocus] = useState(false);
-
-  function handleEnter() {
-    setShow(true);
-  }
-  function handleExit() {
-    setShow(false);
-  }
-
-  function handleOnDelete() {
-    handleDelete(initialValue, index, keyName);
-  }
-
-  function handleOnReroll() {
-    handleReroll(initialValue, index, keyName);
-  }
-
-  function showOptions() {
-    setOptions(true);
-  }
-
-  function hideOptions() {
-    setOptions(false);
-  }
-
-  //TODO Increase maxRows of TextInput on focus
-  // const { focused } = useFormControl() || {};
-
-  // const helperText = useMemo(() => {
-  //   if (focused) {
-  //     return "This field is being focused";
-  //   }
-
-  //   return "Helper text";
-  // }, [focused]);
-
-  // console.log(focused);
-  return (
-    <Box
-      sx={{
-        paddingY: 2,
-        position: "relative",
-      }}
-    >
-      <div
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleExit}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <Circle fontSize="small" sx={{ color: "white", mr: 1, my: 0.5 }} />
-        <TextField
-          hiddenLabel
-          id={`input-with-sx-${inputName}`}
-          variant="standard"
-          defaultValue={initialValue}
-          size={"small"}
-          fullWidth
-          name={inputName}
-        />
-        <Box
-          sx={{
-            display: { xs: "none", sm: "none", md: "block" },
-            paddingRight: "3.5px",
-          }}
-        >
-          <Fade in={show}>
-            <IconButton color="default" onClick={showOptions}>
-              <MoreVertIcon></MoreVertIcon>
-            </IconButton>
-          </Fade>
-        </Box>
-        <Box
-          sx={{
-            display: { xs: "block", sm: "block", md: "none" },
-            paddingRight: "3.5px",
-          }}
-        >
-          <IconButton color="default" onClick={showOptions}>
-            <MoreVertIcon></MoreVertIcon>
-          </IconButton>
-        </Box>
-        <Fade in={options}>
-          <Paper
-            elevation={4}
-            sx={{
-              display: "flex",
-              top: "0.8rem",
-              left: "100%",
-              transform: "translateX(-100%)",
-              position: "absolute",
-              padding: 0.4,
-            }}
-            onMouseLeave={hideOptions}
-          >
-            <IconButton color="primary" onClick={handleOnReroll}>
-              <SettingsBackupRestoreIcon></SettingsBackupRestoreIcon>
-            </IconButton>
-            <IconButton color="error" onClick={handleOnDelete}>
-              <DeleteOutlinedIcon></DeleteOutlinedIcon>
-            </IconButton>
-            <IconButton color={"default"} onClick={hideOptions}>
-              <MoreVertIcon></MoreVertIcon>
-            </IconButton>
-          </Paper>
-        </Fade>
-      </div>
-    </Box>
-  );
-}
-
-interface TextInputSheetPropsType {
-  initialValue?: string;
-  label: string;
-  name: string;
-}
-function TextInputSheet({
-  initialValue,
-  label,
-  name,
-}: TextInputSheetPropsType) {
-  return (
-    <FormControlLabel
-      sx={{
-        backgroundColor: "rgba(0, 0, 0, 0.06)",
-        padding: 0.4,
-        borderRadius: "8px 0 0 8px",
-        display: "flex",
-        justifyContent: "flex-end",
-        marginLeft: 0,
-      }}
-      control={
-        <Box paddingX={1} width={"100%"}>
-          <TextField
-            name={name}
-            hiddenLabel
-            id={`filled-hidden-label-small-${name}`}
-            defaultValue={initialValue}
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      }
-      label={
-        <Box
-          sx={{
-            backgroundColor: "white",
-            borderRadius: "4px 0 0 4px",
-          }}
-          p={0.6}
-        >
-          <Typography variant="body2">{label}</Typography>
-        </Box>
-      }
-      labelPlacement="start"
-    ></FormControlLabel>
   );
 }

@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import {
@@ -8,7 +7,6 @@ import {
   ButtonGroup,
   Drawer,
   Grid,
-  Paper,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -29,10 +27,8 @@ import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 
 import useLocalStorageState from "use-local-storage-state";
-import img from "@/public/images/altheaBack.jpg";
-import { SessionItemType, SessionListType } from "../mySessions";
-
-export const version = "v0.0.1";
+import { SessionListType } from "../mySessions";
+import { version } from "@/gameData/systemVersion";
 
 export interface MessageType {
   id: string;
@@ -380,7 +376,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
           }}
         >
           <section>
-            <TopMenu colors={menuColors} small={true}></TopMenu>
+            <TopMenu colors={"primary"} small={true}></TopMenu>
 
             <GameBanner
               gameColor={game?.backgroundColor}
@@ -524,13 +520,34 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
             </Grid>
           )}
 
-          <Box>
-            <Paper elevation={5} square sx={{ backgroundColor: "#6750A4" }}>
-              <Typography variant="body2" component="h2" color={"white"} p={1}>
-                Footer
-              </Typography>
+          {/* <Box>
+            <Paper elevation={5} square>
+              <Box
+                bgcolor={theme.palette.primary.main}
+                width="100%"
+                display={"flex"}
+              >
+                <Typography
+                  variant="caption"
+                  component="h2"
+                  p={1}
+                  color={"primary.contrastText"}
+                  fontSize={"0.6rem"}
+                >
+                  Editora IndieVisível
+                </Typography>
+                <Typography
+                  variant="caption"
+                  component="h2"
+                  p={1}
+                  color={"primary.contrastText"}
+                  fontSize={"0.6rem"}
+                >
+                  Copywrite 2023
+                </Typography>
+              </Box>
             </Paper>
-          </Box>
+          </Box> */}
         </Box>
       </main>
     </>

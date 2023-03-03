@@ -9,10 +9,20 @@ import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
 import { Fade, Stack } from "@mui/material";
 import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import TopMenu from "@/components/TopMenu";
 import { nanoid } from "nanoid";
+import { FastAverageColor } from "fast-average-color";
+
+import Color from "colorjs.io";
 
 export type heroBannerItemType = {
   id: number;
@@ -99,31 +109,56 @@ const heroBanner: heroBannerType = [
 export default function Home() {
   const data = heroBanner;
   const [heroData, setHeroData] = useState(data[0]);
-  const [textColor, setTextColor] = useState({
-    color: "white",
-    hover: "#6750A4",
-  });
-  const imgRef = useRef(null);
 
-  function changeHeroData(newHeroData: heroBannerItemType) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const fac = new FastAverageColor();
+
+  const [linkColor, setLinkColor] = useState({
+    backgroundColor: "secondary.main",
+    textColor: "white",
+  });
+
+  function changeHeroData(
+    newHeroData: heroBannerItemType,
+    backgroundImgRef?: RefObject<HTMLImageElement> | null
+  ) {
+    if (newHeroData.id === 0) {
+      setLinkColor({
+        backgroundColor: "secondary.main",
+        textColor: "white",
+      });
+    }
+    if (newHeroData.backgroundImg.src?.default) {
+      fac
+        .getColorAsync(newHeroData.backgroundImg.src.default.src)
+        .then((color) => {
+          // console.log(color);
+
+          setLinkColor({
+            backgroundColor: color.hex,
+            textColor: color.isDark ? "#fff" : "#000",
+          });
+          // container.style.backgroundColor = color.rgba;
+          // container.style.color = color.isDark ? "#fff" : "#000";
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
     setHeroData(newHeroData);
   }
-  // const fac = new FastAverageColor();
-  // //TODO - Change text color based on background image average color
-  // useEffect(() => {
-  //   fac
-  //     .getColorAsync(imgRef.current)
-  //     .then((color) => {
-  //       console.log(color);
-  //       // container.style.backgroundColor = color.rgba;
-  //       // container.style.color = color.isDark ? "#fff" : "#000";
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-
-  //   return () => {};
-  // }, [fac, imgRef]);
+  // fac
+  //   .getColorAsync(imgRef.current)
+  //   .then((color) => {
+  //     // console.log(color);
+  //     setLinkColor(color.hex);
+  //     // container.style.backgroundColor = color.rgba;
+  //     // container.style.color = color.isDark ? "#fff" : "#000";
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   });
 
   let newSessionId = "";
 
@@ -153,7 +188,10 @@ export default function Home() {
 
           <div className={styles.hero}>
             <Container>
-              <TopMenu></TopMenu>
+              <TopMenu
+                linkColor={linkColor.textColor}
+                colors="secondary"
+              ></TopMenu>
             </Container>
             <Container>
               <Box marginX={"2rem"} marginTop={"2rem"}>
@@ -181,28 +219,26 @@ export default function Home() {
                         p={2}
                         paddingTop={2}
                       >
-                        <Fade in={!!heroData.text.title}>
-                          <Typography
-                            variant="h3"
-                            component="h1"
-                            color="white"
-                            sx={{
-                              fontSize: {
-                                xs: "1.8rem",
-                                sm: "2rem",
-                                md: "3rem",
-                              },
-                            }}
-                          >
-                            {heroData.text.title}
-                          </Typography>
-                        </Fade>
+                        <Typography
+                          variant="h3"
+                          component="h1"
+                          color={linkColor.textColor}
+                          sx={{
+                            transition: "color 0.6s ease-out",
+                            fontSize: {
+                              xs: "1.8rem",
+                              sm: "2rem",
+                              md: "3rem",
+                            },
+                          }}
+                        >
+                          {heroData.text.title}
+                        </Typography>
+
                         <Typography
                           variant="subtitle1"
-                          color="white"
-                          sx={{
-                            fontSize: { xs: "0.9em", sm: "1rem" },
-                          }}
+                          color={linkColor.textColor}
+                          sx={{ transition: "color 0.6s ease-out" }}
                         >
                           {heroData.text.description}
                         </Typography>
@@ -213,7 +249,16 @@ export default function Home() {
                             noLinkStyle
                             href={`/${heroData.gameId}/${newSessionId}`}
                             startIcon={<CasinoOutlinedIcon />}
-                            sx={{ borderRadius: "24px" }}
+                            color={"secondary"}
+                            sx={{
+                              backgroundColor: linkColor.backgroundColor,
+                              color: linkColor.textColor,
+                              transition: "background-color 0.8s ease",
+                              ":hover": {
+                                // backgroundColor: "secondary.main",
+                                color: "white",
+                              },
+                            }}
                           >
                             Jogar
                           </Button>
@@ -228,7 +273,7 @@ export default function Home() {
         </section>
         <section>
           <Container>
-            <Typography variant="h3" component="h1" color="black">
+            <Typography variant="h3" component="h1" color={"primary"}>
               O que é o Push?
             </Typography>
           </Container>

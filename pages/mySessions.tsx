@@ -96,7 +96,7 @@ export default function MySessions() {
       <main>
         <Box>
           <Container>
-            <TopMenu colors={menuColors}></TopMenu>
+            <TopMenu colors={"primary"}></TopMenu>
           </Container>
         </Box>
 
@@ -223,9 +223,9 @@ function SessionListItem({
   return (
     <Accordion
       sx={{
-        backgroundImage: expanded ? `url(${game?.bannerImg})` : "",
+        backgroundImage: `url(${game?.bannerImg})`,
         backgroundPosition: "center center",
-        backgroundSize: "cover",
+        backgroundSize: expanded ? "cover" : "0px",
       }}
       onChange={handleChange}
     >

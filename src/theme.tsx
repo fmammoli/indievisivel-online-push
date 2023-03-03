@@ -13,22 +13,47 @@ export const roboto = Roboto({
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#6750A4",
+      main: "#612F74",
+      link: "#612F74",
     },
     secondary: {
-      main: "#19857b",
+      main: "#76F0DA",
+      link: "#ffff",
     },
     error: {
-      main: red.A400,
+      main: red[400],
+    },
+    oracle: {
+      main: red[400],
+    },
+    primaryAccent: {
+      main: "#612F74",
+    },
+    secondaryAccent: {
+      main: "#76F0DA",
+      contrastText: "white",
+    },
+    success: {
+      main: "#43742f",
     },
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+    button: {
+      textTransform: "none",
+    },
   },
   components: {
     MuiButton: {
+      defaultProps: {},
       styleOverrides: {
-        outlined: {},
+        root: { borderWidth: "2px" },
+        outlined: {
+          borderRadius: "24px",
+          fontVariant: "normal",
+
+          ":hover": { borderWidth: "2px" },
+        },
       },
     },
     MuiLink: {
