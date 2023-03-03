@@ -219,8 +219,8 @@ export default function GameBanner({
             alignSelf={"flex-end"}
             position={"relative"}
             sx={{
-              width: { xs: "50px", sm: "50px", md: "160px" },
-              height: { xs: "27.8px", sm: "27.8px", md: "100%" },
+              width: { xs: "50px", sm: "50px", md: "100px" },
+              height: { xs: "27.8px", sm: "27.8px", md: "56px" },
             }}
           >
             <Image src={pushPowered} alt={""} fill></Image>

@@ -12,15 +12,25 @@ import {
   AccordionDetails,
   AccordionSummary,
   Fade,
+  IconButton,
+  List,
   Stack,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useMemo, useRef, useState } from "react";
-
+import { useEffect, useMemo, useRef, useState } from "react";
+import HistoryIcon from "@mui/icons-material/History";
 import TopMenu from "@/components/TopMenu";
 import { nanoid } from "nanoid";
 import useLocalStorageState from "use-local-storage-state";
 import { version } from "./[gameId]/[sessionId]";
+import games from "@/gameData/games";
+import MessageIcon from "@mui/icons-material/Message";
+import PersonIcon from "@mui/icons-material/Person";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import SheetSidePanelItem from "@/components/SheetSidePanelItem";
+
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 export interface SessionItemType {
   gameId: string;
@@ -28,6 +38,10 @@ export interface SessionItemType {
   sessionId: string;
   sessionName: string;
   sessionKey: string;
+  lastSaved: string | Date;
+  createdAt: string | Date;
+  messagesCount: number;
+  charactersCount: number;
 }
 
 export interface SessionListType {
@@ -43,9 +57,32 @@ export default function MySessions() {
     defaultValue: { sessions: [] },
   });
 
+  const sortedSessions = [...sessions.sessions].sort(
+    (a, b) => new Date(b.lastSaved).valueOf() - new Date(a.lastSaved).valueOf()
+  );
+
   function clearAll() {
     removeItem();
     localStorage.clear();
+  }
+
+  function removeSession(sessionId: string) {
+    setSessions((prev: SessionListType) => {
+      const toRemoveIndex = prev.sessions.findIndex(
+        (item, index) => item.sessionId === sessionId
+      );
+      console.log(toRemoveIndex);
+      console.log(prev.sessions);
+      if (toRemoveIndex !== -1) {
+        return {
+          sessions: [
+            ...prev.sessions.slice(0, toRemoveIndex),
+            ...prev.sessions.slice(toRemoveIndex + 1, prev.sessions.length),
+          ],
+        };
+      }
+      return prev;
+    });
   }
 
   return (
@@ -63,27 +100,31 @@ export default function MySessions() {
           </Container>
         </Box>
 
-        <Box bgcolor={"#6750A4"} paddingTop={"4rem"}>
+        <Box paddingTop={"4rem"}>
           <Container>
-            <Typography variant="h1" color={"white"}>
+            <Typography variant="h1" color={"primary"}>
               Minhas Sessões
             </Typography>
             <Button color={"error"} onClick={clearAll} variant={"contained"}>
-              Limpar Todas as Sessões
+              Apagar todas as Sessões
             </Button>
             <Box paddingY={4}>
-              {sessions.sessions.map((session, index) => {
+              {sortedSessions.map((session, index) => {
                 if (session.sessionKey && session.sessionId) {
                   return (
                     <SessionListItem
+                      index={index}
                       key={index}
                       gameId={session.gameId}
                       gameName={session.gameName}
                       sessionId={session.sessionId}
                       sessionName={session.sessionName}
-                      createdAt={""}
-                      lastPlayed={""}
+                      createdAt={session.createdAt}
+                      lastSaved={session.lastSaved}
                       sessionKey={session.sessionKey}
+                      charactersCount={session.charactersCount}
+                      messagesCount={session.messagesCount}
+                      handleDelete={removeSession}
                     ></SessionListItem>
                   );
                 }
@@ -97,67 +138,183 @@ export default function MySessions() {
 }
 
 interface SessionListItemPropsType {
+  index: number;
   gameId: string;
   gameName: string;
   sessionId: string;
   sessionName: string;
   sessionKey: string;
   createdAt: string | Date;
-  lastPlayed: string | Date;
+  lastSaved: string | Date;
   messagesCount?: number;
   charactersCount?: number;
+  handleDelete: (sessionId: string) => void;
 }
+const formatTime = (milliseconds: number) => {
+  const seconds = Math.floor((milliseconds / 1000) % 60);
+  const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+  const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+
+  return [
+    hours.toString().padStart(2, "0"),
+    minutes.toString().padStart(2, "0"),
+    seconds.toString().padStart(2, "0"),
+  ].join(":");
+};
 
 function SessionListItem({
+  index,
   gameId,
   gameName,
   sessionId,
   sessionName,
   sessionKey,
   createdAt,
-  lastPlayed,
-  messagesCount,
-  charactersCount,
+  lastSaved,
+  messagesCount = 0,
+  charactersCount = 0,
+  handleDelete,
 }: SessionListItemPropsType) {
-  const [expanded, setExpanded] = useState<string | false>(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(expanded ? false : true);
+  };
+
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  let renderDate = "";
+  let totalTimePlayed = "";
+  const game = games.find((item, index) => item.id === gameId);
+
+  if (hydrated) {
+    renderDate =
+      typeof lastSaved === "string"
+        ? new Date(lastSaved).toLocaleString(["pt-BR"], {
+            weekday: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        : lastSaved.toLocaleString(["pt-BR"], {
+            weekday: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+
+    const end = new Date(lastSaved);
+    const start = new Date(createdAt);
+    totalTimePlayed = formatTime(end.valueOf() - start.valueOf());
+  }
+  const borderRadiusObj =
+    index === 0
+      ? { borderTopRightRadius: "4px", borderTopLeftRadius: "4px" }
+      : {};
+
+  function handleDeleteSession() {
+    handleDelete(sessionId);
+  }
+
   return (
-    <Accordion>
+    <Accordion
+      sx={{
+        backgroundImage: expanded ? `url(${game?.bannerImg})` : "",
+        backgroundPosition: "center center",
+        backgroundSize: "cover",
+      }}
+      onChange={handleChange}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
+        sx={{
+          background: `linear-gradient(90deg, ${game?.backgroundColor}99 1%, ${game?.backgroundColor}99 25%, ${game?.backgroundColor}99 70%, rgba(151,151,151,0) 100%)`,
+          ...borderRadiusObj,
+        }}
       >
         <Typography sx={{ width: "33%", flexShrink: 0 }}>
           {sessionName}
         </Typography>
+
         <Typography sx={{ width: "33%", color: "text.secondary" }}>
           {gameName}
         </Typography>
-        <Typography sx={{ color: "text.secondary" }}>LastPlayed</Typography>
+
+        <Box display={"flex"} gap={1}>
+          <HistoryIcon color={"action"}></HistoryIcon>
+          <Typography sx={{ color: "text.secondary" }}>{renderDate}</Typography>
+        </Box>
       </AccordionSummary>
-      <AccordionDetails>
-        <Typography sx={{ width: "33%", flexShrink: 0 }}>
+      <AccordionDetails
+        sx={{
+          background: `linear-gradient(90deg, ${game?.backgroundColor}99 1%, ${game?.backgroundColor}99 25%, ${game?.backgroundColor}99 70%, rgba(151,151,151,0) 100%)`,
+        }}
+      >
+        {/* <Typography sx={{ width: "33%", flexShrink: 0 }}>
           {sessionKey}
-        </Typography>
-        <Typography>
-          Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-          Aliquam eget maximus est, id dignissim quam.
-        </Typography>
-        <Link
-          href={`/${gameId}/${sessionId}`}
-          underline={"none"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button variant="outlined" color={"primary"}>
-            Continuar Jogando
-          </Button>
-        </Link>
+        </Typography> */}
+        <Box maxWidth={"md"}>
+          <Box display={"flex"} gap={4} paddingBottom={2}>
+            <Box display={"flex"} gap={1} alignItems={"flex-end"}>
+              <PersonIcon fontSize="medium"></PersonIcon>
+              <Typography variant={"body2"}>{charactersCount}</Typography>
+            </Box>
+            <Box display={"flex"} gap={1} alignItems={"flex-end"}>
+              <MessageIcon fontSize="medium"></MessageIcon>
+              <Typography variant={"body2"}>{messagesCount}</Typography>
+            </Box>
+            {/* <Box display={"flex"} gap={1} alignItems={"flex-end"}>
+              <AccessTimeFilledIcon fontSize="medium"></AccessTimeFilledIcon>
+              <Typography variant={"body2"}>{totalTimePlayed}</Typography>
+            </Box> */}
+          </Box>
+          <Typography variant="body1">{game?.about.text}</Typography>
+          <Box paddingY={2} display={"flex"} justifyContent={"space-between"}>
+            <Link
+              href={`/${gameId}/${sessionId}`}
+              underline={"none"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="contained"
+                color={"primary"}
+                sx={{
+                  "&.MuiButton-contained": { color: "white" },
+                  backgroundColor: game?.backgroundColor,
+                }}
+              >
+                Continuar Jogando
+              </Button>
+            </Link>
+
+            <Link
+              href={`/pdfViewer/${game?.pdf}`}
+              underline={"none"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="contained" aria-label="Show pdf">
+                Livro do jogo
+              </Button>
+            </Link>
+
+            <Button
+              variant="contained"
+              color={"error"}
+              endIcon={<DeleteForeverIcon></DeleteForeverIcon>}
+              onClick={handleDeleteSession}
+            >
+              Deletar Sessão
+            </Button>
+          </Box>
+        </Box>
       </AccordionDetails>
     </Accordion>
   );
