@@ -144,18 +144,37 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     if (game && session && session.game) {
       setSessions((prev: SessionListType) => {
         if (prev && session && session.game) {
-          return {
-            sessions: [
-              ...prev.sessions,
-              {
-                sessionId: session.id,
-                sessionKey: `indivisivel-online-push-${session.id}`,
-                sessionName: session.name,
-                gameName: session.game.title,
-                gameId: session.game.id,
-              },
-            ],
-          };
+          const toUpdateIndex = prev.sessions.findIndex(
+            (item, index) => item.sessionId === session.id
+          );
+          if (toUpdateIndex === -1) {
+            return {
+              sessions: [
+                ...prev.sessions,
+                {
+                  sessionId: session.id,
+                  sessionKey: `indivisivel-online-push-${session.id}`,
+                  sessionName: session.name,
+                  gameName: session.game.title,
+                  gameId: session.game.id,
+                },
+              ],
+            };
+          } else {
+            const prevElement = prev.sessions[toUpdateIndex];
+            return {
+              sessions: [
+                ...prev.sessions.slice(0, toUpdateIndex),
+                {
+                  ...prevElement,
+                  sessionName: session.name,
+                  gameName: session.game.title,
+                  gameId: session.game.id,
+                },
+                ...prev.sessions.slice(toUpdateIndex + 1, prev.sessions.length),
+              ],
+            };
+          }
         }
         return prev;
       });
@@ -319,55 +338,9 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
           }
           return prev;
         });
-
-        // setSessions((prevSessions) => {
-        //   type UpdatedSessionType = {
-        //     session: SessionItemType;
-        //     index: number;
-        //   };
-        //   console.log(prevSessions);
-        //   let updatedSession: UpdatedSessionType | null = null;
-        //   console.log(sessionId);
-        //   prevSessions.sessions.forEach((item, index) => {
-        //     if (item.sessionId === sessionId)
-        //       updatedSession = {
-        //         session: {
-        //           ...item,
-        //           gameName: game.title,
-        //           gameId: game.id,
-        //         },
-        //         index: index,
-        //       };
-        //   });
-        //   if (updatedSession) {
-        //     const newSessions = [
-        //       ...prevSessions.sessions.slice(
-        //         0,
-        //         (updatedSession as UpdatedSessionType).index
-        //       ),
-        //       { ...(updatedSession as UpdatedSessionType).session },
-        //       ...prevSessions.sessions.slice(
-        //         (updatedSession as UpdatedSessionType).index
-        //       ),
-        //     ];
-        //     console.log(newSessions);
-        //     // const uniqueSessions = newSessions.filter(
-        //     //   (v, i, a) =>
-        //     //     a.findIndex((v2) => v2.sessionId === v.sessionId) === i
-        //     // );
-        //     return {
-        //       sessions: [...newSessions],
-        //     };
-        //   }
-
-        //   return { sessions: [...prevSessions.sessions] };
-        // });
       }
     }
   }, [isReady, setSession]);
-
-  // if (!session) setSession(initialSesstionState(gameId, sessionId));
-  // console.log(session);
 
   return (
     <>
