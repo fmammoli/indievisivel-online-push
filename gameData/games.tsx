@@ -343,7 +343,7 @@ export const games: GameType[] = [
       { value: 5, text: "Desbancar as Necrocorps" },
       { value: 6, text: "Se tornar um Metabarão" },
     ],
-    bannerImg: "/images/altheaBack.jpg",
+    bannerImg: "/images/a_cidade_poco_cover.jpg",
     backgroundColor: "#E1C661",
     pdf: "a_cidade_poco_game.pdf",
   },

@@ -174,7 +174,7 @@ export default function CharacterSheetSidePanel({
       >
         <ScrollableDiv>
           <SheetSidePanel
-            title={"Character Sheet"}
+            title={"Personagens"}
             align={"left"}
             {...handleHide}
             addButton

@@ -10,10 +10,20 @@ import {
 import Image from "next/image";
 import styles from "@/styles/Home.module.scss";
 import pushPowered from "../public/images/pushPoweredLogo.png";
-import { Dispatch, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SessionType } from "@/pages/[gameId]/[sessionId]";
 import UpdateIcon from "@mui/icons-material/Update";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+
+import HistoryIcon from "@mui/icons-material/History";
 interface GameBannerProps {
   banner?: string;
   title: string;
@@ -21,6 +31,7 @@ interface GameBannerProps {
   sessionName: string;
   lastSaved: string | Date;
   setSession: Dispatch<SetStateAction<SessionType>>;
+  gameColor?: string;
 }
 
 export default function GameBanner({
@@ -30,10 +41,13 @@ export default function GameBanner({
   sessionName,
   lastSaved,
   setSession,
+  gameColor = "#6e6e6e",
 }: GameBannerProps) {
   const [inputState, setInputState] = useState(sessionName);
 
   const [focus, setFocus] = useState(false);
+
+  const [show, setShow] = useState(false);
 
   const handleBlur = () => {
     if (inputState !== sessionName) {
@@ -53,6 +67,55 @@ export default function GameBanner({
   const onBlur = () => {
     setFocus(false);
   };
+
+  const showForm = () => {
+    setShow(true);
+  };
+
+  const hideForm = () => {
+    setShow(false);
+  };
+
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  let renderDate = "";
+
+  if (hydrated) {
+    renderDate =
+      typeof lastSaved === "string"
+        ? new Date(lastSaved).toLocaleString(["pt-BR"], {
+            weekday: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        : lastSaved.toLocaleString(["pt-BR"], {
+            weekday: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+  }
+
+  function handleSubmit(e: FormEvent<Element>) {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      sessionName: { value: string };
+    };
+    if (target.sessionName.value !== sessionName) {
+      setSession((session: SessionType) => {
+        return {
+          ...session,
+          name: target.sessionName.value,
+          lastSaved: new Date(),
+        };
+      });
+    }
+  }
 
   return (
     <Box
@@ -82,17 +145,28 @@ export default function GameBanner({
           ></Image>
         )}
       </Box>
-      <Container sx={{ gridArea: "1 / 1 / 2 / 2", zIndex: "1" }}>
+
+      <Container
+        sx={{
+          gridArea: "1 / 1 / 2 / 2",
+          zIndex: "1",
+          background: `linear-gradient(90deg, ${gameColor}80 1%, ${gameColor}80 25%, ${gameColor}20 70%, rgba(151,151,151,0) 100%)`,
+          margin: 0,
+          display: "flex",
+          width: "100%",
+        }}
+      >
         <Box
           display={"flex"}
           alignItems="center"
           justifyContent="space-between"
           sx={{
-            marginInline: "2rem",
+            marginInline: { sx: "0", sm: "0", md: "2rem" },
             flexDirection: "row",
           }}
+          flexGrow={1}
         >
-          <Box paddingY={1}>
+          <Box paddingY={1} paddingX={2}>
             <Typography
               variant="h2"
               component="h1"
@@ -102,47 +176,43 @@ export default function GameBanner({
             >
               {title}
             </Typography>
-            <Typography
-              variant="h2"
-              component="h1"
-              color="white"
-              sx={{ fontSize: { xs: "2rem", sm: "2rem", md: "3.75rem" } }}
-              borderRadius={"50%"}
-            >
-              {sessionName}
-            </Typography>
-
-            {/* <Box
+            <Box
               display={"flex"}
-              alignItems="center"
-              gap={4}
-              bgcolor={focus ? "gray" : "transparent"}
+              sx={{
+                flexDirection: { xs: "column", sm: "column", md: "row" },
+                gap: { xs: "0", sm: "0", md: "4" },
+              }}
             >
-              <TextField
-                value={inputState}
-                defaultValue={sessionName}
-                onFocus={handleFocus}
-                onBlur={onBlur}
-                variant={"standard"}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "white",
-                  },
-                }}
-                onChange={onChange}
-              ></TextField>
-              <Fade in={focus}>
-                <IconButton onClick={handleBlur} color={"primary"}>
-                  <CheckBoxIcon></CheckBoxIcon>
-                </IconButton>
-              </Fade>
-              <Box display={"flex"} alignItems="center" gap={1}>
-                <UpdateIcon color={"success"}></UpdateIcon>
+              <form
+                onSubmit={handleSubmit}
+                onMouseEnter={showForm}
+                onMouseLeave={hideForm}
+              >
+                <Box display={"flex"} gap={1}>
+                  <TextField
+                    defaultValue={sessionName}
+                    variant={"standard"}
+                    name="sessionName"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        color: "white",
+                      },
+                    }}
+                  ></TextField>
+                  <Fade in={show}>
+                    <IconButton color="primary" type="submit">
+                      <CheckCircleOutlineIcon></CheckCircleOutlineIcon>
+                    </IconButton>
+                  </Fade>
+                </Box>
+              </form>
+              <Box display={"flex"} gap={1} alignItems="center">
+                <HistoryIcon color={"primary"}></HistoryIcon>
                 <Typography variant="body2" color={"white"}>
-                  {new Date(lastSaved).toLocaleString(["pt-BR"])}
+                  {renderDate}
                 </Typography>
               </Box>
-            </Box> */}
+            </Box>
           </Box>
 
           <Box

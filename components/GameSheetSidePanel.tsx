@@ -97,7 +97,7 @@ export default function GameSheetSidePanel({
       py={1}
     >
       <ScrollableDiv>
-        <SheetSidePanel title={"Game Sheet"} {...handleHide} {...pdfProps}>
+        <SheetSidePanel title={"Jogo"} {...handleHide} {...pdfProps}>
           <SheetSidePanelTitleItem
             id={game.id}
             title={game.title}

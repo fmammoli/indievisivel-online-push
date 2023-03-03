@@ -68,7 +68,6 @@ export default function CharacterModal({
       }
     }
   }, [open]);
-  // console.log(character);
 
   function handleAdd(
     character: CharacterType | null,
@@ -152,11 +151,10 @@ export default function CharacterModal({
   }
 
   function handleSubmit(e: any) {
-    console.log(e.target.elements);
     let inputs = [...e.target.elements].filter(
       (item, index) => item.type === "text" || item.type === "textarea"
     );
-    console.log(inputs);
+
     let a = inputs.map((item, index) => {
       return { name: item.name, value: item.value };
     });
@@ -177,7 +175,7 @@ export default function CharacterModal({
     });
 
     newCharValues.id = character?.id;
-    console.log(newCharValues);
+
     setCharacter({ ...character, ...newCharValues });
     handleUpdate({ ...character, ...newCharValues });
     handleOnClose();
@@ -512,7 +510,6 @@ function InputListItem({
   keyName,
   inputName,
 }: InputListItemPropsType) {
-  // console.log(`${index}__${initialValue}`);
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);

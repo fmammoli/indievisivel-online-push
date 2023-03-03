@@ -201,10 +201,15 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
         if (prevSession) {
           if (typeof value === "function") {
             const newMessages = value(prevSession?.messages);
-            return { ...prevSession, messages: newMessages };
+            return {
+              ...prevSession,
+              messages: newMessages,
+              lastSaved: new Date(),
+            };
           }
           if (Array.isArray(value)) {
-            return { ...prevSession, messages: value };
+            console.log("new message");
+            return { ...prevSession, messages: value, lastSaved: new Date() };
           }
         }
         return prevSession;
@@ -230,10 +235,14 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
         if (prevSession) {
           if (typeof value === "function") {
             const newCharacters = value(prevSession?.characters);
-            return { ...prevSession, characters: newCharacters };
+            return {
+              ...prevSession,
+              characters: newCharacters,
+              lastSaved: new Date(),
+            };
           }
           if (Array.isArray(value)) {
-            return { ...prevSession, characters: value };
+            return { ...prevSession, characters: value, lastSaved: new Date() };
           }
         }
         return prevSession;
@@ -242,7 +251,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     [setSession]
   );
 
-  const addMessageOriginal = ({
+  const addMessage = ({
     id,
     text,
     author,
@@ -296,7 +305,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     });
   };
 
-  const addMessage = useCallback(addMessageOriginal, [setMessages]);
+  // const addMessage = useCallback(addMessageOriginal, [setMessages]);
 
   const [characterDrawerStatus, setCharacterDrawerStatus] = useState(false);
   const [gameDrawerStatus, setGameDrawerStatus] = useState(false);
@@ -363,11 +372,12 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
             <TopMenu colors={menuColors} small={true}></TopMenu>
 
             <GameBanner
+              gameColor={game?.backgroundColor}
               banner={game?.bannerImg && game.bannerImg}
               title={game?.title ? game.title : ""}
               backgroundColor={game?.backgroundColor}
               sessionName={session.name}
-              lastSaved={session.lastSaved}
+              lastSaved={session.lastSaved.toString()}
               setSession={setSession}
             ></GameBanner>
           </section>

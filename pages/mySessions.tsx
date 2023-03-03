@@ -73,17 +73,20 @@ export default function MySessions() {
             </Button>
             <Box paddingY={4}>
               {sessions.sessions.map((session, index) => {
-                return (
-                  <SessionListItem
-                    gameId={session.gameId}
-                    gameName={session.gameName}
-                    sessionId={session.sessionId}
-                    sessionName={session.sessionName}
-                    createdAt={""}
-                    lastPlayed={""}
-                    sessionKey={session.sessionKey}
-                  ></SessionListItem>
-                );
+                if (session.sessionKey && session.sessionId) {
+                  return (
+                    <SessionListItem
+                      key={index}
+                      gameId={session.gameId}
+                      gameName={session.gameName}
+                      sessionId={session.sessionId}
+                      sessionName={session.sessionName}
+                      createdAt={""}
+                      lastPlayed={""}
+                      sessionKey={session.sessionKey}
+                    ></SessionListItem>
+                  );
+                }
               })}
             </Box>
           </Container>
