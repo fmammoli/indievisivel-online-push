@@ -22,7 +22,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import TopMenu from "@/components/TopMenu";
 import { nanoid } from "nanoid";
 import useLocalStorageState from "use-local-storage-state";
-import { version } from "./[gameId]/[sessionId]";
+
 import games from "@/gameData/games";
 import MessageIcon from "@mui/icons-material/Message";
 import PersonIcon from "@mui/icons-material/Person";
@@ -31,6 +31,7 @@ import SheetSidePanelItem from "@/components/SheetSidePanelItem";
 
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { version } from "@/gameData/systemVersion";
 
 export interface SessionItemType {
   gameId: string;

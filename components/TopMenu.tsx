@@ -84,6 +84,7 @@ export default function TopMenu({
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
+              color={colors}
             >
               Menu
             </Button>
