@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
@@ -29,6 +29,7 @@ import { useRouter } from "next/router";
 import useLocalStorageState from "use-local-storage-state";
 import { SessionListType } from "../mySessions";
 import { version } from "@/gameData/systemVersion";
+import Color from "colorjs.io";
 
 export interface MessageType {
   id: string;
@@ -358,6 +359,30 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     }
   }, [isReady, setSession]);
 
+  const [linkColor, setLinkColor] = useState({
+    backgroundColor: "secondary.main",
+    textColor: "white",
+  });
+
+  const findColor = (backgroundColor: string) =>
+    useMemo(() => {
+      if (backgroundColor) {
+        let color = new Color(backgroundColor);
+        const contrastWhite = color.contrast("white", "APCA");
+        const contrastBlack = color.contrast("black", "APCA");
+        console.log(`white:${contrastWhite}__black${contrastBlack}`);
+        setLinkColor({
+          backgroundColor: backgroundColor,
+          textColor:
+            Math.abs(contrastBlack) > Math.abs(contrastWhite)
+              ? "black"
+              : "white",
+        });
+        return backgroundColor;
+      }
+    }, [game]);
+  // findColor(game?.backgroundColor || "");
+  console.log(linkColor);
   return (
     <>
       <Head>
@@ -376,8 +401,6 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
           }}
         >
           <section>
-            <TopMenu colors={"primary"} small={true}></TopMenu>
-
             <GameBanner
               gameColor={game?.backgroundColor}
               banner={game?.bannerImg && game.bannerImg}
@@ -386,7 +409,13 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
               sessionName={session.name}
               lastSaved={session.lastSaved.toString()}
               setSession={setSession}
-            ></GameBanner>
+            >
+              <TopMenu
+                linkColor={linkColor.textColor}
+                colors={"secondary"}
+                small={true}
+              ></TopMenu>
+            </GameBanner>
           </section>
 
           {smallSreen ? (

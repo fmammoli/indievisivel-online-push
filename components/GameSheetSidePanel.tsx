@@ -1,8 +1,7 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 
 import { Dispatch, SetStateAction, useMemo } from "react";
 import ScrollableDiv from "./ScrollableDiv";
-import DiceIcon from "./DiceIcon";
 import PentagonIcon from "@mui/icons-material/Pentagon";
 import CircleIcon from "@mui/icons-material/Circle";
 
@@ -39,7 +38,7 @@ export default function GameSheetSidePanel({
       const newMessage: MessageType = {
         id: nanoid(),
         text: text,
-        color: "#ff1744",
+        color: "complications.main",
         author: "Complicações",
         timestamp: new Date(),
         side: "RIGHT",
@@ -68,7 +67,7 @@ export default function GameSheetSidePanel({
       const newMessage: MessageType = {
         id: nanoid(),
         text: text,
-        color: "#6750A4",
+        color: "matrix.main",
         author: "Matrix",
         timestamp: new Date(),
         side: "RIGHT",
@@ -99,6 +98,8 @@ export default function GameSheetSidePanel({
       <ScrollableDiv>
         <SheetSidePanel title={"Jogo"} {...handleHide} {...pdfProps}>
           <SheetSidePanelTitleItem
+            noEdit
+            noSettings
             id={game.id}
             title={game.title}
             secondaryText={`${game.author} - ${game.version}`}
@@ -131,7 +132,7 @@ export default function GameSheetSidePanel({
             button={
               <Button
                 variant="outlined"
-                color={"error"}
+                color={"complications"}
                 sx={{ borderRadius: "90px" }}
                 size="small"
                 startIcon={<CircleIcon></CircleIcon>}
@@ -149,7 +150,7 @@ export default function GameSheetSidePanel({
             button={
               <Button
                 variant="outlined"
-                color={"primary"}
+                color={"matrix"}
                 sx={{ borderRadius: "90px" }}
                 size="small"
                 startIcon={<PentagonIcon></PentagonIcon>}

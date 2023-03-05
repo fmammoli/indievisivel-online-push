@@ -1,6 +1,6 @@
 import { Roboto } from "@next/font/google";
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
+import { blue, orange, red, teal } from "@mui/material/colors";
 
 export const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -26,6 +26,11 @@ const theme = createTheme({
     oracle: {
       main: red[400],
     },
+    complications: {
+      main: orange[400],
+    },
+    dices: { main: blue[500] },
+    matrix: { main: teal[400] },
     primaryAccent: {
       main: "#612F74",
     },

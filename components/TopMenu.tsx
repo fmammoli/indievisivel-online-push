@@ -39,7 +39,12 @@ export default function TopMenu({
   };
   return (
     <nav className={styles.navWrapper}>
-      <Stack direction={"row"} justifyContent="space-between" py={2}>
+      <Stack
+        direction={"row"}
+        justifyContent="space-between"
+        py={2}
+        sx={{ marginInline: { xs: "1rem", sm: "1rem", md: "2rem" } }}
+      >
         <Stack
           alignItems={"center"}
           gap={4}

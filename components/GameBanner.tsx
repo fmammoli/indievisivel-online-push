@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   Fade,
-  FormControl,
   IconButton,
   TextField,
   Typography,
@@ -13,15 +12,13 @@ import pushPowered from "../public/images/pushPoweredLogo.png";
 import {
   Dispatch,
   FormEvent,
+  ReactNode,
   SetStateAction,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import { SessionType } from "@/pages/[gameId]/[sessionId]";
-import UpdateIcon from "@mui/icons-material/Update";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import HistoryIcon from "@mui/icons-material/History";
 
@@ -33,6 +30,7 @@ interface GameBannerProps {
   lastSaved: string | Date;
   setSession: Dispatch<SetStateAction<SessionType>>;
   gameColor?: string;
+  children?: ReactNode;
 }
 
 export default function GameBanner({
@@ -43,31 +41,9 @@ export default function GameBanner({
   lastSaved,
   setSession,
   gameColor = "#6e6e6e",
+  children,
 }: GameBannerProps) {
-  const [inputState, setInputState] = useState(sessionName);
-
-  const [focus, setFocus] = useState(false);
-
   const [show, setShow] = useState(false);
-
-  const handleBlur = () => {
-    if (inputState !== sessionName) {
-      setSession((session: SessionType) => {
-        return { ...session, name: inputState, lastSaved: new Date() };
-      });
-    }
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState(event.target.value);
-  };
-
-  const handleFocus = () => {
-    setFocus(true);
-  };
-  const onBlur = () => {
-    setFocus(false);
-  };
 
   const showForm = () => {
     setShow(true);
@@ -151,12 +127,13 @@ export default function GameBanner({
         sx={{
           gridArea: "1 / 1 / 2 / 2",
           zIndex: "1",
-          background: `linear-gradient(90deg, ${gameColor}80 1%, ${gameColor}80 25%, ${gameColor}20 70%, rgba(151,151,151,0) 100%)`,
+          background: `linear-gradient(90deg, ${gameColor}90 1%, ${gameColor}80 25%, ${gameColor}80 40%, rgba(151,151,151,0) 100%)`,
           margin: 0,
-          display: "flex",
+
           width: "100%",
         }}
       >
+        {children}
         <Box
           display={"flex"}
           alignItems="center"

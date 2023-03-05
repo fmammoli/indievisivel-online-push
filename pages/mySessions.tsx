@@ -1,35 +1,20 @@
 import Head from "next/head";
-import Image from "next/image";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Link from "@/src/Link";
-import SwipeView from "@/components/SwipeView";
-import styles from "@/styles/Home.module.scss";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Fade,
-  IconButton,
-  List,
-  Stack,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import HistoryIcon from "@mui/icons-material/History";
 import TopMenu from "@/components/TopMenu";
-import { nanoid } from "nanoid";
 import useLocalStorageState from "use-local-storage-state";
 
 import games from "@/gameData/games";
 import MessageIcon from "@mui/icons-material/Message";
 import PersonIcon from "@mui/icons-material/Person";
-import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import SheetSidePanelItem from "@/components/SheetSidePanelItem";
 
-import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { version } from "@/gameData/systemVersion";
 
@@ -97,13 +82,13 @@ export default function MySessions() {
       <main>
         <Box>
           <Container>
-            <TopMenu colors={"primary"}></TopMenu>
+            <TopMenu linkColor="primary.main" colors={"primary"}></TopMenu>
           </Container>
         </Box>
 
         <Box paddingTop={"4rem"}>
           <Container>
-            <Typography variant="h1" color={"primary"}>
+            <Typography variant="h2" color={"primary"}>
               Minhas Sessões
             </Typography>
             <Button color={"error"} onClick={clearAll} variant={"contained"}>
@@ -276,21 +261,22 @@ function SessionListItem({
             </Box> */}
           </Box>
           <Typography variant="body1">{game?.about.text}</Typography>
-          <Box paddingY={2} display={"flex"} justifyContent={"space-between"}>
+          <Box
+            paddingY={2}
+            display={"flex"}
+            justifyContent="space-around"
+            sx={{
+              flexDirection: { xs: "column", sm: "column", md: "row" },
+            }}
+            gap={2}
+          >
             <Link
               href={`/${gameId}/${sessionId}`}
               underline={"none"}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button
-                variant="contained"
-                color={"primary"}
-                sx={{
-                  "&.MuiButton-contained": { color: "white" },
-                  backgroundColor: game?.backgroundColor,
-                }}
-              >
+              <Button variant="contained" color={"secondary"}>
                 Continuar Jogando
               </Button>
             </Link>

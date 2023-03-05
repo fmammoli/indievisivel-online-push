@@ -1,18 +1,8 @@
 import Head from "next/head";
-import Image from "next/image";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "@/src/Link";
-import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
-import { Fade, IconButton, Pagination, Paper, Stack } from "@mui/material";
-import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import { useEffect, useRef, useState } from "react";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import TopMenu from "@/components/TopMenu";
+import { Pagination, Paper } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Document, Page } from "react-pdf";
 import { useRouter } from "next/router";
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
@@ -53,7 +43,12 @@ export default function PdfViewer() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Box display={"flex"} justifyContent={"center"} paddingY={2}>
+        <Box
+          display={"flex"}
+          justifyContent={"center"}
+          paddingY={2}
+          overflow={"scroll"}
+        >
           <Paper elevation={6}>
             <Box borderRadius={4}>
               <Document

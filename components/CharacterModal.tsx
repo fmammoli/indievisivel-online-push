@@ -7,26 +7,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Fade,
-  FormControlLabel,
   FormGroup,
   IconButton,
-  Paper,
-  TextField,
-  Typography,
 } from "@mui/material";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 
-import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import pushCharacterSheetLogo from "../public/images/pushCharacterSheetLogo.png";
-import { Circle } from "@mui/icons-material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import useDiceRoller from "./useDiceRoller";
 import { GameType } from "@/gameData/games";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CloseIcon from "@mui/icons-material/Close";
 import TextInputSheet from "./TextInputSheet";
 import InputList from "./InputList";

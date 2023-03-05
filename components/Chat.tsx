@@ -1,16 +1,8 @@
-import {
-  Box,
-  Button,
-  Fab,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Fab, TextField, Typography } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import SendIcon from "@mui/icons-material/Send";
-import Message, { MemoedMessage } from "./Message";
+import { MemoedMessage } from "./Message";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 
 import useDiceRoller from "./useDiceRoller";
@@ -129,14 +121,18 @@ export default function Chat({
     addMessage({ ...newMessage });
   }
   async function handleOracle() {
-    handleFirstRoll({ options: oracle, author: "Oráculo", color: "#ff1744" });
+    handleFirstRoll({
+      options: oracle,
+      author: "Oráculo",
+      color: "oracle.main",
+    });
   }
 
   async function handleDice() {
     handleFirstRoll({
       options: basicRoll,
       author: "Dados",
-      color: "#19857b",
+      color: "dices.main",
     });
   }
 
@@ -217,10 +213,10 @@ export default function Chat({
         </Box>
       </ScrollableDiv>
       <Box py={1} display="flex" gap={1}>
-        <Button variant="outlined" color="error" onClick={handleOracle}>
+        <Button variant="outlined" color="oracle" onClick={handleOracle}>
           Oráculo
         </Button>
-        <Button variant="outlined" color="secondary" onClick={handleDice}>
+        <Button variant="outlined" color="dices" onClick={handleDice}>
           Dados
         </Button>
       </Box>

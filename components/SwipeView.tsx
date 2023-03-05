@@ -36,7 +36,6 @@ export default function SwipeView({
         scrollbar={{ draggable: true }}
         // onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={(swiper) => {
-          console.log(backgroundImgRef);
           handleSwipe(
             data[swiper.activeIndex],
             backgroundImgRef.current ? backgroundImgRef : null

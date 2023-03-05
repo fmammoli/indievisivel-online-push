@@ -6,5 +6,8 @@ declare module "@mui/material/Button" {
     oracle: true;
     primaryAccent: true;
     secondaryAccent: true;
+    dices: true;
+    complications: true;
+    matrix: true;
   }
 }

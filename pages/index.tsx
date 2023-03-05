@@ -7,22 +7,13 @@ import Box from "@mui/material/Box";
 import Link from "@/src/Link";
 import SwipeView from "@/components/SwipeView";
 import styles from "@/styles/Home.module.scss";
-import { Fade, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import CasinoOutlinedIcon from "@mui/icons-material/CasinoOutlined";
-import {
-  MutableRefObject,
-  RefObject,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import { nanoid } from "nanoid";
 import { FastAverageColor } from "fast-average-color";
-
-import Color from "colorjs.io";
 
 export type heroBannerItemType = {
   id: number;
@@ -78,16 +69,16 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 2,
-    gameId: "2",
+    gameId: "0",
     text: {
-      title: "Guardiões de Althea",
+      title: "A Cidade-Poço",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
     },
 
     backgroundImg: {
-      src: require("../public/images/altheaBack.jpg"),
-      alt: "Dragon and some other characters",
+      src: require("../public/images/a_cidade_poco_cover.jpg"),
+      alt: "Person falling from sci fi building",
     },
   },
   {
@@ -102,6 +93,20 @@ const heroBanner: heroBannerType = [
     backgroundImg: {
       src: require("../public/images/season.jpeg"),
       alt: "Cover image for the Season game.",
+    },
+  },
+  {
+    id: 4,
+    gameId: "4",
+    text: {
+      title: "Guardiões de Althea",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+    },
+
+    backgroundImg: {
+      src: require("../public/images/altheaBack.jpg"),
+      alt: "Some characters with a dragon.",
     },
   },
 ];

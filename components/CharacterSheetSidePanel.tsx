@@ -1,6 +1,6 @@
 import { Box, Divider, List } from "@mui/material";
 
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CollapsableListItem from "./CollapsableListItem";
 import ScrollableDiv from "./ScrollableDiv";
 
@@ -155,7 +155,7 @@ export default function CharacterSheetSidePanel({
       bond: {
         list: [],
       },
-      notes: "Aloooo",
+      notes: "",
     });
     setModalState(true);
   }
