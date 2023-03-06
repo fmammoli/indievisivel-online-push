@@ -17,7 +17,10 @@ import { FastAverageColor } from "fast-average-color";
 
 export type heroBannerItemType = {
   id: number;
-  gameId: string;
+  gameId?: string;
+  isGame: boolean;
+  buttonText?: string;
+  href?: string;
   text: {
     title: string;
     description: string;
@@ -36,7 +39,9 @@ export type heroBannerType = heroBannerItemType[];
 const heroBanner: heroBannerType = [
   {
     id: 0,
-    gameId: "0",
+    isGame: false,
+    buttonText: "Saber Mais",
+    href: "#about",
     text: {
       title: "Push Online por IndieVisível",
       description:
@@ -52,7 +57,9 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 1,
-    gameId: "1",
+    isGame: false,
+    buttonText: "Jogos",
+    href: "#jogos",
     text: {
       title: "Push: System Reference Document",
       description:
@@ -70,10 +77,12 @@ const heroBanner: heroBannerType = [
   {
     id: 2,
     gameId: "0",
+    isGame: true,
+    buttonText: "Jogar",
     text: {
       title: "A Cidade-Poço",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit leo, eleifend eu suscipit at, ullamcorper in dui. Donec eget varius ipsum. Vestibulum neque nulla, tristique ac risus quis, posuere tincidunt odio.",
+        "Escavada no solo da Terra 2014, essa cidade vertical que ocupa toda a superfície do planeta é organizada em incontáveis níveis. O status social é que define em qual deles você mora: os aristos ficam nos mais altos possíveis enquanto que os inferiores abrigam os de reputação duvidosa. E é aqui onde você mora, em um futuro que obviamente não deu certo. Para você.",
     },
 
     backgroundImg: {
@@ -83,7 +92,10 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 3,
-    gameId: "3",
+    gameId: "0",
+    isGame: true,
+    buttonText: "Jogar",
+
     text: {
       title: "Season: A letter to the future",
       description:
@@ -97,7 +109,9 @@ const heroBanner: heroBannerType = [
   },
   {
     id: 4,
-    gameId: "4",
+    gameId: "0",
+    isGame: true,
+    buttonText: "Jogar",
     text: {
       title: "Guardiões de Althea",
       description:
@@ -247,12 +261,16 @@ export default function Home() {
                         >
                           {heroData.text.description}
                         </Typography>
-                        <Box maxWidth={50}>
+                        <Box>
                           <Button
                             variant="contained"
                             component={Link}
                             noLinkStyle
-                            href={`/${heroData.gameId}/${newSessionId}`}
+                            href={
+                              heroData.isGame === false
+                                ? heroData.href
+                                : `/${heroData.gameId}/${newSessionId}`
+                            }
                             startIcon={<CasinoOutlinedIcon />}
                             color={"secondary"}
                             sx={{
@@ -265,7 +283,9 @@ export default function Home() {
                               },
                             }}
                           >
-                            Jogar
+                            {heroData.buttonText
+                              ? heroData.buttonText
+                              : "Jogar"}
                           </Button>
                         </Box>
                       </Stack>

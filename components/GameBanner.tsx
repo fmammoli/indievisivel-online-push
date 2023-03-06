@@ -100,7 +100,7 @@ export default function GameBanner({
         display: "grid",
         gridTemplateColumns: "1fr",
         gridTemplateRows: "1fr",
-        borderBlock: { xs: "", sm: "", md: "1px solid #D8D8D8" },
+        borderBottom: { xs: "", sm: "", md: "1px solid #D8D8D8" },
       }}
     >
       <Box

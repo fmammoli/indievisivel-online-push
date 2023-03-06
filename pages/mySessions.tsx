@@ -225,7 +225,7 @@ function SessionListItem({
         }}
       >
         <Typography sx={{ width: "33%", flexShrink: 0 }}>
-          {sessionName}
+          {`#${sessionId + 1} - ${sessionName}`}
         </Typography>
 
         <Typography sx={{ width: "33%", color: "text.secondary" }}>
