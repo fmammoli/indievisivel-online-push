@@ -90,21 +90,21 @@ export const games: GameType[] = [
     complications: [
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "Um personagem é afetado negativamente",
       },
       {
         id: 2,
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "m personagem perde/estraga algo" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "Uma ameaça atual se agrava/intensifica",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "Uma nova ameaça ou barreira surge" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Uma reviravolta ou verdade inconveniente é revelada",
       },
     ],
     mission: {
@@ -140,21 +140,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "O decreto de Imperadoratriz",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "O levante das trogosocialiques",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "Técnico-Tecnos bajuladores" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "Olhokanas por toda parte",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "A Invasão dos Corcundas do Prez" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Bergs, Bergs, Bergs!",
       },
       {
         id: 2,
@@ -162,21 +162,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "Arrastão de psicorratos",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "Nas mãos dos robkanas",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "O famigerado mecamutante" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "Nada escapa da Necrossonda",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "A fuga da Protorrainha" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Destruição pelo Benthacodon",
       },
       {
         id: 3,
@@ -184,21 +184,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "A exaltação da Treva",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "O conluio dos suprarrobôs",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "O ataque do vírus biófago" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "A Igreja do Tecnopapa",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "Comandos do Cérebro Central" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "O passeio de Sua Ofidade Suprema",
       },
       {
         id: 4,
@@ -206,21 +206,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "Nos arredores da Igreja Neuroemocional",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "Por dentro do Paleoinferno",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "Presos na Police Central" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "O núcleo da Aristomaternidade",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "Nos Jardins de Mœbius" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Interna Floresta dos Cristais Cantantes",
       },
       {
         id: 5,
@@ -228,21 +228,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "Metamorfose do Biomecacorpo",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "Iniciação Alquímica do Kolbo-5",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "O Grade Segredo Neo-Esotérico" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "Desdobramentos metrossinérgicos",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "Genealogia do Pseudoinconsciente" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Império dos Polissonhos",
       },
       {
         id: 6,
@@ -250,21 +250,21 @@ export const games: GameType[] = [
       },
       {
         id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus auctor sollicitudin ac vel nunc. Donec iaculis lectus ut urna feugiat maximus.",
+        text: "Amizade além dos psicotempos",
       },
       {
         id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+        text: "Estruturante Organização Social",
       },
-      { id: 3, text: "Lorem ipsum dolor sit amet," },
+      { id: 3, text: "Guerras Cósmicas do Incal" },
       {
         id: 4,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vitae nisl vitae purus",
+        text: "Exaltação dos Humilhados",
       },
-      { id: 5, text: "Lorem ipsum dolor sit amet," },
+      { id: 5, text: "Alienação da Telerrealidade" },
       {
         id: 6,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum",
+        text: "Viagens Anarcopsicóticas",
       },
     ],
     basicRoll: [
