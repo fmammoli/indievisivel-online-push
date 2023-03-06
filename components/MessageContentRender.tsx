@@ -14,7 +14,7 @@ export default function MessageContentRender({
     (handleSecondRoll: any) => {
       handleSecondRoll({ ...content.props });
     },
-    [handleSecondRoll]
+    [content.props]
   );
 
   let toRender = null;

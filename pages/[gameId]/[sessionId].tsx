@@ -357,32 +357,32 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
         });
       }
     }
-  }, [isReady, setSession]);
+  }, [isReady, setSession, setSessions, gameId, sessionId]);
 
   const [linkColor, setLinkColor] = useState({
     backgroundColor: "secondary.main",
     textColor: "white",
   });
 
-  const findColor = (backgroundColor: string) =>
-    useMemo(() => {
-      if (backgroundColor) {
-        let color = new Color(backgroundColor);
-        const contrastWhite = color.contrast("white", "APCA");
-        const contrastBlack = color.contrast("black", "APCA");
-        console.log(`white:${contrastWhite}__black${contrastBlack}`);
-        setLinkColor({
-          backgroundColor: backgroundColor,
-          textColor:
-            Math.abs(contrastBlack) > Math.abs(contrastWhite)
-              ? "black"
-              : "white",
-        });
-        return backgroundColor;
-      }
-    }, [game]);
+  // const findColor = (backgroundColor: string) =>
+  //   useMemo(() => {
+  //     if (backgroundColor) {
+  //       let color = new Color(backgroundColor);
+  //       const contrastWhite = color.contrast("white", "APCA");
+  //       const contrastBlack = color.contrast("black", "APCA");
+  //       console.log(`white:${contrastWhite}__black${contrastBlack}`);
+  //       setLinkColor({
+  //         backgroundColor: backgroundColor,
+  //         textColor:
+  //           Math.abs(contrastBlack) > Math.abs(contrastWhite)
+  //             ? "black"
+  //             : "white",
+  //       });
+  //       return backgroundColor;
+  //     }
+  //   }, [game]);
   // findColor(game?.backgroundColor || "");
-  console.log(linkColor);
+
   return (
     <>
       <Head>
