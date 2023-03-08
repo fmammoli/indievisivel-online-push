@@ -339,22 +339,6 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
           }
           return prevSession;
         });
-
-        setSessions((prev: SessionListType) => {
-          if (prev) {
-            return {
-              sessions: [
-                ...prev.sessions.slice(0, -1),
-                {
-                  ...prev.sessions.slice(-1)[0],
-                  gameName: game.title,
-                  gameId: game.id,
-                },
-              ],
-            };
-          }
-          return prev;
-        });
       }
     }
   }, [isReady, setSession, setSessions, gameId, sessionId]);
@@ -548,35 +532,6 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
               </Grid>
             </Grid>
           )}
-
-          {/* <Box>
-            <Paper elevation={5} square>
-              <Box
-                bgcolor={theme.palette.primary.main}
-                width="100%"
-                display={"flex"}
-              >
-                <Typography
-                  variant="caption"
-                  component="h2"
-                  p={1}
-                  color={"primary.contrastText"}
-                  fontSize={"0.6rem"}
-                >
-                  Editora IndieVisível
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="h2"
-                  p={1}
-                  color={"primary.contrastText"}
-                  fontSize={"0.6rem"}
-                >
-                  Copywrite 2023
-                </Typography>
-              </Box>
-            </Paper>
-          </Box> */}
         </Box>
       </main>
     </>

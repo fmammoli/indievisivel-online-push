@@ -22,10 +22,12 @@ export default function TopMenu({
   colors = "primary",
   small = false,
   linkColor,
+  home = false,
 }: {
   colors?: "primary" | "secondary";
   small?: boolean;
   linkColor?: string;
+  home?: boolean;
 }) {
   const theme = useTheme();
   const logoSize = small ? "36" : "52";
@@ -108,12 +110,12 @@ export default function TopMenu({
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose} href={"#"}>
-                <Link href={"#"} underline={"none"}>
+                <Link href={`${home ? "" : "/"}#about`} underline={"none"}>
                   Sobre
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose} href={"#"}>
-                <Link href={"#"} underline={"none"}>
+                <Link href={`${home ? "" : "/"}#games`} underline={"none"}>
                   Jogos
                 </Link>
               </MenuItem>
@@ -137,7 +139,11 @@ export default function TopMenu({
                 Home
               </Typography>
             </Link>
-            <Link href={"#"} underline={"hover"} color={"secondary"}>
+            <Link
+              href={`${home ? "" : "/"}#about`}
+              underline={"hover"}
+              color={"secondary"}
+            >
               <Typography
                 variant={"body1"}
                 color={linkColor}
@@ -146,7 +152,11 @@ export default function TopMenu({
                 Sobre
               </Typography>
             </Link>
-            <Link href={"#"} underline={"hover"} color={"secondary"}>
+            <Link
+              href={`${home ? "" : "/"}#games`}
+              underline={"hover"}
+              color={"secondary"}
+            >
               <Typography
                 variant={"body1"}
                 color={linkColor}
@@ -163,7 +173,12 @@ export default function TopMenu({
           sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
         >
           <Link href={"/mySessions"} underline={"none"}>
-            <Button variant={"outlined"} size={"large"} color={colors}>
+            <Button
+              variant={"contained"}
+              size={"large"}
+              color={colors}
+              sx={{ borderRadius: "90px" }}
+            >
               Minhas Sessões
             </Button>
           </Link>

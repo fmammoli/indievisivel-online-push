@@ -17,6 +17,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { version } from "@/gameData/systemVersion";
+import Footer from "@/components/Footer";
 
 export interface SessionItemType {
   gameId: string;
@@ -42,6 +43,8 @@ export default function MySessions() {
   >(`indivisivel-online-push-session-list-${version}`, {
     defaultValue: { sessions: [] },
   });
+
+  console.log(sessions);
 
   const sortedSessions = [...sessions.sessions].sort(
     (a, b) => new Date(b.lastSaved).valueOf() - new Date(a.lastSaved).valueOf()
@@ -86,13 +89,13 @@ export default function MySessions() {
           </Container>
         </Box>
 
-        <Box paddingTop={"4rem"}>
+        <Box paddingTop={"4rem"} minHeight={"80svh"}>
           <Container>
             <Typography variant="h2" color={"primary"}>
               Minhas Sessões
             </Typography>
             <Button color={"error"} onClick={clearAll} variant={"contained"}>
-              Apagar todas as Sessões
+              Limpar dados do Push Online
             </Button>
             <Box paddingY={4}>
               {sortedSessions.map((session, index) => {
@@ -100,7 +103,7 @@ export default function MySessions() {
                   return (
                     <SessionListItem
                       index={index}
-                      key={index}
+                      key={session.sessionId}
                       gameId={session.gameId}
                       gameName={session.gameName}
                       sessionId={session.sessionId}
@@ -118,6 +121,9 @@ export default function MySessions() {
             </Box>
           </Container>
         </Box>
+        <footer>
+          <Footer></Footer>
+        </footer>
       </main>
     </>
   );
@@ -173,9 +179,12 @@ function SessionListItem({
     setHydrated(true);
   }, []);
 
+  const [game, setGameInfo] = useState(
+    games.find((item, index) => item.id === gameId)
+  );
+
   let renderDate = "";
   let totalTimePlayed = "";
-  const game = games.find((item, index) => item.id === gameId);
 
   if (hydrated) {
     renderDate =
@@ -225,7 +234,7 @@ function SessionListItem({
         }}
       >
         <Typography sx={{ width: "33%", flexShrink: 0 }}>
-          {`#${sessionId + 1} - ${sessionName}`}
+          {` ${sessionName}`}
         </Typography>
 
         <Typography sx={{ width: "33%", color: "text.secondary" }}>
