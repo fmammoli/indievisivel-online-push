@@ -107,7 +107,7 @@ const heroBanner: heroBannerType = [
     id: 3,
     gameId: "1",
     isGame: true,
-    buttonText: "Jogos",
+    buttonText: "Jogar",
     href: "#jogos",
     text: {
       title: "KStar Squad",
