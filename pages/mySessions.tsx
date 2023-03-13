@@ -44,8 +44,6 @@ export default function MySessions() {
     defaultValue: { sessions: [] },
   });
 
-  console.log(sessions);
-
   const sortedSessions = [...sessions.sessions].sort(
     (a, b) => new Date(b.lastSaved).valueOf() - new Date(a.lastSaved).valueOf()
   );
@@ -268,9 +266,6 @@ function SessionListItem({
           background: `linear-gradient(90deg, ${game?.backgroundColor}99 1%, ${game?.backgroundColor}99 25%, ${game?.backgroundColor}99 70%, rgba(151,151,151,0) 100%)`,
         }}
       >
-        {/* <Typography sx={{ width: "33%", flexShrink: 0 }}>
-          {sessionKey}
-        </Typography> */}
         <Box maxWidth={"md"}>
           <Box display={"flex"} gap={4} paddingBottom={2}>
             <Box display={"flex"} gap={1} alignItems={"flex-end"}>
@@ -281,12 +276,10 @@ function SessionListItem({
               <MessageIcon fontSize="medium"></MessageIcon>
               <Typography variant={"body2"}>{messagesCount}</Typography>
             </Box>
-            {/* <Box display={"flex"} gap={1} alignItems={"flex-end"}>
-              <AccessTimeFilledIcon fontSize="medium"></AccessTimeFilledIcon>
-              <Typography variant={"body2"}>{totalTimePlayed}</Typography>
-            </Box> */}
           </Box>
-          <Typography variant="body1">{game?.about.text}</Typography>
+          <Typography variant="body1">
+            {game?.gameDescriptions.about.text}
+          </Typography>
           <Box
             paddingY={2}
             display={"flex"}

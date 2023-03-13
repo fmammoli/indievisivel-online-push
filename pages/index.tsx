@@ -544,14 +544,18 @@ export default function Home() {
               </Typography>
             </Box>
             <Grid container gap={0} justifyContent="center">
-              {games.map((item) => (
+              {games.map((item, index) => (
                 <GameItem
                   newSessionId={newSessionId}
-                  key={item.id}
-                  about={item.about.text}
+                  key={`${item.id}-${index}`}
+                  about={item.gameDescriptions.about.text}
                   id={item.id}
                   title={item.title}
-                  imageObject={item.imageObject}
+                  imageObject={
+                    item.listImageObject
+                      ? item.listImageObject
+                      : item.imageObject
+                  }
                   backgroundColor={item.backgroundColor}
                 ></GameItem>
               ))}
@@ -661,10 +665,11 @@ function GameItem({
                 sx={{ marginTop: 3 }}
                 component={Link}
                 noLinkStyle
+                disabled={id === "upcoming" ? true : false}
                 href={`/${id}/${newSessionId}`}
                 startIcon={<CasinoOutlinedIcon />}
               >
-                Jogar
+                {id !== "upcoming" ? "Jogar" : "Em Breve"}
               </Button>
             </Box>
           </Grow>

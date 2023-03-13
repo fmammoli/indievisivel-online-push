@@ -204,7 +204,9 @@ export default function Chat({
                     ></MatrixMessageContent>
                   )
                 ) : (
-                  <Typography variant="body2">{message.text}</Typography>
+                  <Typography variant="body2" whiteSpace={"pre-line"}>
+                    {message.text}
+                  </Typography>
                 )}
               </MemoedMessage>
             );

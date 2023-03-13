@@ -1,6 +1,6 @@
 import { Box, Button, Divider } from "@mui/material";
 
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, Fragment, SetStateAction, useMemo } from "react";
 import ScrollableDiv from "./ScrollableDiv";
 import PentagonIcon from "@mui/icons-material/Pentagon";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -104,27 +104,17 @@ export default function GameSheetSidePanel({
             title={game.title}
             secondaryText={`${game.author} - ${game.version}`}
           ></SheetSidePanelTitleItem>
-          <Divider variant="middle" component="li" />
-          <SheetSidePanelItem
-            sheetItem={game.about}
-            title={"Sobre o Jogo"}
-          ></SheetSidePanelItem>
-          <Divider variant="middle" component="li" />
-          <SheetSidePanelItem
-            sheetItem={game.mission}
-            title={"Missão"}
-          ></SheetSidePanelItem>
-          <Divider variant="middle" component="li" />
-          <SheetSidePanelItem
-            sheetItem={game.agenda}
-            title={"Agenda"}
-          ></SheetSidePanelItem>
-          <Divider variant="middle" component="li" />
-          <SheetSidePanelItem
-            sheetItem={game.rewards}
-            title={"Recompenças"}
-            listStyleTypes={["disc", "none"]}
-          ></SheetSidePanelItem>
+          {Object.keys(game.gameDescriptions).map((keyName, index) => {
+            return (
+              <Fragment key={index}>
+                <Divider variant="middle" component="li" />
+                <SheetSidePanelItem
+                  sheetItem={game.gameDescriptions[keyName].text}
+                  title={game.gameDescriptions[keyName].title}
+                ></SheetSidePanelItem>
+              </Fragment>
+            );
+          })}
           <Divider variant="middle" component="li" />
           <SheetSidePanelItem
             sheetItem={game.complications}
@@ -159,11 +149,6 @@ export default function GameSheetSidePanel({
                 Rolar
               </Button>
             }
-          ></SheetSidePanelItem>
-          <Divider variant="middle" component="li" />
-          <SheetSidePanelItem
-            sheetItem={game.themes}
-            title={"Temas"}
           ></SheetSidePanelItem>
         </SheetSidePanel>
       </ScrollableDiv>

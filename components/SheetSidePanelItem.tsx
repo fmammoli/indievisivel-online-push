@@ -18,8 +18,8 @@ export default function SheetSidePanelItem({
   if (typeof sheetItem === "string") {
     toRender = (
       <ListItemText
-        key={title.length}
-        sx={{ paddingX: 3, paddingBottom: 2 }}
+        key={title}
+        sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
         secondary={sheetItem}
       ></ListItemText>
     );
@@ -34,7 +34,11 @@ export default function SheetSidePanelItem({
               color="disabled"
             ></DiceIcon>
 
-            <Typography variant="body2" color={"rgba(0, 0, 0, 0.6)"}>
+            <Typography
+              variant="body2"
+              color={"rgba(0, 0, 0, 0.6)"}
+              whiteSpace="pre-line"
+            >
               {item.text}
             </Typography>
           </Box>
@@ -48,7 +52,7 @@ export default function SheetSidePanelItem({
         return (
           <ListItemText
             key={index}
-            sx={{ paddingX: 3, paddingBottom: 2 }}
+            sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
             secondary={sheetItem[key]}
           ></ListItemText>
         );
@@ -72,6 +76,7 @@ export default function SheetSidePanelItem({
                     component="p"
                     color={"rgba(0, 0, 0, 0.6)"}
                     paddingBottom={1}
+                    whiteSpace="pre-line"
                   >
                     {item}
                   </Typography>
