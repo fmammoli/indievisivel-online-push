@@ -124,7 +124,7 @@ const heroBanner: heroBannerType = [
     id: 4,
     gameId: "0",
     isGame: false,
-    buttonText: "Jogos",
+    buttonText: "Em Breve",
     href: "#jogos",
     text: {
       title: "Guardiões de Althea",
@@ -141,7 +141,7 @@ const heroBanner: heroBannerType = [
     id: 5,
     gameId: "0",
     isGame: false,
-    buttonText: "Jogar",
+    buttonText: "Em Breve",
     href: "#jogos",
     text: {
       title: "Maré de Ferro",
