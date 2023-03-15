@@ -59,7 +59,7 @@ const heroBanner: heroBannerType = [
     text: {
       title: "Push Online por IndieVisível",
       description:
-        "A IndieVisível Press apresenta o Push Online, uma nova forma de jogar seus jogos Push Powered de uma nova!",
+        "A IndieVisível Press apresenta o Push Online, uma nova forma de jogar jogos Push Powered!",
     },
     frontImg: {
       src: require("../public/images/logoIndie-300x300.png"),
