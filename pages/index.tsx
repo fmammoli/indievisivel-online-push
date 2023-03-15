@@ -269,7 +269,7 @@ export default function Home() {
                       {heroData.frontImg && (
                         <div className={styles.imageWrapperHero}>
                           <Image
-                            ref={imgRef}
+                            priority
                             src={heroData.frontImg.src}
                             alt={heroData.frontImg.alt}
                             className={styles.image}

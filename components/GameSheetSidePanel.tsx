@@ -43,12 +43,7 @@ export default function GameSheetSidePanel({
         timestamp: new Date(),
         side: "RIGHT",
         rerollable: false,
-        content: (
-          <MatrixMessageContent
-            value1={value}
-            text={text}
-          ></MatrixMessageContent>
-        ),
+        content: { props: { value1: value, text: text } },
       };
       return [...messages, newMessage];
     });
@@ -58,10 +53,13 @@ export default function GameSheetSidePanel({
     const roll2 = diceRoller.roll("1d6");
 
     const total =
-      ((roll1 as DiceRoll).total - 1) * ((roll2 as DiceRoll).total - 1);
+      ((roll1 as DiceRoll).total - 1) * 6 +
+      ((roll1 as DiceRoll).total - 1) +
+      (roll2 as DiceRoll).total;
 
-    const text =
-      matrix[total].text == "" ? matrix[total + 1].text : matrix[total].text;
+    const text = matrix[total].text;
+
+    console.log(matrix);
 
     setMessages((messages: MessageType[]) => {
       const newMessage: MessageType = {
@@ -71,13 +69,13 @@ export default function GameSheetSidePanel({
         author: "Matrix",
         timestamp: new Date(),
         side: "RIGHT",
-        content: (
-          <MatrixMessageContent
-            value1={(roll1 as DiceRoll).total}
-            value2={(roll2 as DiceRoll).total}
-            text={text}
-          ></MatrixMessageContent>
-        ),
+        content: {
+          props: {
+            value1: (roll1 as DiceRoll).total,
+            value2: (roll2 as DiceRoll).total,
+            text: text,
+          },
+        },
         rerollable: false,
       };
       return [...messages, newMessage];

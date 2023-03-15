@@ -429,7 +429,7 @@ export const games: GameType[] = [
       },
       sceneIncrements: {
         title: "Incrementos de Cena",
-        text: `Agora é omomento de trazer mais vida a sua cena. Adicione elementos para dar mais clima e ação.
+        text: `Agora é o momento de trazer mais vida a sua cena. Adicione elementos para dar mais clima e ação.
       
       1-2-3 
       1-Cheiros esons
