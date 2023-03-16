@@ -4,6 +4,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
 } from "@mui/material";
 import ExpandLessIcon from "@mui/icons-material/ExpandLessOutlined";
@@ -50,9 +51,11 @@ export default function CollapsableListItem({
             gap={1}
             justifyContent="space-between"
             width={"100%"}
+            alignItems={"center"}
           >
-            <ListItemText primary={title}></ListItemText>
-
+            <ListItemButton onClick={handleClick}>
+              <ListItemText primary={title}></ListItemText>
+            </ListItemButton>
             {button}
           </Box>
         ) : null}

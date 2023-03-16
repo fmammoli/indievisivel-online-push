@@ -146,7 +146,7 @@ export default function GameSheetSidePanel({
               <Button
                 variant="outlined"
                 color={"complications"}
-                sx={{ borderRadius: "90px" }}
+                sx={{ borderRadius: "90px", maxHeight: "33px" }}
                 size="small"
                 startIcon={<CircleIcon></CircleIcon>}
                 onClick={handleComplicationsRoll}
@@ -164,7 +164,7 @@ export default function GameSheetSidePanel({
               <Button
                 variant="outlined"
                 color={"matrix"}
-                sx={{ borderRadius: "90px" }}
+                sx={{ borderRadius: "90px", maxHeight: "33px" }}
                 size="small"
                 startIcon={<PentagonIcon></PentagonIcon>}
                 onClick={handleMatrixRoll}
