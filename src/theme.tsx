@@ -41,6 +41,9 @@ const theme = createTheme({
     success: {
       main: "#43742f",
     },
+    other: {
+      main: "#009688",
+    },
   },
   typography: {
     fontFamily: roboto.style.fontFamily,

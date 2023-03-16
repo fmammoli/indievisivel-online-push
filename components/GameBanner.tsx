@@ -201,7 +201,7 @@ export default function GameBanner({
               height: { xs: "27.8px", sm: "27.8px", md: "56px" },
             }}
           >
-            {/* <Image src={pushPowered} alt={""} fill></Image> */}
+            <Image src={pushPowered} alt={"Push Powered"} fill></Image>
           </Box>
         </Box>
       </Container>

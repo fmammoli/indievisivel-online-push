@@ -8,6 +8,7 @@ declare module "@mui/material/styles" {
     matrix: PaletteColorOptions;
     primaryAccent: PaletteColorOptions;
     secondaryAccent: PaletteColorOptions;
+    other: PaletteColorOptions;
   }
   interface PaletteColor {
     darker?: string;

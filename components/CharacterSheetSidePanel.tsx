@@ -180,6 +180,15 @@ export default function CharacterSheetSidePanel({
             addButton
             handleAdd={handleAddButton}
           >
+            {game && game.characterDescription && (
+              <Fragment>
+                <SheetSidePanelItem
+                  sheetItem={game.characterDescription.text}
+                  title={game.characterDescription.title}
+                ></SheetSidePanelItem>
+                <Divider variant="middle" component="li" />
+              </Fragment>
+            )}
             {characters.map((character, index) => {
               if (character.id !== "-1")
                 return (

@@ -1,29 +1,27 @@
-import { Box, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, Button, ListItem, ListItemText, Typography } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
 
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 export default function SheetSidePanelItem({
   sheetItem,
   title,
   button,
   listStyleTypes = ["disc"],
+  contentButtons,
+  handleContentButtons,
 }: {
-  sheetItem: any;
+  sheetItem: string | [] | { [index: string]: any };
   title: string;
   button?: JSX.Element;
+  contentButtons?: JSX.Element;
+  handleContentButtons?: any;
   listStyleTypes?: string[];
 }) {
   let toRender = null;
 
-  if (typeof sheetItem === "string") {
-    toRender = (
-      <ListItemText
-        key={title}
-        sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
-        secondary={sheetItem}
-      ></ListItemText>
-    );
-  } else if (Array.isArray(sheetItem)) {
+  if (Array.isArray(sheetItem)) {
     toRender = sheetItem.map((item, index) => {
       return (
         <ListItem key={index}>
@@ -45,49 +43,107 @@ export default function SheetSidePanelItem({
         </ListItem>
       );
     });
-  } else {
-    let arrayCount = 0;
-    toRender = Object.keys(sheetItem).map((key, index) => {
-      if (typeof sheetItem[key] === "string") {
-        return (
-          <ListItemText
-            key={index}
-            sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
-            secondary={sheetItem[key]}
-          ></ListItemText>
-        );
-      }
-      if (Array.isArray(sheetItem[key])) {
-        arrayCount++;
-        return (
-          <Box key={key} paddingX={3}>
-            <ul
-              style={{
-                paddingInline:
-                  listStyleTypes[arrayCount - 1] === "none" ? "0" : "1rem",
-                marginTop: "0",
-                listStyleType: listStyleTypes[arrayCount - 1],
-              }}
+  } else if (typeof sheetItem !== "string") {
+    if (!sheetItem.rollable) {
+      toRender = (
+        <ListItemText
+          key={title}
+          sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
+          secondary={sheetItem.text ? sheetItem.text : ""}
+        ></ListItemText>
+      );
+    } else {
+      toRender = (
+        <ListItem>
+          <Box>
+            <Typography
+              variant="body2"
+              color={"rgba(0, 0, 0, 0.6)"}
+              whiteSpace="pre-line"
             >
-              {sheetItem[key].map((item: string, index: number) => (
-                <li key={`${index}-${item}`}>
-                  <Typography
-                    variant="body2"
-                    component="p"
-                    color={"rgba(0, 0, 0, 0.6)"}
-                    paddingBottom={1}
-                    whiteSpace="pre-line"
-                  >
-                    {item}
-                  </Typography>
-                </li>
-              ))}
-            </ul>
+              {sheetItem.text}
+            </Typography>
+
+            <Box>
+              {sheetItem.tables.map(
+                (
+                  table: {
+                    id: string;
+                    title: string;
+                    rolls: { value: number; text: string }[];
+                  },
+                  index: number
+                ) => {
+                  return (
+                    <Box key={`${index}-${table.id}`} paddingY={2}>
+                      <Box
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Typography
+                          variant="body2"
+                          color={"rgba(0, 0, 0, 0.6)"}
+                          whiteSpace="pre-line"
+                          fontWeight={"bold"}
+                          align={"center"}
+                        >
+                          Tabela: {table.title}
+                        </Typography>
+                        <Button
+                          variant={"outlined"}
+                          color={"other"}
+                          size={"small"}
+                          startIcon={<DashboardIcon></DashboardIcon>}
+                          onClick={() => handleContentButtons(table)}
+                        >
+                          Rolar
+                        </Button>
+                      </Box>
+
+                      {table.rolls.length <= 6 &&
+                        table.rolls.map((item, index) => {
+                          return (
+                            <Box
+                              key={`${index}-${item.value}`}
+                              display={"flex"}
+                              gap={1}
+                              alignItems="flex-start"
+                              paddingY={0.5}
+                            >
+                              <DiceIcon
+                                value={item.value}
+                                fontSize="large"
+                                color="disabled"
+                              ></DiceIcon>
+
+                              <Typography
+                                variant="body2"
+                                color={"rgba(0, 0, 0, 0.6)"}
+                                whiteSpace="pre-line"
+                              >
+                                {item.text}
+                              </Typography>
+                            </Box>
+                          );
+                        })}
+                    </Box>
+                  );
+                }
+              )}
+            </Box>
           </Box>
-        );
-      }
-    });
-    arrayCount = 0;
+        </ListItem>
+      );
+    }
+  } else {
+    toRender = (
+      <ListItemText
+        key={title}
+        sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
+        secondary={sheetItem ? sheetItem : ""}
+      ></ListItemText>
+    );
   }
 
   return (

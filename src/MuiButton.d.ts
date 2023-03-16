@@ -9,5 +9,6 @@ declare module "@mui/material/Button" {
     dices: true;
     complications: true;
     matrix: true;
+    other: true;
   }
 }

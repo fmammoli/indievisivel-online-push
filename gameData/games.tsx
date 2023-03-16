@@ -1,9 +1,23 @@
+import { text } from "stream/consumers";
+
 export interface GameType {
   id: string;
   title: string;
   author: string;
   version: string;
-  gameDescriptions: { [key: string]: { title: string; text: string } };
+  gameDescriptions: {
+    [key: string]: {
+      title: string;
+      text: string;
+      rollable?: boolean;
+      tables?: {
+        id: string;
+        title: string;
+        rolls: { value: number; text: string }[];
+      }[];
+    };
+  };
+  characterDescription?: { title: string; text: string };
   complications: {
     id: number;
     text: string;
@@ -368,30 +382,47 @@ export const games: GameType[] = [
         
         Para cada letra vocé pode rolar 1d6 nas tabelas a seguir ou escolher a que se encaixa mais com a ideia que vocé tem para a aventura.
         
-        A
-        Achar (explorar, descobrir) 
-        Destruir (derrotar, derrubar) 
-        Proteger (defender, salvar) 
-        Conquistar (escravizar, dominar) 
-        Superar (sobreviver, escapar) 
-        Capturar (recuperar, prender)
-  
-        B
-        Entidade (pessoa, facção, criatura) 
-        Conhecimento (informacao,segredo, ideia) 
-        Gléria (reputacao, poder, riqueza)
-        Local (caminho, comunidade, posição)
-        Recurso (objeto, ingrediente, elemento)
-        Evento (fenémeno, incidente, lenda)
-  
-        C
-        Perda (fracasso, custo)
-        Dominação (opressão, influência)
-        Destruição (ruína, extinção)
-        Dano (morte,sabotagem)
-        Mudança (substituição, corrupção)
-        Disputa (perturbação, conflito)
+       
         `,
+        rollable: true,
+        tables: [
+          {
+            id: "A",
+            title: "Missões A",
+            rolls: [
+              { value: 1, text: "Achar (explorar, descobrir) " },
+              { value: 2, text: " Destruir (derrotar, derrubar) " },
+              { value: 3, text: " Proteger (defender, salvar)  " },
+              { value: 4, text: " Conquistar (escravizar, dominar) " },
+              { value: 5, text: " Superar (sobreviver, escapar) " },
+              { value: 6, text: " Capturar (recuperar, prender)" },
+            ],
+          },
+          {
+            id: "B",
+            title: "Missões B",
+            rolls: [
+              { value: 1, text: "Entidade (pessoa, facção, criatura) " },
+              { value: 2, text: " Conhecimento (informacao,segredo, ideia)" },
+              { value: 3, text: "Gléria (reputacao, poder, riqueza)" },
+              { value: 4, text: "Local (caminho, comunidade, posição)" },
+              { value: 5, text: " Recurso (objeto, ingrediente, elemento) " },
+              { value: 6, text: " Evento (fenémeno, incidente, lenda)" },
+            ],
+          },
+          {
+            id: "C",
+            title: "Missões C",
+            rolls: [
+              { value: 1, text: "Perda (fracasso, custo)" },
+              { value: 2, text: "Dominação (opressão, influência)" },
+              { value: 3, text: "Destruição (ruína, extinção)" },
+              { value: 4, text: "Dano (morte,sabotagem) " },
+              { value: 5, text: "Mudança (substituição, corrupção)" },
+              { value: 6, text: "Disputa (perturbação, conflito)" },
+            ],
+          },
+        ],
       },
       agenda: {
         title: "Agenda",
@@ -426,14 +457,35 @@ export const games: GameType[] = [
       6. Enigma
 
       `,
+        rollable: true,
+        tables: [
+          {
+            id: "1",
+            title: "Desafios",
+            rolls: [
+              { value: 1, text: " Barreira" },
+              { value: 2, text: " Tarefa" },
+              { value: 3, text: "Luta" },
+              { value: 4, text: "Armadilha" },
+              { value: 5, text: "Perseguicao " },
+              { value: 6, text: "Discussao" },
+              { value: 7, text: "Disputa" },
+              { value: 8, text: " Mistério" },
+              { value: 9, text: "Negociação" },
+              { value: 10, text: "Resisténcia " },
+              { value: 11, text: "Ameaca" },
+              { value: 12, text: "Enigma" },
+            ],
+          },
+        ],
       },
       sceneIncrements: {
         title: "Incrementos de Cena",
         text: `Agora é o momento de trazer mais vida a sua cena. Adicione elementos para dar mais clima e ação.
       
       1-2-3 
-      1-Cheiros esons
-      2-Cores evisdes
+      1-Cheiros e sons
+      2-Cores e visões
       3-Pessoas e criaturas
       4-Clima e natureza
       5-Estado de espirito e atmosfera
@@ -442,10 +494,32 @@ export const games: GameType[] = [
       4-5-6
       1. Materiais e texturas
       2. Impressdes ou opinides
-      3. Postura e atitude 4.Luzetempo
+      3. Postura e atitude
+      4.Luzetempo
       5. Angulos da “camera”
       6. Ações e movimento
       `,
+        rollable: true,
+        tables: [
+          {
+            id: "1",
+            title: "Incrementos de Cena",
+            rolls: [
+              { value: 1, text: " Cheiros e sons" },
+              { value: 2, text: " Cores e visões" },
+              { value: 3, text: " Pessoas e criaturas" },
+              { value: 4, text: "Clima e natureza" },
+              { value: 5, text: " Estado de espirito e atmosfera" },
+              { value: 6, text: "Ornamentos e detalhes " },
+              { value: 7, text: " Materiais e texturas" },
+              { value: 8, text: "Impressdes ou opinides " },
+              { value: 9, text: "Postura e atitude " },
+              { value: 10, text: "Luz e tempo " },
+              { value: 11, text: "Angulos da 'câmera'" },
+              { value: 12, text: " Ações e movimento" },
+            ],
+          },
+        ],
       },
       rewards: {
         title: "Evoluindo",
@@ -667,6 +741,10 @@ export const games: GameType[] = [
       { value: 11, text: "INFORTÚNIO" },
       { value: 12, text: "INFORTÚNIO" },
     ],
+    characterDescription: {
+      title: "Guia para a criação de personagens",
+      text: `Vocé precisa escolher seis traços para K-Star. Cada um deles descreve uma parte importante do seu personagem: Dom (o poder especial do seu personagem), Origem (o passado e papel que recaiu sobre ele), Experiéncia (as experiéncias e função que ele escolheu para si), Marca (um trejeito, característica ou traço de personalidade), Power Suit (a armadura, ela contém a K-Force e protege os heróis), e Vínculo (a missão do personagem, algo ou alguém por quem ele lutaria).`,
+    },
     gifts: [
       { value: 1, text: "Olhos das Estrelas" },
       { value: 2, text: "Punhos do Sol" },

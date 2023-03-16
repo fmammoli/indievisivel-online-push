@@ -13,7 +13,6 @@ import SheetSidePanelItem from "./SheetSidePanelItem";
 import { nanoid } from "nanoid";
 import { MessageType } from "@/pages/[gameId]/[sessionId]";
 import { GameType } from "@/gameData/games";
-import MatrixMessageContent from "./MatrixMessageContent";
 
 interface GameSheetViewProps {
   game: GameType;
@@ -59,8 +58,6 @@ export default function GameSheetSidePanel({
 
     const text = matrix[total].text;
 
-    console.log(matrix);
-
     setMessages((messages: MessageType[]) => {
       const newMessage: MessageType = {
         id: nanoid(),
@@ -88,6 +85,33 @@ export default function GameSheetSidePanel({
   );
 
   const handleHide = handleHideButton ? { handleHide: handleHideButton } : {};
+
+  function handleContentButtonClick(table: {
+    id: string;
+    title: string;
+    rolls: {
+      value: number;
+      text: string;
+    }[];
+  }) {
+    const roll = diceRoller.roll(`1d${table.rolls.length}`);
+    setMessages((messages: MessageType[]) => {
+      const value = (roll as DiceRoll).total;
+      const text = table.rolls[value - 1].text;
+      const newMessage: MessageType = {
+        id: nanoid(),
+        text: text,
+        color: "other.main",
+        author: `Tabela ${table.title}`,
+        timestamp: new Date(),
+        side: "RIGHT",
+        rerollable: false,
+        content: { props: { value1: value, text: text } },
+      };
+      return [...messages, newMessage];
+    });
+  }
+
   return (
     <Box
       sx={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -107,8 +131,9 @@ export default function GameSheetSidePanel({
               <Fragment key={index}>
                 <Divider variant="middle" component="li" />
                 <SheetSidePanelItem
-                  sheetItem={game.gameDescriptions[keyName].text}
+                  sheetItem={game.gameDescriptions[keyName]}
                   title={game.gameDescriptions[keyName].title}
+                  handleContentButtons={handleContentButtonClick}
                 ></SheetSidePanelItem>
               </Fragment>
             );
