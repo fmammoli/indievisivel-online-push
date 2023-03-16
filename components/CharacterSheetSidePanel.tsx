@@ -221,7 +221,7 @@ export default function CharacterSheetSidePanel({
                     >
                       <SheetSidePanelItem
                         sheetItem={character.gifts}
-                        title={"Doms"}
+                        title={"Dons"}
                       ></SheetSidePanelItem>
                       <Divider variant="middle" component="li" />
 

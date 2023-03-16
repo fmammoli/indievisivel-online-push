@@ -1,4 +1,11 @@
-import { Box, Button, ListItem, ListItemText, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CollapsableListItem from "./CollapsableListItem";
 import DiceIcon from "./DiceIcon";
@@ -45,12 +52,35 @@ export default function SheetSidePanelItem({
     });
   } else if (typeof sheetItem !== "string") {
     if (!sheetItem.rollable) {
+      if (title === "Dons") {
+        console.log(sheetItem);
+      }
       toRender = (
         <ListItemText
           key={title}
           sx={{ paddingX: 3, paddingBottom: 2, whiteSpace: "pre-line" }}
           secondary={sheetItem.text ? sheetItem.text : ""}
-        ></ListItemText>
+        >
+          {sheetItem.list ? (
+            <ul style={{ marginTop: 0, paddingTop: 0, paddingLeft: "1.2rem" }}>
+              {sheetItem.list.map((item: string, index: number) => {
+                return (
+                  <li key={`${index}-${item}`}>
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color={"rgba(0, 0, 0, 0.6)"}
+                      paddingBottom={1}
+                      whiteSpace="pre-line"
+                    >
+                      {item}
+                    </Typography>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </ListItemText>
       );
     } else {
       toRender = (

@@ -14,7 +14,7 @@ export default function InputList({
   handleAdd,
 }: InputListPropsType) {
   return (
-    <Box id={"formList1"} paddingTop={4} flexGrow={1}>
+    <Box id={"formList1"} paddingTop={4} flexGrow={1} flexBasis={"50%"}>
       <Box
         sx={{ backgroundColor: "rgba(0, 0, 0, 0.06)" }}
         p={1}

@@ -182,7 +182,7 @@ export default function CharacterModal({
   }
 
   return (
-    <Dialog open={open} scroll={"paper"} maxWidth={"lg"}>
+    <Dialog open={open} scroll={"paper"} maxWidth={"xl"}>
       <DialogTitle id="scroll-dialog-title">
         <Box display={"flex"} justifyContent={"flex-end"}>
           <IconButton onClick={handleOnClose}>
