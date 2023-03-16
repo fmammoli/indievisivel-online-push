@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import TopMenu from "@/components/TopMenu";
 import GameBanner from "@/components/GameBanner";
@@ -29,7 +29,6 @@ import { useRouter } from "next/router";
 import useLocalStorageState from "use-local-storage-state";
 import { SessionListType } from "../mySessions";
 import { version } from "@/gameData/systemVersion";
-import Color from "colorjs.io";
 
 export interface MessageType {
   id: string;
@@ -86,14 +85,7 @@ let annonymousCharacter: CharacterType = {
 
 // annonymousCharacter = characters[0];
 
-interface PlayPropsType {
-  gameId: string;
-  sessionId: string;
-  gameName: string;
-  bannerImg: any;
-}
-
-export default function Play({ gameName, bannerImg }: PlayPropsType) {
+export default function Play() {
   const { query, isReady } = useRouter();
   const { gameId, sessionId } = query;
 
@@ -113,7 +105,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
         name: "My new session",
         lastSaved: new Date(),
         createdAt: new Date(),
-        game: null,
+        game: game || null,
         messages: [],
         characters: [{ ...annonymousCharacter, gameId: gameId as string }],
       },
@@ -126,7 +118,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
       defaultValue: {
         sessions: [
           {
-            gameId: session.id,
+            gameId: session.game ? session.game.id : "",
             gameName: session.game ? session.game?.title : "",
             sessionId: session.id,
             sessionName: session.name,
@@ -141,63 +133,6 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     }
   );
 
-  useEffect(() => {
-    if (game && session && session.game) {
-      setSessions((prev: SessionListType) => {
-        if (prev && session && session.game) {
-          const toUpdateIndex = prev.sessions.findIndex(
-            (item, index) => item.sessionId === session.id
-          );
-          if (toUpdateIndex === -1) {
-            return {
-              sessions: [
-                ...prev.sessions,
-                {
-                  sessionId: session.id,
-                  sessionKey: `indivisivel-online-push-${session.id}`,
-                  sessionName: session.name,
-                  gameName: session.game.title,
-                  gameId: session.game.id,
-                  lastSaved: session.lastSaved,
-                  messagesCount: session.messages.length,
-                  charactersCount: session.characters.length,
-                  createdAt: session.createdAt,
-                },
-              ],
-            };
-          } else {
-            const prevElement = prev.sessions[toUpdateIndex];
-            return {
-              sessions: [
-                ...prev.sessions.slice(0, toUpdateIndex),
-                {
-                  ...prevElement,
-                  sessionName: session.name,
-                  gameName: session.game.title,
-                  gameId: session.game.id,
-                  lastSaved: session.lastSaved,
-                  messagesCount: session.messages.length,
-                  charactersCount: session.characters.length,
-                },
-                ...prev.sessions.slice(toUpdateIndex + 1, prev.sessions.length),
-              ],
-            };
-          }
-        }
-        return prev;
-      });
-    }
-  }, [game, session, setSessions]);
-
-  // const [session, setSession] = useState<SessionType>({
-  //   id: nanoid(),
-  //   name: "my new session",
-  //   lastSaved: new Date(),
-  //   game: null,
-  //   messages: [],
-  //   characters: [{ ...annonymousCharacter, gameId: gameId as string }],
-  // });
-
   const [currentCharacter, setCurrentCharacter] =
     useState<CharacterType>(annonymousCharacter);
 
@@ -205,18 +140,19 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
 
   const setMessages = useCallback(
     (value: MessageType[] | ((value: MessageType[] | []) => MessageType[])) => {
-      setSession((prevSession) => {
+      updateSession((prevSession) => {
         if (prevSession) {
           if (typeof value === "function") {
             const newMessages = value(prevSession?.messages);
-            return {
+            const newSession = {
               ...prevSession,
               messages: newMessages,
               lastSaved: new Date(),
             };
+
+            return newSession;
           }
           if (Array.isArray(value)) {
-            console.log("new message");
             return { ...prevSession, messages: value, lastSaved: new Date() };
           }
         }
@@ -233,31 +169,27 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     },
   ];
 
-  const setCharacters = useCallback(
-    (
-      value:
-        | CharacterType[]
-        | ((value: CharacterType[] | []) => CharacterType[])
-    ) => {
-      setSession((prevSession) => {
-        if (prevSession) {
-          if (typeof value === "function") {
-            const newCharacters = value(prevSession?.characters);
-            return {
-              ...prevSession,
-              characters: newCharacters,
-              lastSaved: new Date(),
-            };
-          }
-          if (Array.isArray(value)) {
-            return { ...prevSession, characters: value, lastSaved: new Date() };
-          }
-        }
-        return prevSession;
-      });
-    },
-    [setSession]
-  );
+  const setCharacters = (
+    value: CharacterType[] | ((value: CharacterType[] | []) => CharacterType[])
+  ) => {
+    const newDate = new Date();
+
+    updateSession((prevSession) => {
+      if (typeof value === "function") {
+        const newCharacters = value(prevSession?.characters);
+
+        return {
+          ...prevSession,
+          characters: newCharacters,
+          lastSaved: newDate,
+        };
+      }
+      if (Array.isArray(value)) {
+        return { ...prevSession, characters: value, lastSaved: newDate };
+      }
+      return prevSession;
+    });
+  };
 
   const addMessage = ({
     id,
@@ -313,7 +245,64 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
     });
   };
 
-  // const addMessage = useCallback(addMessageOriginal, [setMessages]);
+  const updateSession = (
+    value: SessionType | ((value: SessionType) => SessionType)
+  ) => {
+    if (typeof value === "function") {
+      setSession((prev) => {
+        const newSession = value(prev);
+
+        return newSession;
+      });
+    } else {
+      return setSession(value);
+    }
+  };
+
+  useEffect(() => {
+    if (session.id !== "")
+      setSessions((prev) => {
+        const toUpdateIndex = prev.sessions.findIndex(
+          (item, index) => item.sessionId === session.id
+        );
+        if (toUpdateIndex === -1) {
+          return {
+            sessions: [
+              ...prev.sessions,
+              {
+                sessionId: session.id,
+                sessionKey: `indivisivel-online-push-${session.id}`,
+                sessionName: session.name,
+                gameName: session.game ? session.game.title : "",
+                gameId: session.game ? session.game.id : "",
+                lastSaved: session.lastSaved,
+                messagesCount: session.messages.length,
+                charactersCount: session.characters.length,
+                createdAt: session.createdAt,
+              },
+            ],
+          };
+        } else {
+          const prevElement = prev.sessions[toUpdateIndex];
+
+          return {
+            sessions: [
+              ...prev.sessions.slice(0, toUpdateIndex),
+              {
+                ...prevElement,
+                sessionName: session.name,
+                lastSaved: session.lastSaved,
+                gameName: session.game ? session.game.title : "",
+                gameId: session.game ? session.game.id : "",
+                messagesCount: session.messages.length,
+                charactersCount: session.characters.length,
+              },
+              ...prev.sessions.slice(toUpdateIndex + 1, prev.sessions.length),
+            ],
+          };
+        }
+      });
+  }, [session, setSessions]);
 
   const [characterDrawerStatus, setCharacterDrawerStatus] = useState(false);
   const [gameDrawerStatus, setGameDrawerStatus] = useState(false);
@@ -325,23 +314,6 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
   function toggleGameDrawer() {
     setGameDrawerStatus((prev) => !prev);
   }
-
-  useEffect(() => {
-    if (gameId && sessionId) {
-      const game = games.find((game, index) => {
-        return game.id === gameId;
-      });
-
-      if (game) {
-        setSession((prevSession) => {
-          if (prevSession) {
-            return { ...prevSession, game: game };
-          }
-          return prevSession;
-        });
-      }
-    }
-  }, [isReady, setSession, setSessions, gameId, sessionId]);
 
   const [linkColor, setLinkColor] = useState({
     backgroundColor: "secondary.main",
@@ -409,7 +381,7 @@ export default function Play({ gameName, bannerImg }: PlayPropsType) {
               backgroundColor={game?.backgroundColor}
               sessionName={session.name}
               lastSaved={session.lastSaved.toString()}
-              setSession={setSession}
+              setSession={updateSession}
             >
               <TopMenu
                 linkColor={linkColor.textColor}
